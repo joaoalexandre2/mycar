@@ -15,12 +15,12 @@ class OrdemServicoRepository implements OrdemServicoRepositoryInterface
 
     public function listar(): Collection
     {
-        return OrdemServico::with('veiculo')->get();
+        return OrdemServico::with('veiculo.cliente')->get();
     }
 
     public function buscarPorId(int $id): ?OrdemServico
     {
-        return OrdemServico::with('veiculo')->find($id);
+        return OrdemServico::with('veiculo.cliente')->find($id);
     }
 
     public function atualizar(int $id, array $dados): ?OrdemServico
@@ -33,7 +33,7 @@ class OrdemServicoRepository implements OrdemServicoRepositoryInterface
 
         $ordemServico->update($dados);
 
-        return $ordemServico->load('veiculo');
+        return $ordemServico->load('veiculo.cliente');
     }
 
     public function deletar(int $id): bool

@@ -11,7 +11,11 @@ class Cliente extends Model
         'nome',
         'cpf',
         'telefone',
-        'ativo'
+        'ativo',
+    ];
+
+    protected $casts = [
+        'ativo' => 'boolean',
     ];
 
     public function veiculos(): HasMany

@@ -45,7 +45,7 @@ class VeiculoController extends Controller
 
     public function index()
     {
-        return response()->json(Veiculo::all());
+        return response()->json(Veiculo::with('cliente')->get());
     }
 
     public function show($id)

@@ -9,11 +9,13 @@ interface ManutencaoRepositoryInterface
 {
     public function criar(array $dados): Manutencao;
 
+    public function listar(): Collection;
+
     public function listarPorVeiculo(int $veiculoId): Collection;
 
     public function buscarPorId(int $id): ?Manutencao;
 
-    public function atualizar(int $id, array $dados): Manutencao;
+    public function atualizar(int $id, array $dados): ?Manutencao;
 
     public function remover(int $id): bool;
 }

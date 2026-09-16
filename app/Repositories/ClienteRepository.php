@@ -14,7 +14,7 @@ class ClienteRepository
 
     public function listar(): \Illuminate\Database\Eloquent\Collection
     {
-        return Cliente::all();
+        return Cliente::withCount('veiculos')->get();
     }
 
 

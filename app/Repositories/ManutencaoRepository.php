@@ -10,34 +10,50 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
 {
     public function criar(array $dados): Manutencao
     {
-        return Manutencao::create($dados);
+        return Manutencao::create($dados)->load('veiculo.cliente');
+    }
+
+    public function listar(): Collection
+    {
+        return Manutencao::with('veiculo.cliente')
+            ->orderByDesc('data_manutencao')
+            ->get();
     }
 
     public function listarPorVeiculo(int $veiculoId): Collection
     {
-        return Manutencao::where('veiculo_id', $veiculoId)
+        return Manutencao::with('veiculo.cliente')
+            ->where('veiculo_id', $veiculoId)
             ->orderByDesc('data_manutencao')
             ->get();
     }
 
     public function buscarPorId(int $id): ?Manutencao
     {
-        return Manutencao::find($id);
+        return Manutencao::with('veiculo.cliente')->find($id);
     }
 
-    public function atualizar(int $id, array $dados): Manutencao
+    public function atualizar(int $id, array $dados): ?Manutencao
     {
-        $manutencao = Manutencao::findOrFail($id);
+        $manutencao = Manutencao::find($id);
+
+        if (!$manutencao) {
+            return null;
+        }
 
         $manutencao->update($dados);
 
-        return $manutencao->fresh();
+        return $manutencao->fresh('veiculo.cliente');
     }
 
     public function remover(int $id): bool
     {
-        $manutencao = Manutencao::findOrFail($id);
+        $manutencao = Manutencao::find($id);
 
-        return $manutencao->delete();
+        if (!$manutencao) {
+            return false;
+        }
+
+        return (bool) $manutencao->delete();
     }
 }

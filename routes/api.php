@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\OrdemServicoController;
+use App\Http\Controllers\ManutencaoController;
 
 Route::post('/clientes', [ClienteController::class, 'store']);
 
@@ -38,4 +39,10 @@ Route::get('/ordens-servico', [OrdemServicoController::class, 'index']);
 Route::put('/ordens-servico/{id}', [OrdemServicoController::class, 'update']);
 
 Route::delete('/ordens-servico/{id}', [OrdemServicoController::class, 'destroy']);
+
+Route::get('/manutencoes', [ManutencaoController::class, 'index']);
+Route::post('/manutencoes', [ManutencaoController::class, 'store']);
+Route::get('/manutencoes/{id}', [ManutencaoController::class, 'show']);
+Route::put('/manutencoes/{id}', [ManutencaoController::class, 'update']);
+Route::delete('/manutencoes/{id}', [ManutencaoController::class, 'destroy']);
 
