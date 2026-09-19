@@ -40,6 +40,10 @@ class OrdemServicoRepository implements OrdemServicoRepositoryInterface
         return [
             'total' => OrdemServico::count(),
             'abertas' => OrdemServico::where('status', 'aberta')->count(),
+            'emAndamento' => OrdemServico::whereIn('status', [
+                'em_andamento',
+                'aguardando_peca',
+            ])->count(),
             'finalizadas' => OrdemServico::where('status', 'finalizada')->count(),
             'valorTotal' => (float) OrdemServico::sum('valor'),
         ];
