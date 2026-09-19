@@ -71,7 +71,7 @@ class OrdemServicoTest extends TestCase
             ->assertJsonPath('resumo.abertas', 1)
             ->assertJsonPath('resumo.emAndamento', 2)
             ->assertJsonPath('resumo.finalizadas', 1)
-            ->assertJsonPath('resumo.valorTotal', 1000.0);
+            ->assertJsonPath('resumo.valorTotal', 1000);
     }
 
     public function test_filtro_por_status(): void

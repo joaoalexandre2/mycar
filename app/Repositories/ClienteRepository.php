@@ -45,6 +45,35 @@ class ClienteRepository
         ];
     }
 
+    public function buscarPorId(int $id): ?Cliente
+    {
+        return Cliente::find($id);
+    }
+
+    public function atualizar(int $id, array $dados): ?Cliente
+    {
+        $cliente = Cliente::find($id);
+
+        if (!$cliente) {
+            return null;
+        }
+
+        $cliente->update($dados);
+
+        return $cliente->fresh();
+    }
+
+    public function deletar(int $id): bool
+    {
+        $cliente = Cliente::find($id);
+
+        if (!$cliente) {
+            return false;
+        }
+
+        return (bool) $cliente->delete();
+    }
+
     private function aplicarFiltros(Builder $query, array $filtros): Builder
     {
         $busca = trim((string) ($filtros['busca'] ?? ''));
