@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class VeiculoController extends Controller
@@ -43,9 +44,36 @@ class VeiculoController extends Controller
         return response()->json($veiculo, 201);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Veiculo::with('cliente')->get());
+        $query = $this->aplicarBusca(
+            Veiculo::with('cliente'),
+            $request->query('busca')
+        );
+
+        if ($request->boolean('all')) {
+            return response()->json($query->get(), 200);
+        }
+
+        $porPaginaSolicitada = (int) $request->query('per_page', 15);
+        $porPagina = $porPaginaSolicitada > 0 ? min($porPaginaSolicitada, 100) : 15;
+        $paginador = $query->orderBy('marca')->orderBy('modelo')->paginate($porPagina);
+
+        return response()->json([
+            'data' => $paginador->items(),
+            'meta' => [
+                'current_page' => $paginador->currentPage(),
+                'last_page' => $paginador->lastPage(),
+                'per_page' => $paginador->perPage(),
+                'total' => $paginador->total(),
+            ],
+            'resumo' => [
+                'total' => Veiculo::count(),
+                'clientesComVeiculo' => Veiculo::distinct('cliente_id')->count('cliente_id'),
+                'marcas' => Veiculo::distinct('marca')->count('marca'),
+                'anoMedio' => (float) Veiculo::avg('ano'),
+            ],
+        ], 200);
     }
 
     public function show($id)
@@ -121,4 +149,22 @@ public function destroy($id)
         'message' => 'Veículo removido com sucesso.'
     ]);
 }
+
+    private function aplicarBusca(Builder $query, ?string $busca): Builder
+    {
+        $busca = trim((string) $busca);
+
+        if ($busca === '') {
+            return $query;
+        }
+
+        return $query->where(function (Builder $query) use ($busca) {
+            $query->where('placa', 'like', "%{$busca}%")
+                ->orWhere('marca', 'like', "%{$busca}%")
+                ->orWhere('modelo', 'like', "%{$busca}%")
+                ->orWhereHas('cliente', function (Builder $query) use ($busca) {
+                    $query->where('nome', 'like', "%{$busca}%");
+                });
+        });
+    }
 }

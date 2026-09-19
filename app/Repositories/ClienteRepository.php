@@ -3,6 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Cliente;
+use App\Models\Veiculo;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class ClienteRepository
 {
@@ -11,42 +15,61 @@ class ClienteRepository
         return Cliente::create($dados);
     }
 
-
-    public function listar(): \Illuminate\Database\Eloquent\Collection
+    public function listar(array $filtros = []): Collection
     {
-        return Cliente::withCount('veiculos')->get();
+        return $this->aplicarFiltros(
+            Cliente::withCount('veiculos'),
+            $filtros
+        )->get();
     }
 
-
-    public function buscarPorId(int $id): ?Cliente
+    public function paginar(array $filtros, int $porPagina): LengthAwarePaginator
     {
-        return Cliente::with('veiculos')->find($id);
+        return $this->aplicarFiltros(
+            Cliente::withCount('veiculos'),
+            $filtros
+        )->orderBy('nome')->paginate($porPagina);
     }
 
-
-   public function atualizar(int $id, array $dados): ?Cliente
-{
-    $cliente = Cliente::find($id);
-
-    if (!$cliente) {
-        return null;
+    /**
+     * Totais gerais, sempre sobre a tabela inteira
+     * (independentes de busca/filtro de status).
+     */
+    public function resumo(): array
+    {
+        return [
+            'total' => Cliente::count(),
+            'ativos' => Cliente::where('ativo', true)->count(),
+            'inativos' => Cliente::where('ativo', false)->count(),
+            'totalVeiculos' => Veiculo::count(),
+        ];
     }
 
-    $cliente->update($dados);
-
-    return $cliente;
-}
-
-    public function deletar(int $id): bool
+    private function aplicarFiltros(Builder $query, array $filtros): Builder
     {
-        $cliente = Cliente::find($id);
+        $busca = trim((string) ($filtros['busca'] ?? ''));
 
-        if (!$cliente) {
-            return false;
+        if ($busca !== '') {
+            $buscaDigitos = preg_replace('/\D/', '', $busca);
+
+            $query->where(function (Builder $query) use ($busca, $buscaDigitos) {
+                $query->where('nome', 'like', "%{$busca}%")
+                    ->orWhere('telefone', 'like', "%{$busca}%");
+
+                if ($buscaDigitos !== '') {
+                    $query->orWhere('cpf', 'like', "%{$buscaDigitos}%");
+                }
+            });
         }
 
-        return $cliente->delete();
+        $status = $filtros['status'] ?? 'todos';
+
+        if ($status === 'ativos') {
+            $query->where('ativo', true);
+        } elseif ($status === 'inativos') {
+            $query->where('ativo', false);
+        }
+
+        return $query;
     }
-
-
 }
