@@ -18,6 +18,10 @@ class Cliente extends Model
         'ativo' => 'boolean',
     ];
 
+    protected $attributes = [
+        'ativo' => true,
+    ];
+
     public function veiculos(): HasMany
     {
         return $this->hasMany(Veiculo::class);
