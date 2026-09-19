@@ -26,11 +26,34 @@ class ClienteController extends Controller
         return response()->json($cliente, 201);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = $this->clienteService->listar();
+        $filtros = [
+            'busca' => $request->query('busca'),
+            'status' => $request->query('status', 'todos'),
+        ];
 
-        return response()->json($clientes, 200);
+        if ($request->boolean('all')) {
+            return response()->json(
+                $this->clienteService->listar($filtros),
+                200
+            );
+        }
+
+        $porPaginaSolicitada = (int) $request->query('per_page', 15);
+        $porPagina = $porPaginaSolicitada > 0 ? min($porPaginaSolicitada, 100) : 15;
+        $paginador = $this->clienteService->paginar($filtros, $porPagina);
+
+        return response()->json([
+            'data' => $paginador->items(),
+            'meta' => [
+                'current_page' => $paginador->currentPage(),
+                'last_page' => $paginador->lastPage(),
+                'per_page' => $paginador->perPage(),
+                'total' => $paginador->total(),
+            ],
+            'resumo' => $this->clienteService->resumo(),
+        ], 200);
     }
 
     public function show(int $id)
@@ -45,17 +68,6 @@ class ClienteController extends Controller
 
         return response()->json($cliente, 200);
     }
-
-//    public function update(UpdateClienteRequest $request, int $id)
-// {
-//     dd([
-//         'id' => $id,
-//         'all' => $request->all(),
-//         'json' => $request->json()->all(),
-//         'content' => $request->getContent(),
-//         'headers' => $request->headers->all(),
-//     ]);
-// }
 
 public function update(UpdateClienteRequest $request, int $id)
 {

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Cliente;
 use App\Repositories\ClienteRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class ClienteService
 {
@@ -19,9 +21,19 @@ class ClienteService
         return $this->clienteRepository->create($dados);
     }
 
-    public function listar()
+    public function listar(array $filtros = []): Collection
     {
-        return $this->clienteRepository->listar();
+        return $this->clienteRepository->listar($filtros);
+    }
+
+    public function paginar(array $filtros, int $porPagina): LengthAwarePaginator
+    {
+        return $this->clienteRepository->paginar($filtros, $porPagina);
+    }
+
+    public function resumo(): array
+    {
+        return $this->clienteRepository->resumo();
     }
 
     public function buscarPorId(int $id)

@@ -5,12 +5,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\OrdemServico;
 use App\Models\Manutencao;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 class Veiculo extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'cliente_id',
         'placa',

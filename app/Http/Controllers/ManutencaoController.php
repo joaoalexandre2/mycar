@@ -11,12 +11,34 @@ class ManutencaoController extends Controller
         private ManutencaoRepositoryInterface $manutencaoRepository
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(
-            $this->manutencaoRepository->listar(),
-            200
-        );
+        $filtros = [
+            'busca' => $request->query('busca'),
+            'status' => $request->query('status', 'todos'),
+        ];
+
+        if ($request->boolean('all')) {
+            return response()->json(
+                $this->manutencaoRepository->listar($filtros),
+                200
+            );
+        }
+
+        $porPaginaSolicitada = (int) $request->query('per_page', 15);
+        $porPagina = $porPaginaSolicitada > 0 ? min($porPaginaSolicitada, 100) : 15;
+        $paginador = $this->manutencaoRepository->paginar($filtros, $porPagina);
+
+        return response()->json([
+            'data' => $paginador->items(),
+            'meta' => [
+                'current_page' => $paginador->currentPage(),
+                'last_page' => $paginador->lastPage(),
+                'per_page' => $paginador->perPage(),
+                'total' => $paginador->total(),
+            ],
+            'resumo' => $this->manutencaoRepository->resumo(),
+        ], 200);
     }
 
     public function store(Request $request)

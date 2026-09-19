@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\OrdemServico;
 use App\Repositories\Interfaces\OrdemServicoRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class OrdemServicoService
@@ -27,9 +29,19 @@ class OrdemServicoService
         return $this->repository->criar($dados);
     }
 
-    public function listar()
+    public function listar(array $filtros = []): Collection
     {
-        return $this->repository->listar();
+        return $this->repository->listar($filtros);
+    }
+
+    public function paginar(array $filtros, int $porPagina): LengthAwarePaginator
+    {
+        return $this->repository->paginar($filtros, $porPagina);
+    }
+
+    public function resumo(): array
+    {
+        return $this->repository->resumo();
     }
 
     public function buscarPorId(int $id): ?OrdemServico

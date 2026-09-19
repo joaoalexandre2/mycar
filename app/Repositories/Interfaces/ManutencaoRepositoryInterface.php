@@ -3,13 +3,18 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Manutencao;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface ManutencaoRepositoryInterface
 {
     public function criar(array $dados): Manutencao;
 
-    public function listar(): Collection;
+    public function listar(array $filtros = []): Collection;
+
+    public function paginar(array $filtros, int $porPagina): LengthAwarePaginator;
+
+    public function resumo(): array;
 
     public function listarPorVeiculo(int $veiculoId): Collection;
 
