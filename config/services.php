@@ -28,6 +28,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'fipe' => [
+        'url' => env('FIPE_API_URL', 'https://parallelum.com.br/fipe/api/v1'),
+        'timeout' => env('FIPE_API_TIMEOUT', 10),
+        'cache_ttl' => env('FIPE_CACHE_TTL', 86400),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
