@@ -9,6 +9,10 @@ return new class extends Migration
      * Cria uma "Oficina Padrão" e move para ela qualquer usuário e dado
      * (cliente, veículo, ordem de serviço, manutenção) que já existisse
      * antes desta versão multi-oficina, para nada ficar sem dono.
+     *
+     * Também confirma o e-mail desses usuários antigos: eles existiam antes
+     * da exigência de confirmação por e-mail, então travar o login deles
+     * seria um bug, não uma proteção.
      */
     public function up(): void
     {
@@ -25,6 +29,8 @@ return new class extends Migration
             'updated_at' => now(),
         ]);
 
+        DB::table('users')->whereNull('oficina_id')->whereNull('email_verified_at')
+            ->update(['email_verified_at' => now()]);
         DB::table('users')->whereNull('oficina_id')->update(['oficina_id' => $oficinaId]);
         DB::table('clientes')->whereNull('oficina_id')->update(['oficina_id' => $oficinaId]);
         DB::table('veiculos')->whereNull('oficina_id')->update(['oficina_id' => $oficinaId]);

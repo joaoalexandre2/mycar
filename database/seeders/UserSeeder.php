@@ -22,12 +22,14 @@ class UserSeeder extends Seeder
 
         $oficina = Oficina::firstOrCreate(['nome' => 'Oficina Demo']);
 
+        // email_verified_at não é mass assignable (de propósito, para não
+        // poder ser setado por engano via input de usuário em outro lugar),
+        // então precisa de forceFill em vez de create().
         User::create([
             'oficina_id' => $oficina->id,
             'name' => 'Administrador',
             'email' => 'admin@mycar.local',
             'password' => Hash::make('mycar@123'),
-            'email_verified_at' => now(),
-        ]);
+        ])->forceFill(['email_verified_at' => now()])->save();
     }
 }
