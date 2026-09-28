@@ -6,9 +6,20 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\EmailVerificationController;
 
 // Autenticação
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+
+// Cadastro de uma nova oficina + usuário administrador dela.
+Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:5,1');
+Route::post('/email/reenviar', [RegisterController::class, 'reenviar'])->middleware('throttle:5,1');
+
+// Link clicado a partir do e-mail de confirmação (assinado, sem precisar de token).
+Route::get('/email/verificar/{id}/{hash}', [EmailVerificationController::class, 'confirmar'])
+    ->middleware('signed')
+    ->name('verificacao.confirmar');
 
 Route::middleware('auth.token')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

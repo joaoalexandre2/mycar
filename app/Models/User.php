@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'oficina_id',
     ];
 
     /**
@@ -33,7 +35,13 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'api_token',
+        'verification_token',
     ];
+
+    public function oficina(): BelongsTo
+    {
+        return $this->belongsTo(Oficina::class);
+    }
 
     /**
      * Get the attributes that should be cast.

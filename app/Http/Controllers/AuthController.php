@@ -28,6 +28,12 @@ class AuthController extends Controller
             ]);
         }
 
+        if (!$user->email_verified_at) {
+            throw ValidationException::withMessages([
+                'email' => ['Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.'],
+            ]);
+        }
+
         $token = Str::random(60);
 
         $user->forceFill([
@@ -39,6 +45,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'oficina' => $user->oficina?->nome,
             ],
             'token' => $token,
         ]);
@@ -69,6 +76,7 @@ class AuthController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'oficina' => $user->oficina?->nome,
         ]);
     }
 }

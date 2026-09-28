@@ -24,6 +24,15 @@ class AppServiceProvider extends ServiceProvider
             ManutencaoRepositoryInterface::class,
             ManutencaoRepository::class
         );
+
+        // Oficina do usuário autenticado na requisição atual. Fica no valor
+        // sentinela 0 (nenhuma oficina real tem esse id) até o middleware
+        // AuthenticateToken resolver o usuário e preencher isso; os models
+        // com PertenceAOficina usam esse valor para se isolar.
+        // (Não usar null aqui: Container::instance() com valor null não é
+        // detectado por isset() em make(), e a resolução cai para tentar
+        // instanciar uma classe chamada "oficina.atual".)
+        $this->app->instance('oficina.atual', 0);
     }
 
     /**
