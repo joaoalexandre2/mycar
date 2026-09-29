@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Mail\RedefinirSenhaEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -22,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'oficina_id',
     ];
 
     /**
@@ -33,7 +37,26 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'api_token',
+        'verification_token',
     ];
+
+    public function oficina(): BelongsTo
+    {
+        return $this->belongsTo(Oficina::class);
+    }
+
+    /**
+     * Sobrescreve o e-mail padrão do Laravel (Password::sendResetLink) para
+     * usar nosso template e apontar para a tela de redefinição no frontend,
+     * em vez de uma rota do backend que não existe (API pura, sem views).
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $frontend = rtrim(config('app.frontend_url'), '/');
+        $url = "$frontend/redefinir-senha?token=$token&email=" . urlencode($this->email);
+
+        Mail::to($this->email)->send(new RedefinirSenhaEmail($this, $url));
+    }
 
     /**
      * Get the attributes that should be cast.

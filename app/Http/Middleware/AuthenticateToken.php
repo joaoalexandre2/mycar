@@ -36,6 +36,11 @@ class AuthenticateToken
 
         $request->setUserResolver(fn () => $user);
 
+        // Toda leitura/escrita feita pelos models com a trait PertenceAOficina
+        // passa a ser isolada automaticamente para a oficina deste usuário.
+        // 0 é o sentinela de "sem oficina" (nunca usar null: ver AppServiceProvider).
+        app()->instance('oficina.atual', $user->oficina_id ?? 0);
+
         return $next($request);
     }
 }
