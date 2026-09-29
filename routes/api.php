@@ -8,6 +8,7 @@ use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\PasswordResetController;
 
 // Autenticação
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
@@ -20,6 +21,10 @@ Route::post('/email/reenviar', [RegisterController::class, 'reenviar'])->middlew
 Route::get('/email/verificar/{id}/{hash}', [EmailVerificationController::class, 'confirmar'])
     ->middleware('signed')
     ->name('verificacao.confirmar');
+
+// Esqueci minha senha
+Route::post('/password/esqueci', [PasswordResetController::class, 'enviar'])->middleware('throttle:5,1');
+Route::post('/password/redefinir', [PasswordResetController::class, 'redefinir'])->middleware('throttle:5,1');
 
 Route::middleware('auth.token')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
