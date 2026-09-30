@@ -25,6 +25,8 @@ class UpdateClienteRequest extends FormRequest
 
             'telefone' => 'required|string|max:20',
 
+            'email' => 'nullable|email|max:255',
+
             'ativo' => 'boolean'
         ];
     }

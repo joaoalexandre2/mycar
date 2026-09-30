@@ -27,7 +27,19 @@ class Manutencao extends Model
         'valor' => 'decimal:2',
         'data_manutencao' => 'date',
         'proxima_data' => 'date',
+        'alertado_em' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        // Se a data da próxima manutenção mudou, o alerta antigo não vale
+        // mais para a nova data — limpa para que possa ser reenviado.
+        static::saving(function (Manutencao $manutencao) {
+            if ($manutencao->isDirty('proxima_data')) {
+                $manutencao->alertado_em = null;
+            }
+        });
+    }
 
     public function veiculo(): BelongsTo
     {

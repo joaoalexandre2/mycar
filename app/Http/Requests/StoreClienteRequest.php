@@ -27,6 +27,7 @@ class StoreClienteRequest extends FormRequest
             'nome' => 'required|string|max:255',
             'cpf' => 'required|digits:11|unique:clientes,cpf',
             'telefone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
             'ativo' => 'boolean'
         ];
         
