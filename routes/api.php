@@ -6,6 +6,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\FipeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
@@ -43,6 +44,13 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/veiculos/{id}', [VeiculoController::class, 'show']);
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update']);
     Route::delete('/veiculos/{id}', [VeiculoController::class, 'destroy']);
+    Route::post('/veiculos/{id}/fipe', [VeiculoController::class, 'consultarFipe']);
+
+    // Tabela FIPE
+    Route::get('/fipe/marcas', [FipeController::class, 'marcas']);
+    Route::get('/fipe/marcas/{marca}/modelos', [FipeController::class, 'modelos']);
+    Route::get('/fipe/marcas/{marca}/modelos/{modelo}/anos', [FipeController::class, 'anos']);
+    Route::get('/fipe/marcas/{marca}/modelos/{modelo}/anos/{ano}', [FipeController::class, 'valor']);
 
     // Ordem de Serviços
     Route::post('/ordens-servico', [OrdemServicoController::class, 'store']);
