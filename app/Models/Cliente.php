@@ -15,6 +15,7 @@ class Cliente extends Model
         'nome',
         'cpf',
         'telefone',
+        'email',
         'ativo',
     ];
 
