@@ -37,6 +37,7 @@ class Veiculo extends Model
     protected $appends = [
         'ipva_estimado',
         'licenciamento_valor',
+        'proximo_vencimento_licenciamento',
     ];
 
     /**
@@ -57,6 +58,41 @@ class Veiculo extends Model
     public function getLicenciamentoValorAttribute(): ?float
     {
         return config("tributos.estados.{$this->uf}.licenciamento");
+    }
+
+    /**
+     * Último dígito da placa, usado pelo calendário de licenciamento
+     * (config/licenciamento.php). Formatos antigo e Mercosul sempre
+     * terminam em número.
+     */
+    public function getFinalPlacaAttribute(): ?int
+    {
+        $ultimoCaractere = substr((string) $this->placa, -1);
+
+        return ctype_digit($ultimoCaractere) ? (int) $ultimoCaractere : null;
+    }
+
+    /**
+     * Próxima data de vencimento do licenciamento (CRLV), estimada a
+     * partir do final da placa (config/licenciamento.php). É sempre o
+     * último dia do mês de referência, no ano corrente ou no próximo caso
+     * a data deste ano já tenha passado. ESTIMATIVA — ver aviso no config.
+     */
+    public function getProximoVencimentoLicenciamentoAttribute(): ?string
+    {
+        $mes = config("licenciamento.meses_por_final_placa.{$this->final_placa}");
+
+        if ($mes === null) {
+            return null;
+        }
+
+        $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
+
+        if ($vencimento->isPast()) {
+            $vencimento = $vencimento->addYear();
+        }
+
+        return $vencimento->toDateString();
     }
 
     public function cliente(): BelongsTo
