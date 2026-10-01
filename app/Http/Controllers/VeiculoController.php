@@ -187,7 +187,7 @@ public function consultarFipe($id, FipeService $fipe)
 
     public function historico($id)
     {
-        $veiculo = Veiculo::with(['ordensServico', 'manutencoes', 'historicoFipe'])->find($id);
+        $veiculo = Veiculo::with(['cliente', 'ordensServico', 'manutencoes', 'historicoFipe'])->find($id);
 
         if (!$veiculo) {
             return response()->json([

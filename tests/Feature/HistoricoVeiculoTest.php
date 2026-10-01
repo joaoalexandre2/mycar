@@ -47,6 +47,7 @@ class HistoricoVeiculoTest extends TestCase
         $this->getJson("/api/veiculos/{$veiculo->id}/historico", $headers)
             ->assertStatus(200)
             ->assertJsonPath('veiculo.id', $veiculo->id)
+            ->assertJsonPath('veiculo.cliente.id', $veiculo->cliente_id)
             ->assertJsonPath('ordens_servico.0.id', $ordem->id)
             ->assertJsonPath('manutencoes.0.id', $manutencao->id)
             ->assertJsonPath('fipe_historico', []);
