@@ -95,6 +95,27 @@ class Veiculo extends Model
         return $vencimento->toDateString();
     }
 
+    /**
+     * Próximo vencimento estimado do IPVA pelo final da placa
+     * (config/ipva.php). ESTIMATIVA genérica — varia por estado.
+     */
+    public function getProximoVencimentoIpvaAttribute(): ?string
+    {
+        $mes = config("ipva.meses_por_final_placa.{$this->final_placa}");
+
+        if ($mes === null) {
+            return null;
+        }
+
+        $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
+
+        if ($vencimento->isPast()) {
+            $vencimento = $vencimento->addYear();
+        }
+
+        return $vencimento->toDateString();
+    }
+
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);

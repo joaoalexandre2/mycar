@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('manutencoes:alertar')->daily();
 Schedule::command('veiculos:alertar-licenciamento')->daily();
+Schedule::command('veiculos:alertar-ipva')->daily();
