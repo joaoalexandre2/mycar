@@ -180,13 +180,28 @@ public function consultarFipe($id, FipeService $fipe)
         ], 502);
     }
 
-    $veiculo->update([
-        'fipe_valor' => $this->valorParaDecimal($resultado['Valor'] ?? ''),
-        'fipe_consultado_em' => now(),
-    ]);
+    $this->gravarValorFipe($veiculo, $this->valorParaDecimal($resultado['Valor'] ?? ''));
 
     return response()->json($veiculo);
 }
+
+    public function historico($id)
+    {
+        $veiculo = Veiculo::with(['cliente', 'ordensServico', 'manutencoes', 'historicoFipe'])->find($id);
+
+        if (!$veiculo) {
+            return response()->json([
+                'message' => 'Veículo não encontrado.'
+            ], 404);
+        }
+
+        return response()->json([
+            'veiculo' => $veiculo,
+            'ordens_servico' => $veiculo->ordensServico,
+            'manutencoes' => $veiculo->manutencoes,
+            'fipe_historico' => $veiculo->historicoFipe,
+        ]);
+    }
 
     /**
      * Busca o valor FIPE quando o veículo tem os três códigos. Se a FIPE
@@ -210,9 +225,26 @@ public function consultarFipe($id, FipeService $fipe)
             return;
         }
 
+        $this->gravarValorFipe($veiculo, $this->valorParaDecimal($resultado['Valor'] ?? ''));
+    }
+
+    /**
+     * Atualiza o valor FIPE atual do veículo e registra uma linha em
+     * fipe_historicos, para a tela de histórico mostrar a evolução do
+     * valor ao longo das consultas.
+     */
+    private function gravarValorFipe(Veiculo $veiculo, float $valor): void
+    {
+        $agora = now();
+
         $veiculo->update([
-            'fipe_valor' => $this->valorParaDecimal($resultado['Valor'] ?? ''),
-            'fipe_consultado_em' => now(),
+            'fipe_valor' => $valor,
+            'fipe_consultado_em' => $agora,
+        ]);
+
+        $veiculo->historicoFipe()->create([
+            'valor' => $valor,
+            'consultado_em' => $agora,
         ]);
     }
 

@@ -45,6 +45,7 @@ Route::middleware('auth.token')->group(function () {
     Route::put('/veiculos/{id}', [VeiculoController::class, 'update']);
     Route::delete('/veiculos/{id}', [VeiculoController::class, 'destroy']);
     Route::post('/veiculos/{id}/fipe', [VeiculoController::class, 'consultarFipe']);
+    Route::get('/veiculos/{id}/historico', [VeiculoController::class, 'historico']);
 
     // Tabela FIPE
     Route::get('/fipe/marcas', [FipeController::class, 'marcas']);
