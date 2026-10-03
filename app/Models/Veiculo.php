@@ -135,4 +135,9 @@ class Veiculo extends Model
     {
         return $this->hasMany(FipeHistorico::class)->orderBy('consultado_em');
     }
+
+    public function pecas(): HasMany
+    {
+        return $this->hasMany(VeiculoPeca::class);
+    }
 }
