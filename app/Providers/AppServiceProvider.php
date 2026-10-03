@@ -25,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
             ManutencaoRepository::class
         );
 
+        $this->app->bind(\App\Services\Catalogo\CatalogoTecnicoService::class, function ($app) {
+            return new \App\Services\Catalogo\CatalogoTecnicoService(
+                array_map(fn (string $classe) => $app->make($classe), config('catalogo.fontes'))
+            );
+        });
+
         // Oficina do usuário autenticado na requisição atual. Fica no valor
         // sentinela 0 (nenhuma oficina real tem esse id) até o middleware
         // AuthenticateToken resolver o usuário e preencher isso; os models
