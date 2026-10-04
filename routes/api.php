@@ -10,6 +10,7 @@ use App\Http\Controllers\FipeController;
 use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\VeiculoPecaController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
@@ -29,6 +30,14 @@ Route::get('/email/verificar/{id}/{hash}', [EmailVerificationController::class, 
 // Esqueci minha senha
 Route::post('/password/esqueci', [PasswordResetController::class, 'enviar'])->middleware('throttle:5,1');
 Route::post('/password/redefinir', [PasswordResetController::class, 'redefinir'])->middleware('throttle:5,1');
+
+// Painel do operador da plataforma: só quem foi promovido por `admin:promover`.
+Route::middleware(['auth.token', 'super.admin'])->prefix('admin')->group(function () {
+    Route::get('/resumo', [AdminController::class, 'resumo']);
+    Route::get('/contas', [AdminController::class, 'contas']);
+    Route::post('/contas/{id}/reenviar-confirmacao', [AdminController::class, 'reenviarConfirmacao'])
+        ->middleware('throttle:10,1');
+});
 
 Route::middleware('auth.token')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

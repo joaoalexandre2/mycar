@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'auth.token' => \App\Http\Middleware\AuthenticateToken::class,
+            'super.admin' => \App\Http\Middleware\SomenteSuperAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
