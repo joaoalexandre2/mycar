@@ -12,6 +12,9 @@ class Oficina extends Model
 
     protected $fillable = [
         'nome',
+        'cnpj',
+        'telefone',
+        'endereco',
     ];
 
     public function usuarios(): HasMany

@@ -9,6 +9,7 @@ use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\FipeController;
 use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\VeiculoPecaController;
+use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
@@ -32,6 +33,10 @@ Route::post('/password/redefinir', [PasswordResetController::class, 'redefinir']
 Route::middleware('auth.token')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [ConfiguracaoController::class, 'atualizarPerfil']);
+    Route::put('/me/senha', [ConfiguracaoController::class, 'alterarSenha'])->middleware('throttle:10,1');
+    Route::get('/oficina', [ConfiguracaoController::class, 'mostrarOficina']);
+    Route::put('/oficina', [ConfiguracaoController::class, 'atualizarOficina']);
 
     // Clientes
     Route::post('/clientes', [ClienteController::class, 'store']);
