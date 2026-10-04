@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ConfirmeSeuEmail;
 use App\Models\Oficina;
 use App\Models\User;
+use App\Services\ConfirmacaoEmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
@@ -77,12 +75,6 @@ class RegisterController extends Controller
 
     private function enviarEmailConfirmacao(User $user): void
     {
-        $url = URL::temporarySignedRoute(
-            'verificacao.confirmar',
-            now()->addHours(24),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
-
-        Mail::to($user->email)->send(new ConfirmeSeuEmail($user, $url));
+        app(ConfirmacaoEmailService::class)->enviar($user);
     }
 }

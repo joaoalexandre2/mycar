@@ -18,12 +18,7 @@ class ConfiguracaoController extends Controller
         $user = $request->user();
         $user->update($dados);
 
-        return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'oficina' => $user->oficina?->nome,
-        ]);
+        return response()->json($user->dadosPublicos());
     }
 
     public function alterarSenha(Request $request)

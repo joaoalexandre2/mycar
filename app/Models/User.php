@@ -46,6 +46,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Dados do usuário que o frontend guarda e usa. "admin" só serve para
+     * mostrar ou esconder o menu: quem barra o acesso é o backend.
+     *
+     * @return array{id: int, name: string, email: string, oficina: ?string, admin: bool}
+     */
+    public function dadosPublicos(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'oficina' => $this->oficina?->nome,
+            'admin' => (bool) $this->is_super_admin,
+        ];
+    }
+
+    /**
      * Sobrescreve o e-mail padrão do Laravel (Password::sendResetLink) para
      * usar nosso template e apontar para a tela de redefinição no frontend,
      * em vez de uma rota do backend que não existe (API pura, sem views).
@@ -67,6 +84,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'ultimo_acesso_em' => 'datetime',
+            'is_super_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }

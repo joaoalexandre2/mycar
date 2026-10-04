@@ -38,15 +38,11 @@ class AuthController extends Controller
 
         $user->forceFill([
             'api_token' => hash('sha256', $token),
+            'ultimo_acesso_em' => now(),
         ])->save();
 
         return response()->json([
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'oficina' => $user->oficina?->nome,
-            ],
+            'user' => $user->dadosPublicos(),
             'token' => $token,
         ]);
     }
@@ -70,13 +66,6 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        $user = $request->user();
-
-        return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'oficina' => $user->oficina?->nome,
-        ]);
+        return response()->json($request->user()->dadosPublicos());
     }
 }
