@@ -15,6 +15,11 @@ class Oficina extends Model
         'cnpj',
         'telefone',
         'endereco',
+        'resumo_semanal',
+    ];
+
+    protected $casts = [
+        'resumo_semanal' => 'boolean',
     ];
 
     public function usuarios(): HasMany
