@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VeiculoPeca;
 use App\Repositories\Interfaces\ManutencaoRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ManutencaoController extends Controller
 {
@@ -134,6 +136,36 @@ class ManutencaoController extends Controller
                 'integer',
                 'min:0',
             ],
+
+            // Peças usadas no serviço (opcional). Ausente = não altera as peças
+            // já registradas; [] = remove; lista = substitui.
+            'pecas' => [
+                'sometimes',
+                'array',
+                'max:20',
+            ],
+            'pecas.*.tipo' => [
+                'required',
+                Rule::in(array_keys(VeiculoPeca::TIPOS)),
+            ],
+            'pecas.*.especificacao' => [
+                'required',
+                'string',
+                'max:120',
+            ],
+            'pecas.*.marca' => [
+                'nullable',
+                'string',
+                'max:60',
+            ],
+            'pecas.*.observacao' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+        ], [], [
+            'pecas.*.tipo' => 'tipo da peça',
+            'pecas.*.especificacao' => 'código ou especificação da peça',
         ]);
     }
 }

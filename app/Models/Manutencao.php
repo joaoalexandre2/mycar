@@ -6,6 +6,7 @@ use App\Models\Concerns\PertenceAOficina;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Manutencao extends Model
 {
@@ -44,5 +45,11 @@ class Manutencao extends Model
     public function veiculo(): BelongsTo
     {
         return $this->belongsTo(Veiculo::class);
+    }
+
+    /** Peças registradas ao salvar esta manutenção. */
+    public function pecas(): HasMany
+    {
+        return $this->hasMany(VeiculoPeca::class);
     }
 }

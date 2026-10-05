@@ -27,6 +27,7 @@ class VeiculoPeca extends Model
 
     protected $fillable = [
         'veiculo_id',
+        'manutencao_id',
         'tipo',
         'especificacao',
         'marca',
@@ -42,5 +43,10 @@ class VeiculoPeca extends Model
     public function veiculo(): BelongsTo
     {
         return $this->belongsTo(Veiculo::class);
+    }
+
+    public function manutencao(): BelongsTo
+    {
+        return $this->belongsTo(Manutencao::class);
     }
 }
