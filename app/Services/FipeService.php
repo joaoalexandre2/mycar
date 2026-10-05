@@ -32,6 +32,14 @@ class FipeService
         return $this->buscar($tipo, "{$tipo}/marcas/{$marca}/modelos/{$modelo}/anos/{$ano}");
     }
 
+    /**
+     * Converte o valor devolvido pela FIPE ("R$ 60.250,50") em número.
+     */
+    public static function valorParaDecimal(string $valor): float
+    {
+        return (float) str_replace(['.', ','], ['', '.'], preg_replace('/[^\d.,]/', '', $valor));
+    }
+
     private function buscar(string $tipo, string $caminho): array
     {
         if (!in_array($tipo, self::TIPOS, true)) {

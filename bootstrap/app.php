@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.token' => \App\Http\Middleware\AuthenticateToken::class,
             'super.admin' => \App\Http\Middleware\SomenteSuperAdmin::class,
+            'perfil' => \App\Http\Middleware\ExigePerfil::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

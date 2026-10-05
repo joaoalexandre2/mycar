@@ -2,45 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conta;
 use App\Models\Oficina;
 use App\Models\User;
 use App\Services\ConfirmacaoEmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
+    private const PERFIS = ['oficina', 'pessoa', 'frota'];
+
     /**
-     * Cria a oficina e o usuário administrador dela, e envia o e-mail
-     * de confirmação. O login só funciona depois que o e-mail é confirmado.
+     * Cria a conta e o usuário dela, e envia o e-mail de confirmação. O login
+     * só funciona depois que o e-mail é confirmado.
+     *
+     * Três perfis: "oficina" (cria a oficina, é o padrão e o que o cadastro
+     * sempre fez), "pessoa" (Cuidados com seu carro) e "frota" (cria uma conta
+     * com o nome da empresa).
      */
     public function store(Request $request)
     {
         $dados = $request->validate([
-            'nome_oficina' => ['required', 'string', 'max:150'],
+            'perfil' => ['sometimes', Rule::in(self::PERFIS)],
+            'nome_oficina' => ['required_if:perfil,oficina', 'required_without:perfil', 'nullable', 'string', 'max:150'],
+            'nome_frota' => ['required_if:perfil,frota', 'nullable', 'string', 'max:150'],
             'name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)],
         ], [], [
             'nome_oficina' => 'nome da oficina',
+            'nome_frota' => 'nome da frota',
             'name' => 'nome',
             'email' => 'e-mail',
             'password' => 'senha',
         ]);
 
-        $user = DB::transaction(function () use ($dados) {
-            $oficina = Oficina::create([
-                'nome' => $dados['nome_oficina'],
-            ]);
+        $perfil = $dados['perfil'] ?? 'oficina';
 
-            return User::create([
-                'oficina_id' => $oficina->id,
+        $user = DB::transaction(function () use ($dados, $perfil) {
+            $base = [
+                'perfil' => $perfil,
                 'name' => $dados['name'],
                 'email' => $dados['email'],
                 'password' => Hash::make($dados['password']),
+            ];
+
+            if ($perfil === 'oficina') {
+                $oficina = Oficina::create(['nome' => $dados['nome_oficina']]);
+
+                return User::create($base + ['oficina_id' => $oficina->id]);
+            }
+
+            $conta = Conta::create([
+                'tipo' => $perfil,
+                'nome' => $perfil === Conta::TIPO_FROTA ? $dados['nome_frota'] : $dados['name'],
             ]);
+
+            return User::create($base + ['conta_id' => $conta->id]);
         });
 
         $this->enviarEmailConfirmacao($user);
