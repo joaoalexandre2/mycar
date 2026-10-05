@@ -20,7 +20,7 @@ class EnviarAlertasLicenciamento extends Command
         $limite = now()->addDays(30);
         $total = 0;
 
-        foreach (Oficina::all() as $oficina) {
+        foreach (Oficina::ativas()->get() as $oficina) {
             app()->instance('oficina.atual', $oficina->id);
 
             foreach (Veiculo::with('cliente')->get() as $veiculo) {

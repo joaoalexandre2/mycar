@@ -20,7 +20,7 @@ class EnviarAlertasManutencao extends Command
         $limite = now()->addDays(30)->toDateString();
         $total = 0;
 
-        foreach (Oficina::all() as $oficina) {
+        foreach (Oficina::ativas()->get() as $oficina) {
             app()->instance('oficina.atual', $oficina->id);
 
             $manutencoes = Manutencao::whereNull('alertado_em')

@@ -60,13 +60,17 @@ class User extends Authenticatable
      */
     public function dadosPublicos(): array
     {
+        $perfil = $this->perfil ?? 'oficina';
+
+        // Quem migrou de perfil mantém a oficina antiga arquivada (e quem
+        // voltou mantém a conta): só aparece o que pertence ao perfil atual.
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'perfil' => $this->perfil ?? 'oficina',
-            'oficina' => $this->oficina?->nome,
-            'conta' => $this->conta?->nome,
+            'perfil' => $perfil,
+            'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
+            'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,
         ];
     }

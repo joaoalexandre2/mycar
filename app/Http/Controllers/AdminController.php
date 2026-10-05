@@ -33,7 +33,9 @@ class AdminController extends Controller
         $agora = now();
 
         return response()->json([
-            'oficinas' => DB::table('oficinas')->count(),
+            // Só as oficinas em funcionamento: as arquivadas (dono migrou de perfil)
+            // não contam, nem o que elas guardam.
+            'oficinas' => DB::table('oficinas')->whereNull('arquivada_em')->count(),
             'contas' => [
                 'pessoa' => DB::table('contas')->where('tipo', 'pessoa')->count(),
                 'frota' => DB::table('contas')->where('tipo', 'frota')->count(),
@@ -44,7 +46,9 @@ class AdminController extends Controller
             'cadastros_30_dias' => DB::table('users')->where('created_at', '>=', $agora->copy()->subDays(30))->count(),
             'ativos_7_dias' => DB::table('users')->where('ultimo_acesso_em', '>=', $agora->copy()->subDays(7))->count(),
             'totais' => collect(self::TABELAS_DE_USO)
-                ->map(fn (string $tabela) => DB::table($tabela)->count())
+                ->map(fn (string $tabela) => DB::table($tabela)
+                    ->whereIn('oficina_id', DB::table('oficinas')->whereNull('arquivada_em')->select('id'))
+                    ->count())
                 ->all(),
         ]);
     }
@@ -114,18 +118,27 @@ class AdminController extends Controller
                 'cadastro_em' => $this->iso($linha->created_at),
                 'ultimo_acesso_em' => $this->iso($linha->ultimo_acesso_em),
                 'admin' => (bool) $linha->is_super_admin,
-                'perfil' => $linha->perfil ?? 'oficina',
-                'conta' => $linha->conta_nome,
-                'oficina' => $linha->oficina_id === null ? null : [
+                'perfil' => $this->perfilDe($linha),
+                'conta' => $this->perfilDe($linha) === 'oficina' ? null : $linha->conta_nome,
+                'oficina' => $this->perfilDe($linha) !== 'oficina' || $linha->oficina_id === null ? null : [
                     'id' => $linha->oficina_id,
                     'nome' => $linha->oficina_nome,
                 ],
-                'totais' => [
-                    'clientes' => (int) $linha->total_clientes,
-                    'veiculos' => (int) $linha->total_veiculos + (int) $linha->total_veiculos_conta,
-                    'ordens_servico' => (int) $linha->total_ordens_servico,
-                    'manutencoes' => (int) $linha->total_manutencoes,
-                ],
+                // Quem migrou de perfil tem a oficina antiga arquivada: o uso
+                // mostrado é o do perfil atual.
+                'totais' => $this->perfilDe($linha) === 'oficina'
+                    ? [
+                        'clientes' => (int) $linha->total_clientes,
+                        'veiculos' => (int) $linha->total_veiculos,
+                        'ordens_servico' => (int) $linha->total_ordens_servico,
+                        'manutencoes' => (int) $linha->total_manutencoes,
+                    ]
+                    : [
+                        'clientes' => 0,
+                        'veiculos' => (int) $linha->total_veiculos_conta,
+                        'ordens_servico' => 0,
+                        'manutencoes' => 0,
+                    ],
             ])->values(),
             'meta' => [
                 'current_page' => $paginador->currentPage(),
@@ -134,6 +147,11 @@ class AdminController extends Controller
                 'total' => $paginador->total(),
             ],
         ]);
+    }
+
+    private function perfilDe(object $linha): string
+    {
+        return $linha->perfil ?? 'oficina';
     }
 
     /**

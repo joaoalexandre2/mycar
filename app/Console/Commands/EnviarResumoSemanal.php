@@ -21,7 +21,7 @@ class EnviarResumoSemanal extends Command
         $dryRun = (bool) $this->option('dry-run');
         $enviados = 0;
 
-        $oficinas = Oficina::query()
+        $oficinas = Oficina::ativas()
             ->where('resumo_semanal', true)
             ->when($this->option('oficina'), fn ($consulta, $id) => $consulta->whereKey($id))
             ->get();
@@ -36,7 +36,10 @@ class EnviarResumoSemanal extends Command
                 continue;
             }
 
+            // Só quem usa o perfil oficina: um dono que migrou de perfil não
+            // recebe o resumo da oficina arquivada.
             $destinatarios = $oficina->usuarios()
+                ->where('perfil', 'oficina')
                 ->whereNotNull('email_verified_at')
                 ->pluck('email')
                 ->all();
