@@ -53,6 +53,8 @@ class ConfiguracaoController extends Controller
             'cnpj' => ['nullable', 'string', 'max:18'],
             'telefone' => ['nullable', 'string', 'max:20'],
             'endereco' => ['nullable', 'string', 'max:200'],
+            // Ausente = não altera (clientes antigos não conhecem o campo).
+            'resumo_semanal' => ['sometimes', 'boolean'],
         ]);
 
         $request->user()->oficina->update($dados);
@@ -62,6 +64,12 @@ class ConfiguracaoController extends Controller
 
     private function dadosOficina(Request $request): array
     {
-        return $request->user()->oficina->only(['nome', 'cnpj', 'telefone', 'endereco']);
+        return $request->user()->oficina->fresh()->only([
+            'nome',
+            'cnpj',
+            'telefone',
+            'endereco',
+            'resumo_semanal',
+        ]);
     }
 }
