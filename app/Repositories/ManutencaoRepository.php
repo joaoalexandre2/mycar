@@ -3,22 +3,40 @@
 namespace App\Repositories;
 
 use App\Models\Manutencao;
+use App\Models\VeiculoPeca;
 use App\Repositories\Interfaces\ManutencaoRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ManutencaoRepository implements ManutencaoRepositoryInterface
 {
+    private const RELACOES = ['veiculo.cliente', 'pecas'];
+
+    /**
+     * Salva a manutenção e, se a requisição trouxe "pecas", registra essas
+     * peças no veículo na mesma transação: ou grava tudo ou nada.
+     */
     public function criar(array $dados): Manutencao
     {
-        return Manutencao::create($dados)->load('veiculo.cliente');
+        $pecas = $this->extrairPecas($dados);
+
+        return DB::transaction(function () use ($dados, $pecas) {
+            $manutencao = Manutencao::create($dados);
+
+            if ($pecas !== null) {
+                $this->sincronizarPecas($manutencao, $pecas);
+            }
+
+            return $manutencao->load(self::RELACOES);
+        });
     }
 
     public function listar(array $filtros = []): Collection
     {
         return $this->aplicarFiltros(
-            Manutencao::with('veiculo.cliente'),
+            Manutencao::with(self::RELACOES),
             $filtros
         )->orderByDesc('data_manutencao')->get();
     }
@@ -26,7 +44,7 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
     public function paginar(array $filtros, int $porPagina): LengthAwarePaginator
     {
         return $this->aplicarFiltros(
-            Manutencao::with('veiculo.cliente'),
+            Manutencao::with(self::RELACOES),
             $filtros
         )->orderByDesc('data_manutencao')->paginate($porPagina);
     }
@@ -48,7 +66,7 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
 
     public function listarPorVeiculo(int $veiculoId): Collection
     {
-        return Manutencao::with('veiculo.cliente')
+        return Manutencao::with(self::RELACOES)
             ->where('veiculo_id', $veiculoId)
             ->orderByDesc('data_manutencao')
             ->get();
@@ -56,20 +74,39 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
 
     public function buscarPorId(int $id): ?Manutencao
     {
-        return Manutencao::with('veiculo.cliente')->find($id);
+        return Manutencao::with(self::RELACOES)->find($id);
     }
 
+    /**
+     * "pecas" ausente na requisição = não mexe nas peças já registradas
+     * (clientes antigos continuam funcionando). "pecas" = [] remove todas
+     * as peças desta manutenção. Qualquer outra lista substitui as atuais.
+     */
     public function atualizar(int $id, array $dados): ?Manutencao
     {
-        $manutencao = Manutencao::find($id);
+        $pecas = $this->extrairPecas($dados);
 
-        if (!$manutencao) {
-            return null;
-        }
+        return DB::transaction(function () use ($id, $dados, $pecas) {
+            $manutencao = Manutencao::find($id);
 
-        $manutencao->update($dados);
+            if (!$manutencao) {
+                return null;
+            }
 
-        return $manutencao->fresh('veiculo.cliente');
+            $manutencao->update($dados);
+
+            if ($pecas !== null) {
+                $this->sincronizarPecas($manutencao, $pecas);
+            } else {
+                // Mudou o veículo ou a data? As peças registradas acompanham.
+                VeiculoPeca::where('manutencao_id', $manutencao->id)->get()->each->update([
+                    'veiculo_id' => $manutencao->veiculo_id,
+                    'usado_em' => $manutencao->data_manutencao->toDateString(),
+                ]);
+            }
+
+            return $manutencao->fresh(self::RELACOES);
+        });
     }
 
     public function remover(int $id): bool
@@ -81,6 +118,43 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
         }
 
         return (bool) $manutencao->delete();
+    }
+
+    /**
+     * Tira "pecas" dos dados da manutenção (não é coluna dela).
+     *
+     * @return array<int, array<string, mixed>>|null null quando não veio na requisição
+     */
+    private function extrairPecas(array &$dados): ?array
+    {
+        $pecas = $dados['pecas'] ?? null;
+        unset($dados['pecas']);
+
+        return $pecas;
+    }
+
+    /**
+     * Substitui as peças registradas por esta manutenção. Entram no veículo
+     * como "serviço", com a data da própria manutenção.
+     *
+     * @param array<int, array<string, mixed>> $pecas
+     */
+    private function sincronizarPecas(Manutencao $manutencao, array $pecas): void
+    {
+        VeiculoPeca::where('manutencao_id', $manutencao->id)->delete();
+
+        foreach ($pecas as $peca) {
+            VeiculoPeca::create([
+                'veiculo_id' => $manutencao->veiculo_id,
+                'manutencao_id' => $manutencao->id,
+                'tipo' => $peca['tipo'],
+                'especificacao' => $peca['especificacao'],
+                'marca' => $peca['marca'] ?? null,
+                'fonte' => 'servico',
+                'usado_em' => $manutencao->data_manutencao->toDateString(),
+                'observacao' => $peca['observacao'] ?? null,
+            ]);
+        }
     }
 
     private function aplicarFiltros(Builder $query, array $filtros): Builder
