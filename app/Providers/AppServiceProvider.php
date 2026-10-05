@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
         // detectado por isset() em make(), e a resolução cai para tentar
         // instanciar uma classe chamada "oficina.atual".)
         $this->app->instance('oficina.atual', 0);
+
+        // Mesma ideia para os perfis pessoa e frota: conta do usuário
+        // autenticado, 0 enquanto não houver (models com PertenceAConta).
+        $this->app->instance('conta.atual', 0);
     }
 
     /**

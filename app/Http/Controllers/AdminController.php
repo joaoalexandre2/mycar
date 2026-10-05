@@ -33,14 +33,22 @@ class AdminController extends Controller
         $agora = now();
 
         return response()->json([
-            'oficinas' => DB::table('oficinas')->count(),
+            // Só as oficinas em funcionamento: as arquivadas (dono migrou de perfil)
+            // não contam, nem o que elas guardam.
+            'oficinas' => DB::table('oficinas')->whereNull('arquivada_em')->count(),
+            'contas' => [
+                'pessoa' => DB::table('contas')->where('tipo', 'pessoa')->count(),
+                'frota' => DB::table('contas')->where('tipo', 'frota')->count(),
+            ],
             'usuarios' => DB::table('users')->count(),
             'email_pendente' => DB::table('users')->whereNull('email_verified_at')->count(),
             'cadastros_7_dias' => DB::table('users')->where('created_at', '>=', $agora->copy()->subDays(7))->count(),
             'cadastros_30_dias' => DB::table('users')->where('created_at', '>=', $agora->copy()->subDays(30))->count(),
             'ativos_7_dias' => DB::table('users')->where('ultimo_acesso_em', '>=', $agora->copy()->subDays(7))->count(),
             'totais' => collect(self::TABELAS_DE_USO)
-                ->map(fn (string $tabela) => DB::table($tabela)->count())
+                ->map(fn (string $tabela) => DB::table($tabela)
+                    ->whereIn('oficina_id', DB::table('oficinas')->whereNull('arquivada_em')->select('id'))
+                    ->count())
                 ->all(),
         ]);
     }
@@ -53,17 +61,29 @@ class AdminController extends Controller
 
         $consulta = DB::table('users')
             ->leftJoin('oficinas', 'oficinas.id', '=', 'users.oficina_id')
+            ->leftJoin('contas', 'contas.id', '=', 'users.conta_id')
             ->select([
                 'users.id',
                 'users.name',
                 'users.email',
+                'users.perfil',
                 'users.email_verified_at',
                 'users.created_at',
                 'users.ultimo_acesso_em',
                 'users.is_super_admin',
                 'oficinas.id as oficina_id',
                 'oficinas.nome as oficina_nome',
+                'contas.nome as conta_nome',
             ]);
+
+        // Veículos cadastrados pelas contas pessoa e frota (os das oficinas
+        // entram em total_veiculos).
+        $consulta->selectSub(
+            DB::table('veiculos_conta')
+                ->selectRaw('count(*)')
+                ->whereColumn('veiculos_conta.conta_id', 'users.conta_id'),
+            'total_veiculos_conta'
+        );
 
         foreach (self::TABELAS_DE_USO as $chave => $tabela) {
             $consulta->selectSub(
@@ -78,7 +98,8 @@ class AdminController extends Controller
             $consulta->where(function ($query) use ($busca) {
                 $query->where('users.name', 'like', "%{$busca}%")
                     ->orWhere('users.email', 'like', "%{$busca}%")
-                    ->orWhere('oficinas.nome', 'like', "%{$busca}%");
+                    ->orWhere('oficinas.nome', 'like', "%{$busca}%")
+                    ->orWhere('contas.nome', 'like', "%{$busca}%");
             });
         }
 
@@ -97,16 +118,27 @@ class AdminController extends Controller
                 'cadastro_em' => $this->iso($linha->created_at),
                 'ultimo_acesso_em' => $this->iso($linha->ultimo_acesso_em),
                 'admin' => (bool) $linha->is_super_admin,
-                'oficina' => $linha->oficina_id === null ? null : [
+                'perfil' => $this->perfilDe($linha),
+                'conta' => $this->perfilDe($linha) === 'oficina' ? null : $linha->conta_nome,
+                'oficina' => $this->perfilDe($linha) !== 'oficina' || $linha->oficina_id === null ? null : [
                     'id' => $linha->oficina_id,
                     'nome' => $linha->oficina_nome,
                 ],
-                'totais' => [
-                    'clientes' => (int) $linha->total_clientes,
-                    'veiculos' => (int) $linha->total_veiculos,
-                    'ordens_servico' => (int) $linha->total_ordens_servico,
-                    'manutencoes' => (int) $linha->total_manutencoes,
-                ],
+                // Quem migrou de perfil tem a oficina antiga arquivada: o uso
+                // mostrado é o do perfil atual.
+                'totais' => $this->perfilDe($linha) === 'oficina'
+                    ? [
+                        'clientes' => (int) $linha->total_clientes,
+                        'veiculos' => (int) $linha->total_veiculos,
+                        'ordens_servico' => (int) $linha->total_ordens_servico,
+                        'manutencoes' => (int) $linha->total_manutencoes,
+                    ]
+                    : [
+                        'clientes' => 0,
+                        'veiculos' => (int) $linha->total_veiculos_conta,
+                        'ordens_servico' => 0,
+                        'manutencoes' => 0,
+                    ],
             ])->values(),
             'meta' => [
                 'current_page' => $paginador->currentPage(),
@@ -115,6 +147,11 @@ class AdminController extends Controller
                 'total' => $paginador->total(),
             ],
         ]);
+    }
+
+    private function perfilDe(object $linha): string
+    {
+        return $linha->perfil ?? 'oficina';
     }
 
     /**

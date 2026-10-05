@@ -41,6 +41,9 @@ class AuthenticateToken
         // 0 é o sentinela de "sem oficina" (nunca usar null: ver AppServiceProvider).
         app()->instance('oficina.atual', $user->oficina_id ?? 0);
 
+        // Idem para os perfis pessoa e frota (models com PertenceAConta).
+        app()->instance('conta.atual', $user->conta_id ?? 0);
+
         return $next($request);
     }
 }

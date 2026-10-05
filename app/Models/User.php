@@ -26,6 +26,8 @@ class User extends Authenticatable
         'email',
         'password',
         'oficina_id',
+        'perfil',
+        'conta_id',
     ];
 
     /**
@@ -45,19 +47,30 @@ class User extends Authenticatable
         return $this->belongsTo(Oficina::class);
     }
 
+    public function conta(): BelongsTo
+    {
+        return $this->belongsTo(Conta::class);
+    }
+
     /**
-     * Dados do usuário que o frontend guarda e usa. "admin" só serve para
-     * mostrar ou esconder o menu: quem barra o acesso é o backend.
+     * Dados do usuário que o frontend guarda e usa. "admin" e "perfil" só
+     * servem para escolher menus e telas: quem barra o acesso é o backend.
      *
-     * @return array{id: int, name: string, email: string, oficina: ?string, admin: bool}
+     * @return array{id: int, name: string, email: string, perfil: string, oficina: ?string, conta: ?string, admin: bool}
      */
     public function dadosPublicos(): array
     {
+        $perfil = $this->perfil ?? 'oficina';
+
+        // Quem migrou de perfil mantém a oficina antiga arquivada (e quem
+        // voltou mantém a conta): só aparece o que pertence ao perfil atual.
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'oficina' => $this->oficina?->nome,
+            'perfil' => $perfil,
+            'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
+            'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,
         ];
     }

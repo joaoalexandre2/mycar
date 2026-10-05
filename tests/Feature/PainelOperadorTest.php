@@ -248,12 +248,55 @@ class PainelOperadorTest extends TestCase
             'oficina_id' => Oficina::factory()->create()->id,
         ]);
 
-        $this->artisan('admin:promover', ['email' => 'dono@exemplo.com'])->assertExitCode(0);
+        $this->artisan('admin:promover', ['email' => 'dono@exemplo.com', '--force' => true])->assertExitCode(0);
         $this->assertTrue((bool) $usuario->fresh()->is_super_admin);
 
+        // Retirar o acesso nunca pede confirmação.
         $this->artisan('admin:promover', ['email' => 'dono@exemplo.com', '--remover' => true])->assertExitCode(0);
         $this->assertFalse((bool) $usuario->fresh()->is_super_admin);
 
         $this->artisan('admin:promover', ['email' => 'ninguem@exemplo.com'])->assertExitCode(1);
+    }
+
+    public function test_promover_pede_confirmacao_e_o_padrao_e_nao_conceder(): void
+    {
+        $usuario = User::factory()->create([
+            'email' => 'dono@exemplo.com',
+            'oficina_id' => Oficina::factory()->create()->id,
+        ]);
+
+        $pergunta = "Tornar {$usuario->name} <dono@exemplo.com> ADMINISTRADOR da plataforma? Essa pessoa passa a ver todas as contas cadastradas.";
+
+        // Resposta "não" (ou o padrão): ninguém vira administrador.
+        $this->artisan('admin:promover', ['email' => 'dono@exemplo.com'])
+            ->expectsConfirmation($pergunta, 'no')
+            ->expectsOutputToContain('nada foi alterado')
+            ->assertExitCode(1);
+        $this->assertFalse((bool) $usuario->fresh()->is_super_admin);
+
+        // Resposta "sim": concede.
+        $this->artisan('admin:promover', ['email' => 'dono@exemplo.com'])
+            ->expectsConfirmation($pergunta, 'yes')
+            ->assertExitCode(0);
+        $this->assertTrue((bool) $usuario->fresh()->is_super_admin);
+    }
+
+    public function test_promover_sem_terminal_interativo_nao_concede_sem_force(): void
+    {
+        // Como no ssh sem tty (ou quando o Laravel sugere este comando no lugar de
+        // outro): a pergunta recebe a resposta padrão, que é não.
+        $usuario = User::factory()->create([
+            'email' => 'dono@exemplo.com',
+            'oficina_id' => Oficina::factory()->create()->id,
+        ]);
+
+        $codigo = \Illuminate\Support\Facades\Artisan::call('admin:promover', [
+            'email' => 'dono@exemplo.com',
+            '--no-interaction' => true,
+        ]);
+
+        $this->assertSame(1, $codigo);
+        $this->assertStringContainsString('nada foi alterado', \Illuminate\Support\Facades\Artisan::output());
+        $this->assertFalse((bool) $usuario->fresh()->is_super_admin);
     }
 }
