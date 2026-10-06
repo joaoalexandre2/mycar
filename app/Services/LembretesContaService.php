@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Documento;
 use App\Models\Seguro;
+use App\Models\Servico;
 use App\Models\VeiculoConta;
 use Illuminate\Support\Carbon;
 
@@ -75,6 +76,35 @@ class LembretesContaService
                 $itens[] = $item;
             }
 
+            // Serviços (óleo, bateria...): só o mais recente de cada tipo, por prazo e/ou km.
+            $kmAtual = $veiculo->kmAtual();
+
+            foreach ($veiculo->servicosVigentes() as $servico) {
+                if ($servico->proximo_em !== null && $servico->alerta_data_em === null) {
+                    $dia = $servico->proximo_em->copy()->startOfDay();
+
+                    if ($dia->lte(now()->addDays((int) config('servicos.margem_dias'))->endOfDay())) {
+                        $item = $this->item($veiculo, 'servico', $nome, $dia, $hoje, null, $dia->toDateString());
+                        $item['servico_id'] = $servico->id;
+                        $item['motivo'] = 'data';
+                        $item['rotulo'] = $servico->rotulo;
+                        $itens[] = $item;
+                    }
+                }
+
+                $faltam = $servico->kmRestante($kmAtual);
+
+                if ($faltam !== null && $servico->alerta_km_em === null && $faltam <= (int) config('servicos.margem_km')) {
+                    $item = $this->item($veiculo, 'servico', $nome, $hoje, $hoje, null, $hoje->toDateString());
+                    $item['servico_id'] = $servico->id;
+                    $item['motivo'] = 'km';
+                    $item['rotulo'] = $servico->rotulo;
+                    $item['km_restante'] = $faltam;
+                    $item['proxima_km'] = $servico->proxima_km;
+                    $itens[] = $item;
+                }
+            }
+
             // Seguro: avisa quando a apólice (a de vigência mais longa) está perto de acabar.
             $apolice = $veiculo->seguros()
                 ->where('tipo', 'apolice')
@@ -107,6 +137,18 @@ class LembretesContaService
     public function marcarComoAvisados(array $itens): void
     {
         foreach ($itens as $item) {
+            if ($item['tipo'] === 'servico') {
+                $servico = Servico::find($item['servico_id']);
+
+                if ($servico) {
+                    $coluna = $item['motivo'] === 'km' ? 'alerta_km_em' : 'alerta_data_em';
+                    $servico->{$coluna} = $item['ciclo'];
+                    $servico->saveQuietly();
+                }
+
+                continue;
+            }
+
             if ($item['tipo'] === 'documento') {
                 $documento = Documento::find($item['documento_id']);
 

@@ -53,6 +53,36 @@ class ContaController extends Controller
                 ];
             }
 
+            // Serviços (óleo, bateria...) perto da próxima troca, por prazo ou por km.
+            $kmAtual = $veiculo->kmAtual();
+
+            foreach ($veiculo->servicosVigentes() as $servico) {
+                $dias = $servico->diasRestantes($hoje);
+                $faltam = $servico->kmRestante($kmAtual);
+
+                $porPrazo = $dias !== null && $dias <= self::DIAS_A_FRENTE;
+                $porKm = $faltam !== null && $faltam <= (int) config('servicos.margem_km');
+
+                if (!$porPrazo && !$porKm) {
+                    continue;
+                }
+
+                $vencimentos[] = [
+                    'tipo' => 'servico',
+                    'rotulo' => $servico->rotulo,
+                    'veiculo_id' => $veiculo->id,
+                    'veiculo' => trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}"),
+                    'placa' => $veiculo->placa,
+                    // Só por km: sem data própria, aparece como "hoje".
+                    'data' => $porPrazo ? $servico->proximo_em->toDateString() : $hoje->toDateString(),
+                    'dias' => $porPrazo ? $dias : 0,
+                    'valor_estimado' => null,
+                    'km_restante' => $faltam,
+                    'proxima_km' => $servico->proxima_km,
+                    'por_km' => !$porPrazo,
+                ];
+            }
+
             foreach ($veiculo->documentosComVencimento() as $documento) {
                 $dia = $documento->vencimento->copy()->startOfDay();
 

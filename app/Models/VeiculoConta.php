@@ -99,6 +99,40 @@ class VeiculoConta extends Model
             ->values();
     }
 
+    public function servicos(): HasMany
+    {
+        return $this->hasMany(Servico::class, 'veiculo_conta_id');
+    }
+
+    /**
+     * Quilometragem mais recente que sabemos: a maior entre os abastecimentos
+     * e os serviços registrados. Null se nunca informaram o km.
+     */
+    public function kmAtual(): ?int
+    {
+        $maior = max(
+            (int) $this->abastecimentos()->max('km'),
+            (int) $this->servicos()->max('km'),
+        );
+
+        return $maior > 0 ? $maior : null;
+    }
+
+    /**
+     * Só o serviço mais recente de cada tipo vale para avisos.
+     *
+     * @return \Illuminate\Support\Collection<int, Servico>
+     */
+    public function servicosVigentes()
+    {
+        return $this->servicos()
+            ->orderByDesc('realizado_em')
+            ->orderByDesc('id')
+            ->get()
+            ->unique(fn (Servico $s) => $s->chave())
+            ->values();
+    }
+
     public function seguros(): HasMany
     {
         return $this->hasMany(Seguro::class, 'veiculo_conta_id');
