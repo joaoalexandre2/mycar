@@ -43,6 +43,19 @@ class CatalogoPecasController extends Controller
         $porSistema = collect($catalogo->pecas($categoria, $busca))->countBy('sistema');
         $pecas = $catalogo->pecas($categoria, $busca, $filtros['sistema'] ?? null);
 
+        // Os códigos que a pessoa já confirmou para este veículo, junto de cada peça.
+        $meusCodigos = $veiculo
+            ? $veiculo->codigosPecas()->orderBy('id')->get()->groupBy('peca_id')
+            : collect();
+
+        $pecas = array_map(function (array $peca) use ($meusCodigos) {
+            $peca['meus_codigos'] = $meusCodigos->get($peca['id'], collect())
+                ->map(fn ($c) => CodigoPecaController::formatar($c))
+                ->values();
+
+            return $peca;
+        }, $pecas);
+
         return response()->json([
             'veiculo' => $veiculo ? [
                 'id' => $veiculo->id,

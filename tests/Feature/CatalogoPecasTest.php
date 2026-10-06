@@ -41,10 +41,10 @@ class CatalogoPecasTest extends TestCase
         foreach (config('pecas_catalogo.modelos') as $linha) {
             $this->assertCount(4, $linha, json_encode($linha));
             $this->assertContains($linha[2], $categorias, $linha[3]);
-            $this->assertSame(CatalogoPecas::normalizar($linha[1]), $linha[1], "Palavras fora do padrão em {$linha[3]}");
+            $this->assertSame(CatalogoPecas::normalizar(str_replace('*', '', $linha[1])), str_replace('*', '', $linha[1]), "Palavras fora do padrão em {$linha[3]}");
         }
 
-        $this->assertGreaterThanOrEqual(70, count(config('pecas_catalogo.modelos')));
+        $this->assertGreaterThanOrEqual(110, count(config('pecas_catalogo.modelos')));
         $this->assertGreaterThanOrEqual(100, count(config('pecas_catalogo.pecas')));
     }
 
@@ -76,7 +76,7 @@ class CatalogoPecasTest extends TestCase
     {
         $catalogo = new CatalogoPecas();
 
-        $this->assertNull($catalogo->modeloDoVeiculo('BMW', '320iA 2.0 TB M Sport A.Flex/M.Sport 4p'));
+        $this->assertNull($catalogo->modeloDoVeiculo('Lexus', 'IS 250 2.5 V6'));
         $this->assertNull($catalogo->modeloDoVeiculo('Ford', 'Gol 1.0')); // Gol existe, mas na VW
         $this->assertNull($catalogo->modeloDoVeiculo(null, null));
     }
@@ -163,7 +163,7 @@ class CatalogoPecasTest extends TestCase
     public function test_veiculo_fora_do_catalogo_recebe_so_as_pecas_comuns(): void
     {
         [, $headers] = $this->autenticarConta('pessoa');
-        $bmw = $this->veiculo('BMW', '320iA 2.0 TB M Sport A.Flex/M.Sport 4p');
+        $bmw = $this->veiculo('Lexus', 'IS 250 2.5 V6');
 
         $r = $this->getJson("/api/conta/pecas-catalogo?veiculo_id={$bmw->id}", $headers)->assertStatus(200);
 
@@ -200,5 +200,102 @@ class CatalogoPecasTest extends TestCase
 
         $this->getJson("/api/conta/pecas-catalogo?veiculo_id={$veiculoA->id}", $headersB)->assertStatus(404);
         $this->getJson("/api/conta/pecas-catalogo?veiculo_id={$veiculoA->id}", $headersA)->assertStatus(200);
+    }
+
+    // ------------------------------------------- marcas, BMW/Audi e meu código
+
+    public function test_acha_bmw_e_audi_pelo_nome_da_fipe(): void
+    {
+        $catalogo = new CatalogoPecas();
+
+        $bmw = $catalogo->modeloDoVeiculo('BMW', '320iA 2.0 TB M Sport A.Flex/M.Sport 4p');
+        $this->assertSame('BMW Série 3 (320i)', $bmw['nome']);
+        $this->assertSame('sedan', $bmw['categoria']);
+        $this->assertSame('BMW Original Parts', $bmw['original']);
+
+        $this->assertSame('BMW X1', $catalogo->modeloDoVeiculo('BMW', 'X1 sDrive 20i 2.0 TB Active Flex')['nome']);
+        $this->assertSame('Audi A3 Sedan', $catalogo->modeloDoVeiculo('Audi', 'A3 Sedan 1.4 TFSI Ambiente')['nome']);
+        $this->assertSame('Audi Q5', $catalogo->modeloDoVeiculo('Audi', 'Q5 2.0 TFSI Ambition')['nome']);
+        $this->assertSame('Citroën C4 Cactus', $catalogo->modeloDoVeiculo('Citroën', 'C4 Cactus Feel 1.6')['nome']);
+    }
+
+    public function test_marca_da_peca_original_por_montadora(): void
+    {
+        $catalogo = new CatalogoPecas();
+
+        $this->assertSame('ACDelco', $catalogo->modeloDoVeiculo('GM - Chevrolet', 'Onix LT 1.0')['original']);
+        $this->assertSame('Mopar', $catalogo->modeloDoVeiculo('Fiat', 'Uno Way 1.0')['original']);
+        $this->assertSame('Motorcraft', $catalogo->modeloDoVeiculo('Ford', 'Ka 1.0')['original']);
+        $this->assertSame('Mobis', $catalogo->modeloDoVeiculo('Hyundai', 'HB20 1.0')['original']);
+    }
+
+    public function test_as_marcas_de_reposicao_referenciam_pecas_que_existem(): void
+    {
+        $nomes = array_map(fn ($p) => $p[1], config('pecas_catalogo.pecas'));
+
+        foreach (config('pecas_catalogo.marcas') as [$pecas, $marcas]) {
+            $this->assertNotEmpty($marcas);
+
+            foreach ($pecas as $peca) {
+                $this->assertContains($peca, $nomes, "Marcas apontam para peça que não existe: {$peca}");
+            }
+        }
+    }
+
+    public function test_pecas_trazem_as_marcas_comuns(): void
+    {
+        $pecas = collect((new CatalogoPecas())->pecas(null, 'amortecedor'))->keyBy('nome');
+
+        $this->assertContains('Cofap', $pecas['Amortecedor dianteiro']['marcas']);
+        $this->assertContains('Monroe', $pecas['Amortecedor dianteiro']['marcas']);
+        $this->assertSame([], collect((new CatalogoPecas())->pecas(null, 'buzina'))->first()['marcas']);
+    }
+
+    public function test_guarda_o_meu_codigo_e_devolve_junto_da_peca(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $v = $this->veiculo('GM - Chevrolet', 'Onix LT 1.0');
+
+        $this->postJson("/api/conta/veiculos/{$v->id}/codigos-pecas", [
+            'peca_id' => 'amortecedor-dianteiro', 'marca' => 'Cofap', 'codigo' => ' gp 12345 ', 'observacoes' => 'Comprei na loja X',
+        ], $headers)->assertStatus(201)->assertJsonPath('codigo', 'GP 12345')->assertJsonPath('marca', 'Cofap');
+
+        $r = $this->getJson("/api/conta/pecas-catalogo?veiculo_id={$v->id}&q=amortecedor", $headers);
+        $peca = collect($r->json('pecas'))->firstWhere('id', 'amortecedor-dianteiro');
+        $this->assertCount(1, $peca['meus_codigos']);
+        $this->assertSame('GP 12345', $peca['meus_codigos'][0]['codigo']);
+
+        $outra = collect($r->json('pecas'))->firstWhere('id', 'amortecedor-traseiro');
+        $this->assertSame([], $outra['meus_codigos']);
+
+        $id = $peca['meus_codigos'][0]['id'];
+        $this->deleteJson("/api/conta/veiculos/{$v->id}/codigos-pecas/{$id}", [], $headers)->assertStatus(200);
+        $this->deleteJson("/api/conta/veiculos/{$v->id}/codigos-pecas/{$id}", [], $headers)->assertStatus(404);
+    }
+
+    public function test_valida_o_meu_codigo(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $v = $this->veiculo('Fiat', 'Uno');
+
+        $this->postJson("/api/conta/veiculos/{$v->id}/codigos-pecas", [], $headers)
+            ->assertStatus(422)->assertJsonValidationErrors(['peca_id', 'codigo']);
+        $this->postJson("/api/conta/veiculos/{$v->id}/codigos-pecas", ['peca_id' => 'peca-inventada', 'codigo' => 'X1'], $headers)
+            ->assertStatus(422)->assertJsonValidationErrors('peca_id');
+        $this->postJson('/api/conta/veiculos/999/codigos-pecas', ['peca_id' => 'bateria', 'codigo' => 'X1'], $headers)
+            ->assertStatus(404);
+    }
+
+    public function test_meu_codigo_nao_vaza_entre_contas(): void
+    {
+        [, $headersA] = $this->autenticarConta('pessoa');
+        $veiculoA = $this->veiculo('Fiat', 'Uno');
+        $id = $this->postJson("/api/conta/veiculos/{$veiculoA->id}/codigos-pecas", ['peca_id' => 'bateria', 'codigo' => 'M60'], $headersA)->json('id');
+
+        [, $headersB] = $this->autenticarConta('frota');
+
+        $this->postJson("/api/conta/veiculos/{$veiculoA->id}/codigos-pecas", ['peca_id' => 'bateria', 'codigo' => 'X'], $headersB)->assertStatus(404);
+        $this->deleteJson("/api/conta/veiculos/{$veiculoA->id}/codigos-pecas/{$id}", [], $headersB)->assertStatus(404);
+        $this->assertSame(1, \App\Models\CodigoPeca::withoutGlobalScopes()->count());
     }
 }
