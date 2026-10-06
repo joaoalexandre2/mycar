@@ -63,6 +63,47 @@ class VeiculoConta extends Model
         });
     }
 
+    public function documentos(): HasMany
+    {
+        return $this->hasMany(Documento::class, 'veiculo_conta_id');
+    }
+
+    /**
+     * CRLV mais recente com data de vencimento. Quando existe, a data real
+     * vale no lugar da estimativa de licenciamento pela placa.
+     */
+    public function crlvAtual(): ?Documento
+    {
+        return $this->documentos()
+            ->where('tipo', 'crlv')
+            ->whereNotNull('vencimento')
+            ->orderByDesc('vencimento')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    /**
+     * Documentos com vencimento que valem para avisos: de CRLV só o mais
+     * recente (os anteriores são histórico).
+     *
+     * @return \Illuminate\Support\Collection<int, Documento>
+     */
+    public function documentosComVencimento()
+    {
+        $crlvId = $this->crlvAtual()?->id;
+
+        return $this->documentos()
+            ->whereNotNull('vencimento')
+            ->get()
+            ->filter(fn (Documento $d) => $d->tipo !== 'crlv' || $d->id === $crlvId)
+            ->values();
+    }
+
+    public function seguros(): HasMany
+    {
+        return $this->hasMany(Seguro::class, 'veiculo_conta_id');
+    }
+
     public function abastecimentos(): HasMany
     {
         return $this->hasMany(Abastecimento::class, 'veiculo_conta_id');

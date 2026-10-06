@@ -25,11 +25,14 @@ class ContaController extends Controller
         $vencimentos = [];
 
         foreach ($veiculos as $veiculo) {
+            // Com a data real do CRLV cadastrada, ela vale no lugar da estimativa de licenciamento.
+            $temCrlv = $veiculo->crlvAtual() !== null;
+
             foreach ([
                 'ipva' => [$veiculo->proximo_vencimento_ipva, $veiculo->ipva_estimado],
                 'licenciamento' => [$veiculo->proximo_vencimento_licenciamento, $veiculo->licenciamento_valor],
             ] as $tipo => [$data, $valor]) {
-                if ($data === null) {
+                if ($data === null || ($tipo === 'licenciamento' && $temCrlv)) {
                     continue;
                 }
 
@@ -48,6 +51,44 @@ class ContaController extends Controller
                     'dias' => (int) $hoje->diffInDays($dia, false),
                     'valor_estimado' => $valor,
                 ];
+            }
+
+            foreach ($veiculo->documentosComVencimento() as $documento) {
+                $dia = $documento->vencimento->copy()->startOfDay();
+
+                if ($dia->gt($limite)) {
+                    continue;
+                }
+
+                $vencimentos[] = [
+                    'tipo' => 'documento',
+                    'rotulo' => $documento->rotulo,
+                    'veiculo_id' => $veiculo->id,
+                    'veiculo' => trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}"),
+                    'placa' => $veiculo->placa,
+                    'data' => $dia->toDateString(),
+                    'dias' => (int) $hoje->diffInDays($dia, false),
+                    'valor_estimado' => null,
+                ];
+            }
+
+            // Fim da apólice de seguro (a de vigência mais longa), na mesma janela.
+            $apolice = $veiculo->seguros()->where('tipo', 'apolice')->whereNotNull('vigencia_fim')->orderByDesc('vigencia_fim')->first();
+
+            if ($apolice) {
+                $dia = $apolice->vigencia_fim->copy()->startOfDay();
+
+                if ($dia->lte($limite)) {
+                    $vencimentos[] = [
+                        'tipo' => 'seguro',
+                        'veiculo_id' => $veiculo->id,
+                        'veiculo' => trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}"),
+                        'placa' => $veiculo->placa,
+                        'data' => $dia->toDateString(),
+                        'dias' => (int) $hoje->diffInDays($dia, false),
+                        'valor_estimado' => (float) $apolice->valor_anual,
+                    ];
+                }
             }
 
             // Revisão informada pelo dono; atrasada também aparece.

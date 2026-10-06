@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Documento;
+use App\Models\Seguro;
 use App\Models\VeiculoConta;
 use Illuminate\Support\Carbon;
 
@@ -31,11 +33,14 @@ class LembretesContaService
         foreach (VeiculoConta::all() as $veiculo) {
             $nome = trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}");
 
+            // Com a data real do CRLV cadastrada, ela vale no lugar da estimativa de licenciamento.
+            $temCrlv = $veiculo->crlvAtual() !== null;
+
             foreach ([
                 'ipva' => [$veiculo->proximo_vencimento_ipva, $veiculo->ipva_estimado, $veiculo->ipva_alertado_ano],
                 'licenciamento' => [$veiculo->proximo_vencimento_licenciamento, $veiculo->licenciamento_valor, $veiculo->licenciamento_alertado_ano],
             ] as $tipo => [$data, $valor, $alertadoAno]) {
-                if ($data === null) {
+                if ($data === null || ($tipo === 'licenciamento' && $temCrlv)) {
                     continue;
                 }
 
@@ -55,6 +60,38 @@ class LembretesContaService
                     $itens[] = $this->item($veiculo, 'revisao', $nome, $dia, $hoje, null, $dia->toDateString());
                 }
             }
+
+            // Documentos (CRLV, vistoria, outros) com a data que o dono informou.
+            foreach ($veiculo->documentosComVencimento() as $documento) {
+                $dia = $documento->vencimento->copy()->startOfDay();
+
+                if ($documento->alertado_em !== null || $dia->gt($limite)) {
+                    continue;
+                }
+
+                $item = $this->item($veiculo, 'documento', $nome, $dia, $hoje, null, $dia->toDateString());
+                $item['documento_id'] = $documento->id;
+                $item['rotulo'] = $documento->rotulo;
+                $itens[] = $item;
+            }
+
+            // Seguro: avisa quando a apólice (a de vigência mais longa) está perto de acabar.
+            $apolice = $veiculo->seguros()
+                ->where('tipo', 'apolice')
+                ->whereNotNull('vigencia_fim')
+                ->orderByDesc('vigencia_fim')
+                ->first();
+
+            if ($apolice && $apolice->alertado_em === null) {
+                $dia = $apolice->vigencia_fim->copy()->startOfDay();
+                $limiteSeguro = now()->addDays((int) config('seguro.dias_lembrete'))->endOfDay();
+
+                if ($dia->lte($limiteSeguro)) {
+                    $item = $this->item($veiculo, 'seguro', $nome, $dia, $hoje, (float) $apolice->valor_anual, $dia->toDateString());
+                    $item['seguro_id'] = $apolice->id;
+                    $itens[] = $item;
+                }
+            }
         }
 
         usort($itens, fn (array $a, array $b) => $a['data'] <=> $b['data']);
@@ -70,6 +107,28 @@ class LembretesContaService
     public function marcarComoAvisados(array $itens): void
     {
         foreach ($itens as $item) {
+            if ($item['tipo'] === 'documento') {
+                $documento = Documento::find($item['documento_id']);
+
+                if ($documento) {
+                    $documento->alertado_em = $item['ciclo'];
+                    $documento->saveQuietly();
+                }
+
+                continue;
+            }
+
+            if ($item['tipo'] === 'seguro') {
+                $seguro = Seguro::find($item['seguro_id']);
+
+                if ($seguro) {
+                    $seguro->alertado_em = $item['ciclo'];
+                    $seguro->saveQuietly();
+                }
+
+                continue;
+            }
+
             $veiculo = VeiculoConta::find($item['veiculo_id']);
 
             if (!$veiculo) {
