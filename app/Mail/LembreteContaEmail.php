@@ -40,6 +40,10 @@ class LembreteContaEmail extends Mailable
 
     private function rotulo(array $item): string
     {
+        if (isset($item['rotulo'])) {
+            return $item['rotulo'];
+        }
+
         return match ($item['tipo']) {
             'ipva' => 'IPVA',
             'licenciamento' => 'licenciamento',
