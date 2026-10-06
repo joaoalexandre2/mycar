@@ -16,6 +16,7 @@ use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\DespesaController;
+use App\Http\Controllers\CatalogoPecasController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
 use App\Http\Controllers\RegisterController;
@@ -115,6 +116,7 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/veiculos/{id}/fipe', [ContaVeiculoController::class, 'consultarFipe']);
 
         Route::get('/despesas', [DespesaController::class, 'index']);
+        Route::get('/pecas-catalogo', [CatalogoPecasController::class, 'index']);
 
         Route::get('/servicos', [ServicoController::class, 'index']);
         Route::post('/servicos', [ServicoController::class, 'store']);
