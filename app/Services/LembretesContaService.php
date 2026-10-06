@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Seguro;
 use App\Models\VeiculoConta;
 use Illuminate\Support\Carbon;
 
@@ -55,6 +56,24 @@ class LembretesContaService
                     $itens[] = $this->item($veiculo, 'revisao', $nome, $dia, $hoje, null, $dia->toDateString());
                 }
             }
+
+            // Seguro: avisa quando a apólice (a de vigência mais longa) está perto de acabar.
+            $apolice = $veiculo->seguros()
+                ->where('tipo', 'apolice')
+                ->whereNotNull('vigencia_fim')
+                ->orderByDesc('vigencia_fim')
+                ->first();
+
+            if ($apolice && $apolice->alertado_em === null) {
+                $dia = $apolice->vigencia_fim->copy()->startOfDay();
+                $limiteSeguro = now()->addDays((int) config('seguro.dias_lembrete'))->endOfDay();
+
+                if ($dia->lte($limiteSeguro)) {
+                    $item = $this->item($veiculo, 'seguro', $nome, $dia, $hoje, (float) $apolice->valor_anual, $dia->toDateString());
+                    $item['seguro_id'] = $apolice->id;
+                    $itens[] = $item;
+                }
+            }
         }
 
         usort($itens, fn (array $a, array $b) => $a['data'] <=> $b['data']);
@@ -70,6 +89,17 @@ class LembretesContaService
     public function marcarComoAvisados(array $itens): void
     {
         foreach ($itens as $item) {
+            if ($item['tipo'] === 'seguro') {
+                $seguro = Seguro::find($item['seguro_id']);
+
+                if ($seguro) {
+                    $seguro->alertado_em = $item['ciclo'];
+                    $seguro->saveQuietly();
+                }
+
+                continue;
+            }
+
             $veiculo = VeiculoConta::find($item['veiculo_id']);
 
             if (!$veiculo) {

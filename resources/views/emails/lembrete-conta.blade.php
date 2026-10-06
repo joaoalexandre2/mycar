@@ -2,7 +2,7 @@
 # {{ $ehFrota ? 'Vencimentos da frota ' . $nomeConta : 'Lembrete para o seu carro' }}
 
 @php
-    $rotulos = ['ipva' => 'IPVA', 'licenciamento' => 'Licenciamento', 'revisao' => 'Revisão'];
+    $rotulos = ['ipva' => 'IPVA', 'licenciamento' => 'Licenciamento', 'revisao' => 'Revisão', 'seguro' => 'Fim do seguro'];
 
     $quando = function (int $dias): string {
         if ($dias < 0) {
@@ -21,7 +21,7 @@
 @endforeach
 @endcomponent
 
-As datas e os valores de **IPVA e licenciamento são estimativas** pelo final da placa e pelo estado: confirme no site do Detran/Sefaz. A data da revisão é a que você informou.
+As datas e os valores de **IPVA e licenciamento são estimativas** pelo final da placa e pelo estado: confirme no site do Detran/Sefaz. A data da revisão e o fim do seguro são os que você informou; para o seguro, é um bom momento para comparar propostas.
 
 @component('mail::button', ['url' => $urlSistema])
 Abrir o MyCar

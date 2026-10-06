@@ -63,6 +63,11 @@ class VeiculoConta extends Model
         });
     }
 
+    public function seguros(): HasMany
+    {
+        return $this->hasMany(Seguro::class, 'veiculo_conta_id');
+    }
+
     public function abastecimentos(): HasMany
     {
         return $this->hasMany(Abastecimento::class, 'veiculo_conta_id');

@@ -43,6 +43,7 @@ class LembreteContaEmail extends Mailable
         return match ($item['tipo']) {
             'ipva' => 'IPVA',
             'licenciamento' => 'licenciamento',
+            'seguro' => 'renovação do seguro',
             default => 'revisão',
         };
     }

@@ -50,6 +50,25 @@ class ContaController extends Controller
                 ];
             }
 
+            // Fim da apólice de seguro (a de vigência mais longa), na mesma janela.
+            $apolice = $veiculo->seguros()->where('tipo', 'apolice')->whereNotNull('vigencia_fim')->orderByDesc('vigencia_fim')->first();
+
+            if ($apolice) {
+                $dia = $apolice->vigencia_fim->copy()->startOfDay();
+
+                if ($dia->lte($limite)) {
+                    $vencimentos[] = [
+                        'tipo' => 'seguro',
+                        'veiculo_id' => $veiculo->id,
+                        'veiculo' => trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}"),
+                        'placa' => $veiculo->placa,
+                        'data' => $dia->toDateString(),
+                        'dias' => (int) $hoje->diffInDays($dia, false),
+                        'valor_estimado' => (float) $apolice->valor_anual,
+                    ];
+                }
+            }
+
             // Revisão informada pelo dono; atrasada também aparece.
             if ($veiculo->revisao_prevista_em !== null) {
                 $dia = $veiculo->revisao_prevista_em->copy()->startOfDay();
