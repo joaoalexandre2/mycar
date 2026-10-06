@@ -11,6 +11,7 @@ use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\VeiculoPecaController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AbastecimentoController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
 use App\Http\Controllers\RegisterController;
@@ -107,5 +108,9 @@ Route::middleware('auth.token')->group(function () {
         Route::put('/veiculos/{id}', [ContaVeiculoController::class, 'update']);
         Route::delete('/veiculos/{id}', [ContaVeiculoController::class, 'destroy']);
         Route::post('/veiculos/{id}/fipe', [ContaVeiculoController::class, 'consultarFipe']);
+
+        Route::get('/veiculos/{id}/abastecimentos', [AbastecimentoController::class, 'index']);
+        Route::post('/veiculos/{id}/abastecimentos', [AbastecimentoController::class, 'store']);
+        Route::delete('/veiculos/{id}/abastecimentos/{abastecimentoId}', [AbastecimentoController::class, 'destroy']);
     });
 });

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\CalculaTributosVeiculo;
 use App\Models\Concerns\PertenceAConta;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Veículo de uma conta (pessoa ou frota). Os carros dos clientes de uma
@@ -60,5 +61,10 @@ class VeiculoConta extends Model
                 $veiculo->revisao_alertada_em = null;
             }
         });
+    }
+
+    public function abastecimentos(): HasMany
+    {
+        return $this->hasMany(Abastecimento::class, 'veiculo_conta_id');
     }
 }
