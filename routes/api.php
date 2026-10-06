@@ -15,6 +15,7 @@ use App\Http\Controllers\AbastecimentoController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\ServicoController;
+use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
 use App\Http\Controllers\RegisterController;
@@ -50,6 +51,7 @@ Route::middleware('auth.token')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [ConfiguracaoController::class, 'atualizarPerfil']);
+    Route::put('/me/aparencia', [ConfiguracaoController::class, 'atualizarAparencia']);
     Route::put('/me/senha', [ConfiguracaoController::class, 'alterarSenha'])->middleware('throttle:10,1');
 
     // Tabela FIPE (consulta pública, sem dados de nenhuma conta)
@@ -111,6 +113,8 @@ Route::middleware('auth.token')->group(function () {
         Route::put('/veiculos/{id}', [ContaVeiculoController::class, 'update']);
         Route::delete('/veiculos/{id}', [ContaVeiculoController::class, 'destroy']);
         Route::post('/veiculos/{id}/fipe', [ContaVeiculoController::class, 'consultarFipe']);
+
+        Route::get('/despesas', [DespesaController::class, 'index']);
 
         Route::get('/servicos', [ServicoController::class, 'index']);
         Route::post('/servicos', [ServicoController::class, 'store']);

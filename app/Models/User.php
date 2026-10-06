@@ -28,6 +28,8 @@ class User extends Authenticatable
         'oficina_id',
         'perfil',
         'conta_id',
+        'tema',
+        'cor',
     ];
 
     /**
@@ -72,6 +74,9 @@ class User extends Authenticatable
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,
+            // Aparência escolhida em Configurações; null = nunca escolheu.
+            'tema' => $this->tema,
+            'cor' => $this->cor,
         ];
     }
 
