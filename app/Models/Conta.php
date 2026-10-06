@@ -20,6 +20,11 @@ class Conta extends Model
     protected $fillable = [
         'tipo',
         'nome',
+        'lembretes_email',
+    ];
+
+    protected $casts = [
+        'lembretes_email' => 'boolean',
     ];
 
     public function usuarios(): HasMany

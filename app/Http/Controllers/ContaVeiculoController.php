@@ -132,6 +132,7 @@ class ContaVeiculoController extends Controller
             'marca' => ['required', 'string', 'max:100'],
             'modelo' => ['required', 'string', 'max:100'],
             'ano' => ['required', 'integer', 'min:1900', 'max:' . date('Y')],
+            'revisao_prevista_em' => ['nullable', 'date'],
             'uf' => ['nullable', 'string', 'size:2', Rule::in(array_keys(config('tributos.estados')))],
             'fipe_marca_id' => ['nullable', 'integer'],
             'fipe_modelo_id' => ['nullable', 'integer'],
