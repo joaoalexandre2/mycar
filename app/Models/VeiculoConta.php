@@ -99,6 +99,11 @@ class VeiculoConta extends Model
             ->values();
     }
 
+    public function codigosPecas(): HasMany
+    {
+        return $this->hasMany(CodigoPeca::class, 'veiculo_conta_id');
+    }
+
     public function servicos(): HasMany
     {
         return $this->hasMany(Servico::class, 'veiculo_conta_id');

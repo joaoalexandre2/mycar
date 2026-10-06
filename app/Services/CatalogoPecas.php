@@ -13,7 +13,13 @@ class CatalogoPecas
 {
     public const AVISO = 'Mostramos os tipos de peça do seu modelo, não códigos de fabricante. A compatibilidade exata muda por ano, motor e versão: antes de comprar, confirme pelo chassi ou pelo código da peça original.';
 
-    /** "Corolla XEi 2.0" -> "corolla xei 2 0" (sem acento, só letras e números). */
+    /** @return array<int, string> ids (slug do nome) de todas as peças do catálogo */
+    public static function idsDasPecas(): array
+    {
+        return array_map(fn (array $p) => Str::slug($p[1]), config('pecas_catalogo.pecas'));
+    }
+
+    /** "Corolla XEi 2.0" ->"corolla xei 2 0" (sem acento, só letras e números). */
     public static function normalizar(?string $texto): string
     {
         $limpo = preg_replace('/[^a-z0-9]+/', ' ', Str::lower(Str::ascii((string) $texto)));
@@ -40,8 +46,10 @@ class CatalogoPecas
 
             $exigidas = explode(' ', $palavras);
 
-            if (array_diff($exigidas, $modeloTokens)) {
-                continue;
+            foreach ($exigidas as $palavra) {
+                if (!$this->temPalavra($palavra, $modeloTokens)) {
+                    continue 2;
+                }
             }
 
             if (count($exigidas) > $melhorPeso) {
@@ -50,11 +58,54 @@ class CatalogoPecas
                     'nome' => $nome,
                     'categoria' => $categoria,
                     'categoria_rotulo' => config("pecas_catalogo.categorias.{$categoria}"),
+                    // Marca da peça original da montadora (ex.: ACDelco para a Chevrolet).
+                    'original' => config('pecas_catalogo.originais.'.explode('|', $marcas)[0]),
                 ];
             }
         }
 
         return $melhor;
+    }
+
+    /**
+     * "320*" casa qualquer palavra que comece com 320 (320i, 320ia...);
+     * sem asterisco, a palavra tem que ser igual.
+     *
+     * @param array<int, string> $tokens
+     */
+    private function temPalavra(string $palavra, array $tokens): bool
+    {
+        if (str_ends_with($palavra, '*')) {
+            $prefixo = rtrim($palavra, '*');
+
+            foreach ($tokens as $token) {
+                if (str_starts_with($token, $prefixo)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return in_array($palavra, $tokens, true);
+    }
+
+    /** Marcas de reposição comuns da peça (lista vazia se não houver). */
+    private function marcasDa(string $nome): array
+    {
+        static $mapa = null;
+
+        if ($mapa === null) {
+            $mapa = [];
+
+            foreach (config('pecas_catalogo.marcas') as [$nomes, $marcas]) {
+                foreach ($nomes as $n) {
+                    $mapa[$n] = $marcas;
+                }
+            }
+        }
+
+        return $mapa[$nome] ?? [];
     }
 
     /**
@@ -94,6 +145,7 @@ class CatalogoPecas
                 'posicao' => $posicao,
                 'intervalo_km' => $km,
                 'observacao' => $obs,
+                'marcas' => $this->marcasDa($nome),
                 '_pontos' => $pontos,
             ];
         }
