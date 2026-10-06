@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -13,6 +14,20 @@ class ConfiguracaoController extends Controller
     {
         $dados = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = $request->user();
+        $user->update($dados);
+
+        return response()->json($user->dadosPublicos());
+    }
+
+    /** Grava o tema e a cor principal escolhidos, para valerem em qualquer navegador. */
+    public function atualizarAparencia(Request $request)
+    {
+        $dados = $request->validate([
+            'tema' => ['required', Rule::in(['claro', 'escuro'])],
+            'cor' => ['required', Rule::in(['blue', 'green', 'purple', 'orange'])],
         ]);
 
         $user = $request->user();
