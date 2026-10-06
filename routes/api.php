@@ -98,6 +98,8 @@ Route::middleware('auth.token')->group(function () {
     // Perfis PESSOA (Cuidados com seu carro) e FROTA: veículos da própria conta
     Route::middleware('perfil:pessoa,frota')->prefix('conta')->group(function () {
         Route::get('/resumo', [ContaController::class, 'resumo']);
+        Route::get('/preferencias', [ContaController::class, 'preferencias']);
+        Route::put('/preferencias', [ContaController::class, 'atualizarPreferencias']);
 
         Route::get('/veiculos', [ContaVeiculoController::class, 'index']);
         Route::post('/veiculos', [ContaVeiculoController::class, 'store']);

@@ -49,6 +49,23 @@ class ContaController extends Controller
                     'valor_estimado' => $valor,
                 ];
             }
+
+            // Revisão informada pelo dono; atrasada também aparece.
+            if ($veiculo->revisao_prevista_em !== null) {
+                $dia = $veiculo->revisao_prevista_em->copy()->startOfDay();
+
+                if ($dia->lte($limite)) {
+                    $vencimentos[] = [
+                        'tipo' => 'revisao',
+                        'veiculo_id' => $veiculo->id,
+                        'veiculo' => trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}"),
+                        'placa' => $veiculo->placa,
+                        'data' => $dia->toDateString(),
+                        'dias' => (int) $hoje->diffInDays($dia, false),
+                        'valor_estimado' => null,
+                    ];
+                }
+            }
         }
 
         usort($vencimentos, fn (array $a, array $b) => $a['data'] <=> $b['data']);
@@ -63,5 +80,32 @@ class ContaController extends Controller
             'vencimentos' => $vencimentos,
             'dias_a_frente' => self::DIAS_A_FRENTE,
         ]);
+    }
+
+    public function preferencias(Request $request)
+    {
+        return response()->json($this->dadosPreferencias($request));
+    }
+
+    public function atualizarPreferencias(Request $request)
+    {
+        $dados = $request->validate([
+            'lembretes_email' => ['required', 'boolean'],
+        ]);
+
+        $request->user()->conta->update($dados);
+
+        return response()->json($this->dadosPreferencias($request));
+    }
+
+    private function dadosPreferencias(Request $request): array
+    {
+        $conta = $request->user()->conta()->first();
+
+        return [
+            'nome' => $conta?->nome,
+            'tipo' => $conta?->tipo,
+            'lembretes_email' => (bool) $conta?->lembretes_email,
+        ];
     }
 }
