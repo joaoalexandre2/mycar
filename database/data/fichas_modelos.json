@@ -1,0 +1,5577 @@
+{
+    "Audi A3": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi A3",
+        "url": "https://pt.wikipedia.org/wiki/Audi_A3",
+        "revisao": 72714228,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996—presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Familiar Médio"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 101hp, 1.8 125hp, 1.8 turbo (150,180,210 e 225 hp), V6 3.0, v6 3.2 Quattro ou 2.0 Turbo (estes 2 últimos no modelo a partir de 2006), 1.2T FSI de 110 cv, 1.4T FSI de 150 cv, 1.8T FSI de 180 cv, 1.6TDI de 110 cv, 2.0TDI de 150 e 184 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual ou Automática Tiptronic DSG de 6 marchas (Último modelo)"
+            }
+        ]
+    },
+    "Audi A3 Sedan": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi A3",
+        "url": "https://pt.wikipedia.org/wiki/Audi_A3",
+        "revisao": 72714228,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996—presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Familiar Médio"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 101hp, 1.8 125hp, 1.8 turbo (150,180,210 e 225 hp), V6 3.0, v6 3.2 Quattro ou 2.0 Turbo (estes 2 últimos no modelo a partir de 2006), 1.2T FSI de 110 cv, 1.4T FSI de 150 cv, 1.8T FSI de 180 cv, 1.6TDI de 110 cv, 2.0TDI de 150 e 184 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual ou Automática Tiptronic DSG de 6 marchas (Último modelo)"
+            }
+        ]
+    },
+    "Audi A4": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi A4",
+        "url": "https://pt.wikipedia.org/wiki/Audi_A4",
+        "revisao": 72299535,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1994-presente"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 16v-3.2 V6 FSI"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5, 6 marchas e CVT (Multitronic)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4520 mm (sedan); 4488 mm (station wagon)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1730 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1415 mm (sedan); 1440 mm (station wagon)"
+            }
+        ]
+    },
+    "Audi A5": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi A5",
+        "url": "https://pt.wikipedia.org/wiki/Audi_A5",
+        "revisao": 71941765,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2007–presente"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 TDI 170cv; V6 2.7 TDI 190cv; V6 3.0 TDI 240cv; 2.0 TFSI 180cv; 2.0 TFSI 211cv; V6 3.2 FSI 265cv; (S5)V8 4.2 FSI 354 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6 vel. manual; Multitronic (CVT); Tiptronic (automática convencional)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.60"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.85"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.37"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1610"
+            }
+        ]
+    },
+    "Audi Q3": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi Q3",
+        "url": "https://pt.wikipedia.org/wiki/Audi_Q3",
+        "revisao": 70208796,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2011-presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "crossover"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 TFSI de 150 cv ou 2.0 TFSI de 220 cv"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4388 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1831 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1540 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "64 litros"
+            }
+        ]
+    },
+    "Audi Q5": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi Q5",
+        "url": "https://pt.wikipedia.org/wiki/Audi_Q5",
+        "revisao": 67521329,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "desde 2008"
+            }
+        ]
+    },
+    "Audi Q7": {
+        "fonte": "Wikipédia",
+        "pagina": "Audi Q7",
+        "url": "https://pt.wikipedia.org/wiki/Audi_Q7",
+        "revisao": 72714225,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "on"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "V6 3.0 TDI; VR6 3.6 FSI; 4.2 FSI; V8 4.2 TDI; V 6.0 TDI"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5085"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1984"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1697"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2245"
+            }
+        ]
+    },
+    "BMW Série 1 (118i)": {
+        "fonte": "Wikipédia",
+        "pagina": "BMW Série 1",
+        "url": "https://pt.wikipedia.org/wiki/BMW_Série_1",
+        "revisao": 69617174,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            }
+        ]
+    },
+    "BMW Série 1 (120i)": {
+        "fonte": "Wikipédia",
+        "pagina": "BMW Série 1",
+        "url": "https://pt.wikipedia.org/wiki/BMW_Série_1",
+        "revisao": 69617174,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            }
+        ]
+    },
+    "BMW X3": {
+        "fonte": "Wikipédia",
+        "pagina": "BMW X3",
+        "url": "https://pt.wikipedia.org/wiki/BMW_X3",
+        "revisao": 69480545,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003-presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover do segmento D"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV de 5 portas"
+            }
+        ]
+    },
+    "Chevrolet Agile": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Agile",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Agile",
+        "revisao": 72533337,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2009-2016"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B; \"Compacto Premium\" no Brasil"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 Econo.Flex"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual e Automatizado de 5 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4000 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1680 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1470 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1032 kg"
+            }
+        ]
+    },
+    "Chevrolet Astra": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Astra",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Astra",
+        "revisao": 72058529,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1998-2011 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.8L 8V G ou E, I4, dianteiro transversal; 2.0L 8V flex, I4, transversal; 2.0L 16V gasolina, I4, transversal"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "4 marchas, automática; 5 marchas, manual"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4199 mm (hatchback); 4342 mm (sedan)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1709 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1431 mm(hatchback); 1425 mm(sedan)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1150 kg (hatchback 2 portas); 1180 kg(coupé 4 portas); 1190 kg (sedan)"
+            }
+        ]
+    },
+    "Chevrolet Blazer": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Blazer",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Blazer",
+        "revisao": 70381155,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1982 — 2005 (EUA); 1995 — 2011 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Utilitário-Esportivo Médio"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.2; 2.4; 2.4 Flex; 2.5 D; 2.8 TD; 4.3 Sfi V6"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual; 4 marchas, automática"
+            }
+        ]
+    },
+    "Chevrolet Captiva": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Captiva",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Captiva",
+        "revisao": 71798542,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2008 — 2017; 2019 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover médio de luxo"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "3.0 SIDI V6, 3.6 Alloytec V6, 2.4 Ecotec l4"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1800 kg"
+            }
+        ]
+    },
+    "Chevrolet Celta": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Celta",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Celta",
+        "revisao": 71502745,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2000 - 2015"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B/Carro popular"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 MPFI (60cv) 2000-2001; 1.0 MPFI VHC (70cv) 2002-2005; 1.0 MPFI VHC Flex (70cv) 2005-2008; 1.0 MPFI VHC-E (78cv) Flex 2009-2016; 1.4 MPFI (85cv) 2003-2005"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 Marchas, Manual"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2.443 mm"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3.788 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.771 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.429 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "834 - 890 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "46 - 54 L"
+            }
+        ]
+    },
+    "Chevrolet Classic": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Classic",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Classic",
+        "revisao": 71502667,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "Corsa Sedan: 1995 — 2002; Classic: 2002 — 2016"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 8V VHC 70 cv a 6400 rpm (2003-2005); 1.6 8V 92 cv a 5600 rpm (2003-2005); 1.4 8V; 1.8 8V; 1.0 16V; 1.6 16V; 1.0 8V VHC Flexpower 72 cv a 6400rpm (2006-2008); 1.0 8V VHCE 78 cv a 6400rpm (2009-2016)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 4 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4056 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1608 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1420 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "920 kg"
+            }
+        ]
+    },
+    "Chevrolet Cobalt": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Cobalt",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Cobalt",
+        "revisao": 71108829,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            }
+        ]
+    },
+    "Chevrolet Corsa": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Corsa",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Corsa",
+        "revisao": 72296851,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1994 - 2012 (Hatch); 2003 - 2015 (Sedan)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B; \"Compacto\" no Brasil"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 EFI 50 cv a 5800 rpm (1994 - 1996); 1.4 EFI 60 cv a 5200 rpm (1994 - 1996); 1.0 MPFI 60 cv a 6.000 rpm (1996 - 2002); 1.6 MPFI 92 cv a 5600 rpm (1996 - 2002)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automático de 4 velocidades (Corsa Classic)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3833 mm (hatch); 4181 mm (sedan)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1646 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1430 mm (hatch); 1432 mm (sedan)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1020 kg (hatch 1.0); 1026 kg (hatch 1.4); 1150 kg (hatch 1.8); 1043 kg (sedan 1.4)"
+            }
+        ]
+    },
+    "Chevrolet Cruze": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Cruze",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Cruze",
+        "revisao": 73008295,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2008–2023"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Sedan; Hatch"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Primeira geração:; 1.8 aspirado I4; Segunda geração:; 1.4 turbo I4"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "Primeira geração:; 144 cv @ 6.300rpm (A); 140 cv @ 6.300rpm (G); Segunda geração:; 153 cv @ 5.200rpm (A); 150 cv @ 5.200rpm (G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "Primeira geração:; 18.9 kgf·m @ 3.800rpm (A); 17.8 kgf·m @ 3.800rpm (G); Segunda geração:; 24.5 kgf·m @ 2.000rpm (A); 24 kgf·m @ 2.000rpm (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "Primeira geração:; 4600 mm (Sedan); 4510 mm (Hatchback); Segunda geração:; 4665 mm (Sedan); 4448 mm (Hatchback)"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "Primeira geração:; 2685 mm (Sedan, Hatchback); Segunda geração:; 2700 mm (Sedan, Hatchback)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "Primeira geração:; 1790 mm (Sedan, Hatchback); Segunda geração:; 1807 mm (Sedan, Hatchback)"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "Primeira geração:; 1475 mm (Sedan); 1477 mm (Hatchback); Segunda geração:; 1484 mm (Sedan, Hatchback)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "Primeira geração:; 1424 kg (Sedan); 1410 kg (Hatchback); Segunda geração:; 1310 kg (Sedan); 1331 kg (Hatchback)"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "Primeira geração:; 60 L (Sedan, Hatchback); Segunda geração:; 52 L (Sedan, Hatchback)"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "Primeira geração:; 197 km/h; (0 a 100 km/h: 11,4s) (Sedan, Hatchback); Segunda geração:; 214 km/h; (0 a 100 km/h: 9,0s) (Sedan, Hatchback)"
+            }
+        ]
+    },
+    "Chevrolet Equinox": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Equinox",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Equinox",
+        "revisao": 70845155,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004 — presente 2017 - em produção ( Brasil)"
+            }
+        ]
+    },
+    "Chevrolet Meriva": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Meriva",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Meriva",
+        "revisao": 70846182,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003 - 2012"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Minivan Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.8 8V Gasolina - 102CV; 1.8 16V Gasolina - (02/03) - 122CV; 1.8 8V Flexpower; 1.4 8V EconoFlex"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automatizada de 5 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4042 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1694 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1573 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1225 kg"
+            }
+        ]
+    },
+    "Chevrolet Montana": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Montana",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Montana",
+        "revisao": 72773050,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003–2021; 2023–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape leve (2003–2021); Picape intermediária (desde 2023)"
+            }
+        ]
+    },
+    "Chevrolet Onix": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Onix",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Onix",
+        "revisao": 73136250,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2013–presente; 2013-2021 (Primeira Geração); 2020-presente (Segunda Geração)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback (5 portas); Sedan Plus (4 portas)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 SPE/4 aspirado Flex; 1.0 aspirado Flex; 1.4 aspirado flex; 1.0 turbo Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "82 a 116 cv"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "10,6 -16,8 kgfm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6 (MT e AT)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4163 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2551 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1730 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1473 mm"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "200 km/h"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "44 L"
+            }
+        ]
+    },
+    "Chevrolet Onix Plus": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Onix Plus",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Onix_Plus",
+        "revisao": 71810789,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006 — 2019 (Prisma ) — Presente (Onix Plus)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1ª Geração: 1.4L 8V Econo.Flex - 105CV a 6000RPM - (2006 - 2012); 2ª Geração: 1.0L 8V, transversal - Smart Performance Economy 4 Cilindros (SPE/4) - 80CV - (2014 - Em diante); 1.4L 8V, transversal - Smart Performance Economy 4 Cilindros (SPE/4) - 106CV - (2014 - Em diante)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4275 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1964 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1484 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1031 kg"
+            }
+        ]
+    },
+    "Chevrolet Prisma": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Onix Plus",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Onix_Plus",
+        "revisao": 71810789,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006 — 2019 (Prisma ) — Presente (Onix Plus)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1ª Geração: 1.4L 8V Econo.Flex - 105CV a 6000RPM - (2006 - 2012); 2ª Geração: 1.0L 8V, transversal - Smart Performance Economy 4 Cilindros (SPE/4) - 80CV - (2014 - Em diante); 1.4L 8V, transversal - Smart Performance Economy 4 Cilindros (SPE/4) - 106CV - (2014 - Em diante)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4275 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1964 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1484 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1031 kg"
+            }
+        ]
+    },
+    "Chevrolet S10": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet S10",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_S10",
+        "revisao": 71738296,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1995 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.8 Turbo Diesel"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 8 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5361 mm (WT); 5408 mm (High Country)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1874 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1831 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2028 kg (WT); 2106 kg (High Country)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "46.9 Kgf-m @ 2.000rpm (WT); 52 Kgf-m @ 2.000rpm (High Country)"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "207 cv @ 3.400rpm"
+            }
+        ]
+    },
+    "Chevrolet Spin": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Spin",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Spin",
+        "revisao": 70846175,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012 - presente; 2013 - 2015 (); 2015 - 2016 ()"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Minivan Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.8 Econo.Flex"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4360 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1735 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1664 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "LT: 1202 kg; LTZ: 1255 kg"
+            }
+        ]
+    },
+    "Chevrolet Tracker": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Tracker",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Tracker",
+        "revisao": 71914033,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1989 - 2004 (Canadá e Estados Unidos); 1988 - 1990; 2004 - 2007 (Argentina); 1996 - 2016 (Equador); 2013 - Presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto (Segmento B)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 L 132 cv ( G ) 1988 - 2005 / 1.8 L 144 cv ( A ) 140 cv ( G ) 2013 - 2016 1.4 Turbo Ecotec 153 cv 2017-2019 (Nos EUA continua 1.4 Turbo)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades Manual 1988 - 2005 / 6 Velocidades Automático 2013 - Presente"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4215 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1990 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1740 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1060 kg"
+            }
+        ]
+    },
+    "Chevrolet Trailblazer": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Trailblazer (2012)",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Trailblazer_(2012)",
+        "revisao": 71257660,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012–presente (Brasil); 2012–2020 (Tailândia); 2013–2015 (Rússia)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "SUV"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.8 turbo diesel; 3.6 V6 gasolina"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4878 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1902 mm (carroceria); 2132 mm (espelho a espelho)"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1847 mm (máx. com bagageiro)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2161 kg; 3500 kg (peso bruto total)"
+            }
+        ]
+    },
+    "Chevrolet Vectra": {
+        "fonte": "Wikipédia",
+        "pagina": "Chevrolet Vectra",
+        "url": "https://pt.wikipedia.org/wiki/Chevrolet_Vectra",
+        "revisao": 70731163,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1993 — 2011 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento D (1ª e 2ª geração); Segmento C (3ª geração)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 8V; 2.0 16V; 2.2 8V; 2.2 16V; 2.4 16V"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 4 velocidades"
+            }
+        ]
+    },
+    "Chevrolet Zafira": {
+        "fonte": "Wikipédia",
+        "pagina": "Opel Zafira",
+        "url": "https://pt.wikipedia.org/wiki/Opel_Zafira",
+        "revisao": 71613784,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2000–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Minivan Segmento C"
+            }
+        ]
+    },
+    "Citroën Aircross": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën Aircross",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_Aircross",
+        "revisao": 66430273,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2009–presente (Europa); 2010–2020 (América Latina)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            }
+        ]
+    },
+    "Citroën Basalt": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën Basalt",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_Basalt",
+        "revisao": 71136916,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "SUV crossover subcompacto (Segmento B)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades manual; 6 velocidades manual; CVT"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4300 mm - 4343 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "2019 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1585 mm"
+            }
+        ]
+    },
+    "Citroën C3": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën C3",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_C3",
+        "revisao": 72511734,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2002 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Citadino ou Compacto (B)"
+            }
+        ]
+    },
+    "Citroën C3 Aircross": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën Aircross",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_Aircross",
+        "revisao": 66430273,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2009–presente (Europa); 2010–2020 (América Latina)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            }
+        ]
+    },
+    "Citroën C4": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën C4",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_C4",
+        "revisao": 70446642,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "hatch médio; hatch esportivo; sedan médio"
+            }
+        ]
+    },
+    "Citroën C4 Cactus": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën C4 Cactus",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_C4_Cactus",
+        "revisao": 72568018,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2014–2020 (Espanha); 2018–2024 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.5 de 110 cv, 1.6 de 130 cv e 1.2 turbo de 130 cavalos."
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4,15 m"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1,72 m"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1,60 m"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "955"
+            }
+        ]
+    },
+    "Citroën C4 Lounge": {
+        "fonte": "Wikipédia",
+        "pagina": "Citroën C4 Lounge",
+        "url": "https://pt.wikipedia.org/wiki/Citroën_C4_Lounge",
+        "revisao": 70482047,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2013 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "médio-grande"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6L I4 16V Turbo THP - G; 2.0L I4 16V - E ou G"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual; 6 marchas, automática"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4,62m"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1,78m"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1,50m"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2,71m"
+            }
+        ]
+    },
+    "Fiat Argo": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Argo",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Argo",
+        "revisao": 71716814,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2017 - presente (Brasil); 2018 - presente (Argentina); 2020 - presente (México)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 6v Firefly (72/77 cv); 1.3 8v Firefly (101/109 cv); 1.8 E.torQ Evo 16v(135/139 cv)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 marchas; Automatizada GSR de 5 Marchas; Automática de 6 marchas; CVT de 7 Marchas Simuladas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4000 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1750 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1500 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1243 kg"
+            }
+        ]
+    },
+    "Fiat Cronos": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Cronos",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Cronos",
+        "revisao": 72674789,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2018-presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Sedã Compacto"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1726 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1515 mm; 1524 mm"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4372 mm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; CVT de 7 velocidades"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "45 L"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1130 kg; 1190 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "Motor 1.0:; 75 cv @ 6.000rpm (A); 71 cv @ 6.000rpm (G); Motor 1.3:; 107 cv @ 6.250rpm (A); 98 cv @ 6.250rpm (G)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Sedã"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "Motor 1.0:; 10.7 kgf-m @ 3.250rpm (A); 10 kgf-m @ 3.250rpm (G); Motor 1.3:; 13.7 kgf-m @ 4.000rpm (A); 13.2 kgf-m @ 4.000rpm (G)"
+            }
+        ]
+    },
+    "Fiat Doblò": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Doblò",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Doblò",
+        "revisao": 69768708,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2000-presente (Mundo) 2001-2021 (Brasil)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3 Mpi Fire 16V; 1.6 Mpi 16V; 1.8 Flex (GM); 1.4 Flex Fire; 1.8 (GM); 1.6 16V E.Torq; 1.8 16V E.Torq"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.250 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.720 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.858 mm"
+            }
+        ]
+    },
+    "Fiat Fastback": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Fastback",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Fastback",
+        "revisao": 71716400,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2022 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV cupê de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 L GSE FireFly I3 flex turbo; 1.0 L GSE FireFly I3 flex turbo Hibrido Leve; 1.3 L GSE FireFly I4 flex turbo"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "125 cv; 185 cv"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "20,4kgfm-27,5kgfm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Câmbio automático de 6 velocidades; CVT de 7 velocidades simuladas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4427 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2532 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1545 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1253 kg–1304 kg"
+            }
+        ]
+    },
+    "Fiat Fiorino": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Fiorino",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Fiorino",
+        "revisao": 72834832,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1977-2000 e 2007-presente (Europa); 1978-presente (Brasil); 1989-2016 (Argentina); 1996-2001 (China)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Comercial leve"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0; 1.3; 1.4 Fire; 1.6 i.e; 1.3 mpi fire; 1.5 mpi; 1.0 i.e; 1.0 mpi"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3835 mm (primeira geração); 4160 mm (segunda geração); 4384 mm (terceira geração); 3864 mm (terceira geração europeia)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1564 mm (primeira geração); 1620 mm (segunda geração); 1809 mm (terceira geração); 1716 mm (terceira geração europeia)"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1810 mm (primeira geração); 1920 mm (segunda geração); 1809 mm (terceira geração); 1721 mm (terceira geração europeia)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "870 kg (primeira geração); 995 kg (segunda geração); 1117 kg (terceira geração); 1165 kg (terceira geração europeia)"
+            }
+        ]
+    },
+    "Fiat Grand Siena": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Siena",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Siena",
+        "revisao": 71716361,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996–2016 Siena"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "sedã compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 8V; 1.0 16V; 1.3 8V; 1.3 16V; 1.4 8V; 1.4 8V Tetrafuel; 1.5 8V; 1.6 8V; 1.6 16V; 1.6 16V E.Torq; 1.8 8V"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6 Marchas manual (1.0, 1998–1999) / 5 Marchas manual (1998–2016) / 5 Marchas Dualogic (2009–2012)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4100 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1626 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1445 mm"
+            }
+        ]
+    },
+    "Fiat Idea": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Idea",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Idea",
+        "revisao": 66898636,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003 - 2012; 2005 - 2016; 2005 - 2018"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Minivan Compacta"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 8V Fire / 1.6 16V E.Torq / 1.8 16V E.Torq"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 marchas ou Dualogic Automatizada de 5 marchas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3.930 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.698 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.691 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1.230 kg"
+            }
+        ]
+    },
+    "Fiat Mobi": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Mobi",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Mobi",
+        "revisao": 72772519,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2016–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento A"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback de cinco portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 Fire flex (2016–2024); 1.0 Firefly flex (2017–2020; desde 2025)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de cinco marchas; Automatizada de cinco marchas (2018–2020)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3566 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2305 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1633 mm"
+            }
+        ]
+    },
+    "Fiat Palio": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Palio",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Palio",
+        "revisao": 70435736,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996 - 2018"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 8V Fire 55cv; 1.0 8V Fire 65/66cv; 1.0 8V Fiasa 60cv; 1.0 16V Fire 69cv; 1.3 8V Fire 70cv; 1.3 8v Fire 71/70cv; 1.3 16V Fire 80cv; 1.3 8V Multijet diesel (exportação); 1.4 8V Fire 81/80cv; 1.4 8v Fire 86/85cv; 1.5 8V Fiasa 76cv; 1.6 16V Torque 106cv; 1.6 8V Sevel 92cv; 1.8 8V GM Powertrain 113/115cv (1.8R); 1.8 8V GM Powertrain 112/114cv (ELX 1.8/HLX 1.8); 1.6 16V E.TorQ 116/117cv; 1.0 8V Fire EVO 73/75cv; 1.4 8V Fire EVO 85/88cv; 1.8 8V E.Torq 130/132 cv (Weekend)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual; 5 marchas, semi - automático (Citymatic 1999 - 2000); 5 marchas, automatizada (Dualogic); 6 marchas, manual (Siena 6 Marchas)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "373 (cm) (carroceria de 1996) - 376 (cm) (carroceria de 2001) - 385 (cm) (carroceria de 2004) - 388 (cm) (carroceria de 2011)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "163 (cm) (2004) - 166 (cm) (2011)"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "145 (cm) (2004) - 151 (cm) (2011)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "986 kg (modelo 1996) - 935 kg (modelo 2003)/1062 kg (2011)"
+            }
+        ]
+    },
+    "Fiat Pulse": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Pulse",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Pulse",
+        "revisao": 71940364,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2021 – atualmente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (B)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "* 1.0 turbo 8V 130 cv * 1.3 8V Firefly 107 cv * 1.0 turbo 8V 130 cv + elétrico 12 Volts 3kW (Híbrido)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; ( Automática CVT) de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "410 cm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "178 cm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "158 cm"
+            }
+        ]
+    },
+    "Fiat Punto": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Punto",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Punto",
+        "revisao": 70962740,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1993–2018; 2007–2017; 2008–2018; 2005–2011"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B; \"Compacto premium\" no Brasil"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback de 3 ou 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 8V Fire; 1.4 8V Fire Evo; 1.4 16V T-Jet; 1.6 16V E.Torq; 1.8 8V GM Familia I; 1.8 16V E.Torq"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 ou 6 marchas (na versão T-Jet); Dualogic de 5 marchas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4065 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2510 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1687 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1499 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1090 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "60 l"
+            }
+        ]
+    },
+    "Fiat Siena": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Siena",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Siena",
+        "revisao": 71716361,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996–2016 Siena"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "sedã compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 8V; 1.0 16V; 1.3 8V; 1.3 16V; 1.4 8V; 1.4 8V Tetrafuel; 1.5 8V; 1.6 8V; 1.6 16V; 1.6 16V E.Torq; 1.8 8V"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6 Marchas manual (1.0, 1998–1999) / 5 Marchas manual (1998–2016) / 5 Marchas Dualogic (2009–2012)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4100 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1626 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1445 mm"
+            }
+        ]
+    },
+    "Fiat Strada": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Strada",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Strada",
+        "revisao": 71426977,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1998–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape leve (Segmento B)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3 8V FireFly; 1.4 8V Fire; 1.5 8V MPI (descontinuado); 1.6 8V SPI; 1.8 8V GM; 1.6 16V MPI; 1.8 16V E.TorQ"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automático CVT 5 velocidades"
+            }
+        ]
+    },
+    "Fiat Toro": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Toro",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Toro",
+        "revisao": 71738611,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2016 — Presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Sport Utility Pick-Up - SUP; Picape intermediária (Segmento C)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Picape de 4 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3L T270 Flex I4; 1.8L I4 16v Flex; 2.4L I4 16v Flex; 2.0L I4 16v Diesel"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "1.8: (G) 135 cv / (E) 139 cv @ 6250 rpm; 2.4: (G) 174 cv / (E) 186 cv @ 5750 rpm; 2.0 D: 170 cv @ 3750 rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "1.8: (G) 18.76 kgf-m / (E) 19.27 kgf-m @ 3750 rpm; 2.4: (G) 23.5 kgf-m / (E) 24.9 kgf-m @ 4000 rpm; 2.0 D: 35.69 kgf-m @ 1750 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "6 velocidades manual; 6 velocidades automática; 9 velocidades automática"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4915 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2900 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1840 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1730 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1836 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "60 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "190 km/h"
+            }
+        ]
+    },
+    "Fiat Uno": {
+        "fonte": "Wikipédia",
+        "pagina": "Fiat Uno",
+        "url": "https://pt.wikipedia.org/wiki/Fiat_Uno",
+        "revisao": 72638683,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "Europa: 1983-1993; Brasil: 1ª geração 1984-2013; Brasil: 2ª geração 2010-2021; Filipinas: 1992-2000; Marrocos: 1995-2003; Sérvia (ná época Iugoslávia): 1988-1994; Uruguai (Uno Novo): 2010-2020; Polônia: 1995-2002"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Fiasa 1.0 8v gas; Fiasa 1.3 8v gas; Fiasa 1.5 8v gas; Fire 1.0 Evo 8V Flex; Fire 1.4 Evo 8V Flex; Firefly 1.0 6V Flex; Firefly 1.3 8V Flex"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3770 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1656 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1548 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "800 kg; 900 kg em suas primeiras versões"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "48 L"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "58 cv (Primeira Geração) 75 cv (Segunda Geração)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "6.000 rpm"
+            }
+        ]
+    },
+    "Ford Courier": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Courier",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Courier",
+        "revisao": 71426989,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996 - 2013"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape leve (Segmento B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Picape 2 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3L Endura 8v; 1.4L Zetec 16V; 1.6L Zetec RoCam 8v; 1.6L RoCam Flex 8v"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "1.3L: 60 cv @ 5000 rpm; 1.4L: 89 cv @ 5600 rpm; 1.6L: 95 cv @ 5500 rpm; 1.6L: 107 cv @ 5500 rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "1.3L: 10.4 kgf-m @ 3500 rpm; 1.4L: 12.5 kgf-m @ 4500 rpm; 1.6L: 14.2 kgf-m @ 2250 rpm; 1.6L: 15.6 kgf-m @ 4250 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades manual"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4457 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2830 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1685 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1477 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1040 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "60 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "162 km/h"
+            }
+        ]
+    },
+    "Ford EcoSport": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford EcoSport",
+        "url": "https://pt.wikipedia.org/wiki/Ford_EcoSport",
+        "revisao": 71721821,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV de 5 portas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4228 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1734 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1679 mm"
+            }
+        ]
+    },
+    "Ford Edge": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Edge",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Edge",
+        "revisao": 70498401,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006 - presente; 2014 - presente (Europa)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Grande"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4717 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1930 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1746 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2026 kg"
+            }
+        ]
+    },
+    "Ford Fiesta": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Fiesta",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Fiesta",
+        "revisao": 72714231,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1976–2023 (Mundo); 1976–2019 (América do Norte); 1995–2019 (América do Sul)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            }
+        ]
+    },
+    "Ford Focus": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Focus",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Focus",
+        "revisao": 72299555,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1998–presente (Mundo) 2000 - 2019 (América do Sul)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0L l4, 1.4L l4, 1.6l l4, 1.8L l4, 2.0L l4, 2.3L l4, 2.5L turbo l5"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Manual de 6 velocidades; Automático de 5 velocidades"
+            }
+        ]
+    },
+    "Ford Fusion": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Fusion",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Fusion",
+        "revisao": 70845134,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2005–2020"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento D"
+            }
+        ]
+    },
+    "Ford Ka": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Ka",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Ka",
+        "revisao": 72438414,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1996–2021"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Subcompacto; Compacto"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "hatch 3 portas; hatch 5 portas; sedan 4 portas"
+            }
+        ]
+    },
+    "Ford Ranger": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Ranger",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Ranger",
+        "revisao": 71738284,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1982 — 2011 (original); 1998 - presente; outubro de 2018 - presente (Nova geração); 1994 - 2013 2015 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Instalação Dianteira Duratorq Diesel 2.2 com 150 cv ou 160 cv; Duratec 2.3L DOHC com 150 cv; Power Stroke 3.0L Electronic com 163 cv; 2.5L Duratec Flex com 173 cv; 3.2L Duratorq Diesel com 200 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5354 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1860 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1848 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1480 kg até 2000 kg"
+            }
+        ]
+    },
+    "Ford Territory": {
+        "fonte": "Wikipédia",
+        "pagina": "Ford Territory",
+        "url": "https://pt.wikipedia.org/wiki/Ford_Territory",
+        "revisao": 71159362,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004–2016; 2018–presente"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4856 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1898 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1714 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2015 kg"
+            }
+        ]
+    },
+    "Honda City": {
+        "fonte": "Wikipédia",
+        "pagina": "Honda City",
+        "url": "https://pt.wikipedia.org/wiki/Honda_City",
+        "revisao": 70737664,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1981 – presente; 2009 – presente (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.5L I4 16V i-VTEC; 1.5L I4 16V Earth Dreams i-DTEC"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual; 6 marchas, manual; 7 marchas, automático; Transmissão CVT"
+            }
+        ]
+    },
+    "Honda Civic": {
+        "fonte": "Wikipédia",
+        "pagina": "Honda Civic",
+        "url": "https://pt.wikipedia.org/wiki/Honda_Civic",
+        "revisao": 73135968,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1972 – presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Motor a combustão:; 2.0 Aspirado I4 Gasolina; Motor(es) elétrico(s):; 1 motor elétrico"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4679 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1802 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1432 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1449 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "Motor a combustão:; 143 cv @ 6.000rpm; Motor(es) elétrico(s):; 184 cv; Potência combinada:; 203 cv"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "Motor a combustão:; 19.1 kgf·m @ 4.500rpm; Motor(es) elétrico(s):; 32.1 kgf·m"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 1 velocidade"
+            }
+        ]
+    },
+    "Honda Fit": {
+        "fonte": "Wikipédia",
+        "pagina": "Honda Fit",
+        "url": "https://pt.wikipedia.org/wiki/Honda_Fit",
+        "revisao": 72849315,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "980-1.100 kg"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3.830–3.850 mm (Mundial) 4.000 mm (EUA e Canadá)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades Automática de 5 velocidades CVT"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1525-1.550 mm mm"
+            },
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "Junho de 2001 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Carro subcompacto (B)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1675 mm"
+            }
+        ]
+    },
+    "Honda HR-V": {
+        "fonte": "Wikipédia",
+        "pagina": "Honda HR-V",
+        "url": "https://pt.wikipedia.org/wiki/Honda_HR-V",
+        "revisao": 70644069,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1999 - 2005, 2016 - presente"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1309 kg"
+            }
+        ]
+    },
+    "Honda WR-V": {
+        "fonte": "Wikipédia",
+        "pagina": "Honda WR-V",
+        "url": "https://pt.wikipedia.org/wiki/Honda_WR-V",
+        "revisao": 71771110,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2017 - 2022; 2025 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.5 i-VTEC Flex ONE"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "116 cv @ 6.200rpm (A) e (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "CVT de 7 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4320 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2650 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1790 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1650 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1278 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "44 L"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "15.8 Kgf-m (A); 15.5 Kgf-m (G) @ 4.600rpm"
+            }
+        ]
+    },
+    "Hyundai Azera": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai Azera",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_Azera",
+        "revisao": 70738920,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1986–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento E"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Sedã de 4 portas"
+            }
+        ]
+    },
+    "Hyundai Creta": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai Creta",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_Creta",
+        "revisao": 73028647,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2014 - presente (China e Coréia do Sul); 2015 - presente (Índia); 2016 - presente (Rússia, Argélia); 2016 - presente (Piracicaba, Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV 5 portas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4300 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2610 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1790 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1635 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1200 kg – 1300 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "50 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "180 km/h – 190 km/h"
+            }
+        ]
+    },
+    "Hyundai HB20": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai HB20",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_HB20",
+        "revisao": 73136033,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012—presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto (Segmento B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatch de 5 portas; Sedã de 4 portas; Crossover de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 Aspirado I3 Flex; 1.0 Turbo I3 Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "80 cv @ 6.200rpm (A); 75 cv @ 6.200rpm (G); 120 cv @ 6.000rpm (A); 115 cv @ 6.000rpm (G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "10.2 kgf·m @ 4.500rpm (A); 9.6 kgf·m @ 4.500rpm (G); 17.5 kgf·m @ 1.500rpm (A); 17.5 kgf·m @ 1.500rpm (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4015 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2530 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1720 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1470 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "993 kg; 1110 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "50 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "161 km/h; (0 a 100 km/h: 14,5s); 190 km/h; (0 a 100 km/h: 10,7s)"
+            }
+        ]
+    },
+    "Hyundai HB20S": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai HB20",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_HB20",
+        "revisao": 73136033,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012—presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto (Segmento B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatch de 5 portas; Sedã de 4 portas; Crossover de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 Aspirado I3 Flex; 1.0 Turbo I3 Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "80 cv @ 6.200rpm (A); 75 cv @ 6.200rpm (G); 120 cv @ 6.000rpm (A); 115 cv @ 6.000rpm (G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "10.2 kgf·m @ 4.500rpm (A); 9.6 kgf·m @ 4.500rpm (G); 17.5 kgf·m @ 1.500rpm (A); 17.5 kgf·m @ 1.500rpm (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4015 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2530 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1720 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1470 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "993 kg; 1110 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "50 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "161 km/h; (0 a 100 km/h: 14,5s); 190 km/h; (0 a 100 km/h: 10,7s)"
+            }
+        ]
+    },
+    "Hyundai HB20X": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai HB20",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_HB20",
+        "revisao": 73136033,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012—presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto (Segmento B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatch de 5 portas; Sedã de 4 portas; Crossover de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 Aspirado I3 Flex; 1.0 Turbo I3 Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "80 cv @ 6.200rpm (A); 75 cv @ 6.200rpm (G); 120 cv @ 6.000rpm (A); 115 cv @ 6.000rpm (G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "10.2 kgf·m @ 4.500rpm (A); 9.6 kgf·m @ 4.500rpm (G); 17.5 kgf·m @ 1.500rpm (A); 17.5 kgf·m @ 1.500rpm (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4015 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2530 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1720 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1470 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "993 kg; 1110 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "50 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "161 km/h; (0 a 100 km/h: 14,5s); 190 km/h; (0 a 100 km/h: 10,7s)"
+            }
+        ]
+    },
+    "Hyundai Tucson": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai Tucson",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_Tucson",
+        "revisao": 72718387,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (Segmento C)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 e 2.7 V6"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "4 marchas automática 6 marchas"
+            }
+        ]
+    },
+    "Hyundai Veloster": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai Veloster",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_Veloster",
+        "revisao": 70879954,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2011-2022"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Hatchback Médio"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 Gamma MPI 130 cv; 1.6 Gamma GDI 140 cv; 1.6 Gamma Turbo GDI 186 cv - 204 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4219 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1791 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1400 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1170 kg"
+            }
+        ]
+    },
+    "Hyundai i30": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai i30",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_i30",
+        "revisao": 72201205,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2007 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 CVVT 109 cv; 1.6 CVVT 122 cv; 1.6 CRDi 90 cv; 1.6 CRDi VGT 115 cv; 2.0 CRDi VGT 140 cv; 2.0 DOHC 16v CVVT"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades manual; 4 velocidades automáticas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4245 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1765 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1480 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1288 kg"
+            }
+        ]
+    },
+    "Hyundai ix35": {
+        "fonte": "Wikipédia",
+        "pagina": "Hyundai ix35",
+        "url": "https://pt.wikipedia.org/wiki/Hyundai_ix35",
+        "revisao": 70890466,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2010 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2,0 litros; 4 cilindros; DOHC; 16 válvulas"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades; Automatizado de 5 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4410 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1820 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1655 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1576 kg"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "197 Nm @ 4.600 rpm"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "168 cv @ 6.200 rpm"
+            }
+        ]
+    },
+    "Jeep Commander": {
+        "fonte": "Wikipédia",
+        "pagina": "Jeep Commander (XK)",
+        "url": "https://pt.wikipedia.org/wiki/Jeep_Commander_(XK)",
+        "revisao": 70970328,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006-2010"
+            }
+        ]
+    },
+    "Jeep Compass": {
+        "fonte": "Wikipédia",
+        "pagina": "Jeep Compass",
+        "url": "https://pt.wikipedia.org/wiki/Jeep_Compass",
+        "revisao": 71486622,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2007-presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3 Turbo Flex I4; 2.0 Turbo Gasolina I4"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades; Automática de 9 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4404 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1819 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1625 mm; 1640 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1589 kg; 1720 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "176 cv @ 5.750rpm (A); 176 cv @ 5.750rpm (G); 272 cv @ 5.200rpm (G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "27.5 kgf·m @ 1.750rpm (A); 27.5 kgf·m @ 1.750rpm (G); 40.8 kgf·m @ 3.000rpm (G)"
+            }
+        ]
+    },
+    "Jeep Renegade": {
+        "fonte": "Wikipédia",
+        "pagina": "Jeep Renegade",
+        "url": "https://pt.wikipedia.org/wiki/Jeep_Renegade",
+        "revisao": 71136790,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2014—presente (Estados Unidos e Itália); 2015—presente (Brasil); 2016 - presente (Alemanha)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3L I4 16V Turbo Flex; 1.4L I4 16V Turbo G; 1.6L I4 16V Flex; 1.8L I4 16V Flex; 2.4L I4 16V G; 1.6L I4 8V TD; 2.0L I4 16V TD"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automatizado de 6 velocidades; Automático de 6 velocidades; Automático de 9 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4230 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1800 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1690 mm"
+            }
+        ]
+    },
+    "Mitsubishi L200": {
+        "fonte": "Wikipédia",
+        "pagina": "Mitsubishi L200",
+        "url": "https://pt.wikipedia.org/wiki/Mitsubishi_L200",
+        "revisao": 71738250,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1978-presente; 1999-presente (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "dianteiro, longitudinal, alumínio, 2.4L, diesel, potência 190cv@3500rpm, torque 43,9kgf.m@2.500rpm, 16 válvulas, DOHC MIVEC, injeção eletrônica direta Common-Rail, turbocompressor e intercooler"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 marchas ou automática 5 marchas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5115 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1800 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1780 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2950 kg"
+            }
+        ]
+    },
+    "Mitsubishi Pajero": {
+        "fonte": "Wikipédia",
+        "pagina": "Mitsubishi Pajero",
+        "url": "https://pt.wikipedia.org/wiki/Mitsubishi_Pajero",
+        "revisao": 71995238,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1982 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Utilitário esportivo"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.4 turbo Diesel (4N15)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 8 marchas (Aisin TL-80NF)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4785 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1815 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1805 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2110 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "190 cv @ 3.500 rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "43,9 kgfm @ 2.500 rpm"
+            }
+        ]
+    },
+    "Nissan Frontier": {
+        "fonte": "Wikipédia",
+        "pagina": "Nissan Frontier",
+        "url": "https://pt.wikipedia.org/wiki/Nissan_Frontier",
+        "revisao": 71106097,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1997 – presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Diesel, dianteiro, 2.5 L, 190 cv a 4000 rpm, 45,8 kgfm a 2000 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 marchas ou automático de 5 marchas, tração traseira ou 4x4, com reduzida e engates eletrônicos"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "523 cm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "185 cm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "178 cm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1985 kg (MT), 2005 kg (AT)"
+            }
+        ]
+    },
+    "Nissan Kicks": {
+        "fonte": "Wikipédia",
+        "pagina": "Nissan Kicks",
+        "url": "https://pt.wikipedia.org/wiki/Nissan_Kicks",
+        "revisao": 72341578,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2016 - Presente; 2018 - Presente Estados Unidos e Canadá"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto (segmento B)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV Crossover 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0T Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "125 cv (A) @ 5.000rpm; 120 cv (G) @ 5.000rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "22.4 kgf·m @ 2.500rpm (A); 20.4 kgf·m (G)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Câmbio automatizado de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4365 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2655 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1800 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1620 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1322 kg - 1366 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "48 L"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "185 km/h; (0 a 100 km/h: 12,4s)"
+            }
+        ]
+    },
+    "Nissan March": {
+        "fonte": "Wikipédia",
+        "pagina": "Nissan Micra",
+        "url": "https://pt.wikipedia.org/wiki/Nissan_Micra",
+        "revisao": 67635430,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2011-2020 (Brasil) 1982 — presente (Mundo)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "subcompacto"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "hatch"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual 5 marchas, CVT"
+            }
+        ]
+    },
+    "Peugeot 2008": {
+        "fonte": "Wikipédia",
+        "pagina": "Peugeot 2008",
+        "url": "https://pt.wikipedia.org/wiki/Peugeot_2008",
+        "revisao": 71030441,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2013 - Presente; 2015 - Presente ()"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 16V flex (115 cv) e 1.6 16V turbo flex (173 cv)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Manual de 6 velocidades; Automática de 4 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.15 m"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2.54 m"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.73 m"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.58 m"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1231 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "55 L"
+            }
+        ]
+    },
+    "Peugeot 207": {
+        "fonte": "Wikipédia",
+        "pagina": "Peugeot 207",
+        "url": "https://pt.wikipedia.org/wiki/Peugeot_207",
+        "revisao": 72341751,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006 - 2014 (França) 2010 - presente (Irã) 2010 - 2013 (Indonésia)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "compacto premium"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 manual"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4030"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1250kg"
+            }
+        ]
+    },
+    "Peugeot 208": {
+        "fonte": "Wikipédia",
+        "pagina": "Peugeot 208",
+        "url": "https://pt.wikipedia.org/wiki/Peugeot_208",
+        "revisao": 72341752,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2012 - Presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "hatch 3 portas; hatch 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4L HDI 68cv; 1.6L HDI 92cv; 1.6L HDI 112cv; 1.0L VTi 68cv; 1.2L 82cv; 1.2L THP 110cv; 1.2L THP 102cv; 1.2L THP 130cv; 1.4L 95cv; 1.6L THP 156cv; 1.6L 120cv; 1.0L FireFly 75 cv; 1.0L Turbo GSE T200 130cv1.2L 90cv Flex; 1.5L 93cv Flex; 1.6L 122cv Flex; 1.6L THP 173cv Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "Diesel; 1.4: 68 cv @ 4000 rpm; 1.6: 92 cv @ 4000 rpm; 1.6: 100 cv @ 3750 rpm; 1.6: 112 cv @ 3600 rpm; 1.6: 115 cv @ 3600 rpm; Gasolina/Flex; 1.0 Firefly: 75 cv @ 3500 rpm; 1.6: 120 cv @ 3500 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 marchas Manual de 6 marchas Automática de 6 marchas"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3962 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2538 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1463 mm"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "55 Litros"
+            }
+        ]
+    },
+    "Peugeot 308": {
+        "fonte": "Wikipédia",
+        "pagina": "Peugeot 308",
+        "url": "https://pt.wikipedia.org/wiki/Peugeot_308",
+        "revisao": 70446664,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2007 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Familiar Compacto (segmento C)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 95cv; 1.6 THP 150cv; 1.6 122cv (EC5M); 1.6 HDi 90cv; 1.6 HDi 110cv; 2.0HDi 136cv; 2.0 151cv (EW10)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades manual; 6 velocidades manual; 4 velocidades automático; 6 velocidades automático"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4276 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1815 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1498 mm"
+            }
+        ]
+    },
+    "Renault Captur": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Captur",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Captur",
+        "revisao": 73110964,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "desde 2013 e fim em 2023 por falta de componentes que vem da Rússia e pra dar espaço a outro produto."
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades, Automático, CVT"
+            }
+        ]
+    },
+    "Renault Clio": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Clio",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Clio",
+        "revisao": 73110965,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1990 — presente. 1998 — 2016 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "veículo pequeno (Brasil); compacto premium (Europa)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "4 cilindros gasolina; 4 cilindros bicombustível; 4 cilindros Diesel"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 ou 6 Velocidades (marchas)"
+            }
+        ]
+    },
+    "Renault Duster": {
+        "fonte": "Wikipédia",
+        "pagina": "Dacia Duster",
+        "url": "https://pt.wikipedia.org/wiki/Dacia_Duster",
+        "revisao": 72341554,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2010 – presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.5 diesel; 115 cv; 139g CO2/km"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4315 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1822 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1630 mm – 1690 mm"
+            }
+        ]
+    },
+    "Renault Duster Oroch": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Oroch",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Oroch",
+        "revisao": 73110998,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2015 – presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape intermediária (Segmento C)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Picape 4 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.3 turbo TCe flex; 1.6 16V Flex; 2.0 16V Flex"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "1.6 16V: (gasolina) 110 cv 5.750 rpm; 1.6 16V: (etanol) 115 cv 5.750 rpm; 2.0 16V: (gasolina) 143 cv 5.750 rpm; 2.0 16V: (etanol) 148 cv 5.750 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 velocidades manual; 6 velocidades manual"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4693 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2829 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1821 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1695 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1292 kg - 1346 kg"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "1.6 16V : 160 km/h (gasolina); 1.6 16V : 164 km/h (etanol); 2.0 16V : 178 km/h (gasolina); 2.0 16V : 186 Km/h (etanol)"
+            }
+        ]
+    },
+    "Renault Fluence": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Fluence",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Fluence",
+        "revisao": 72690086,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2009 - 2017"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Médio"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 L"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual; CVT"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4620 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1810 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1470 mm"
+            }
+        ]
+    },
+    "Renault Kangoo": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Kangoo",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Kangoo",
+        "revisao": 73110982,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1997 – presente"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.010 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.672 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.860 mm"
+            }
+        ]
+    },
+    "Renault Kwid": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Kwid",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Kwid",
+        "revisao": 71837195,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2015 (Índia) - Presente; 2017 (Brasil) - Presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento A"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 Aspirado Flex I3 (Brasil); 0.9 Aspirado I3 Gasolina (Índia)"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "71 cv @ 5.500rpm (A); 68 cv @ 5.500rpm (G) (Brasil); 67.06 hp @ 5.500rpm (G) (Índia)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "10 kgf·m @ 4.250rpm (A); 9.4 kgf·m @ 4.250rpm (G) (Brasil); 91 Nm @ 4.250rpm (G) (Índia)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades (Brasil, Índia); Automática de 5 velocidades (Índia)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3731 mm (Brasil, Índia)"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2423 mm (Brasil); 2500 mm (Índia)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1579 mm (Brasil, Índia)"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1481 mm (Brasil); 1490 mm (Índia)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "825 kg (Brasil)"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "38 L (Brasil); 28 L (Índia)"
+            },
+            {
+                "chave": "velocidade_maxima",
+                "rotulo": "Velocidade máxima",
+                "valor": "156 km/h; (0 a 100km/h: 13,5s) (Brasil)"
+            }
+        ]
+    },
+    "Renault Logan": {
+        "fonte": "Wikipédia",
+        "pagina": "Dacia Logan",
+        "url": "https://pt.wikipedia.org/wiki/Dacia_Logan",
+        "revisao": 67634091,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2004 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 16v 80 cv (D4D, 2007-2017); 1.5 Diesel 80~105 cv (K9K); 1.6 8v 96 cv (K7M, 2007-2018); 1.6 16v 118 cv (MR16DE, 2018-presente); 1.0 12v 82 cv (B4D, 2017-presente)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual ou automatizado (Easy'R)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4349 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1733 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1529 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1019 ~ 1062 kg"
+            }
+        ]
+    },
+    "Renault Master": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Master",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Master",
+        "revisao": 70317222,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1980–presente (França); 2002–presente (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Veículo comercial ligeiro; Van/Furgão de grande porte"
+            }
+        ]
+    },
+    "Renault Mégane": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Mégane",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Mégane",
+        "revisao": 72299559,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "Primeira geração: 1995 - 2001; Segunda geração: 2002 — 2008; Terceira geração: 2008 - 2016; Quarta geração: 2016 - 2025"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C (Europa); Médio (Brasil)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "TCe 130 CV; 1.3 TCe 140 CV; 1.3 TCe 160 CV; 1.5 dCi 90 CV FAP ECO2; 1.5 dCi 110 CV FAP ECO2; 1.5 dCi 110 CV FAP ECO2 Cx. Aut. EDC; 2.0 dCi 160 CV FAP"
+            }
+        ]
+    },
+    "Renault Sandero": {
+        "fonte": "Wikipédia",
+        "pagina": "Renault Sandero",
+        "url": "https://pt.wikipedia.org/wiki/Renault_Sandero",
+        "revisao": 73111021,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2007 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatch 5 portas"
+            }
+        ]
+    },
+    "Toyota Corolla": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota Corolla",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_Corolla",
+        "revisao": 73124392,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1966–presente; 1998–presente ()"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 I4; 1.8 I4"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "e-CVT de 0 velocidades (Híbrido); CVT de 10 velocidades (Combustão)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4630 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1780 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1455 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1410 kg - 1450 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "Combustão:; 101 cv @ 6.600rpm (A); 169 cv @ 6.600rpm (G); Híbrido:; 101 cv @ 5.200rpm (A); 98 cv(G)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "21.3 kgf·m @ 4.400rpm (A) e (G)(Combustão); 14.5 kgf·m @ 3.600rpm (A) e (G)"
+            }
+        ]
+    },
+    "Toyota Corolla Cross": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota Corolla Cross",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_Corolla_Cross",
+        "revisao": 71010878,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2020–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover do Segmento C"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Gasolina:; 1798 cc 2ZR-FE/2ZR-FAE I4 (ZSG10); 1986 cc M20A-FKS I4 (MXGA10/15; América do Norte e China); Flex:; 1798 cc 2ZR-FBE I4 (ZSG10; Tailândia); 1986 cc M20A-FKB I4 (MXGA10; Brasil); Híbrido:; 1798 cc 2ZR-FXE I4 (ZVG10/11/15); 1986 cc M20A-FXS I4 (MXGH10/15; Europa)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "K313 \"Super CVT-i\" com 7 velocidades (1.8 L); K120 \"Direct Shift-CVT\" (2.0 L); eCVT (modelos híbridos)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4460 mm - 4490 mm"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2640 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1825 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1620 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1325 kg (modelos flex); 1385 kg (modelos híbridos)"
+            }
+        ]
+    },
+    "Toyota Etios": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota Etios",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_Etios",
+        "revisao": 70642524,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "Novembro de 2010 – abril de 2020 (sedan, Índia); Junho de 2011 – abril de 2020 (hatchback, Índia); Março de 2013 – outubro de 2017 (Indonésia); Setembro de 2012 – agosto de 2023 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.5L 16v; 1.3 L 1NR-FBE I4; 1.2 L 3NR-FE I4; 1.5 L 2NR-FBE I4; 1.4 L 1ND-TV I4-T"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4265 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1695 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1510 mm"
+            }
+        ]
+    },
+    "Toyota Hilux": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota Hilux",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_Hilux",
+        "revisao": 71738276,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1968 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.8 Turbo Diesel I4"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5325 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1855 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1815 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2090 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "204 cv @ 3.400rpm (D)"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "50.9 kgf·m @ 2.800rpm (D)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            }
+        ]
+    },
+    "Toyota SW4": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota SW4",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_SW4",
+        "revisao": 71235957,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1997 – presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "SUV (E)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.8 Turbo Diesel"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4795 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1855 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1835 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2175 kg"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "204 cv @ 3.400rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "50.9 kgf·m @ 2.800rpm"
+            }
+        ]
+    },
+    "Toyota Yaris": {
+        "fonte": "Wikipédia",
+        "pagina": "Toyota Vitz",
+        "url": "https://pt.wikipedia.org/wiki/Toyota_Vitz",
+        "revisao": 71913851,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1999 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1000, 1300 e 1500 cc"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "manual, automatico CVT"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3785 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1695 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1540 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1040 Kg"
+            }
+        ]
+    },
+    "Volkswagen Amarok": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Amarok",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Amarok",
+        "revisao": 71738266,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2010 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape média (Segmento D)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0L; biturbo; 186 cv a 4000rpm; 40,8 kgfm a 1500rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 6 velocidades; Automática de 10 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "5254 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1954 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1834 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "2065 kg"
+            }
+        ]
+    },
+    "Volkswagen CrossFox": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Fox",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Fox",
+        "revisao": 71040110,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003 — 2021"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 8v Flex EA-111"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 Marchas manual"
+            }
+        ]
+    },
+    "Volkswagen Fox": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Fox",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Fox",
+        "revisao": 71040110,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2003 — 2021"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Compacto"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 8v Flex EA-111"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 Marchas manual"
+            }
+        ]
+    },
+    "Volkswagen Gol": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Gol",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Gol",
+        "revisao": 73136182,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1980–2023"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback de 3 portas; Hatchback de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "AE-1000/CHT 1.0 8V (52 cv); AE-1600/CHT 1.6 8V (82 cv); AT-1000 1.0 8V (57 cv); AT-1000 1.0 16V (69 cv); EA-111 1.0 8V Flex (71/72 cv); EA-111 1.0 8V (65 cv); EA-111 1.0 16V (76 cv); EA-111 1.0 16V Turbo (112 cv); 1300 Boxer (1.3, 47 cv); 1600 Boxer (1.6, 65 cv); MD-270 1.5 8V (78 cv); MD-270 1.6 8V (81 cv); EA-827 AP-1600 8V (1.6, 75 - 99 cv); EA-827 AP-1800 8V (1.8, 91 - 106); EA-827 AP-2000 2.0 8V (112 - 125 cv); EA-827 AP 2.0 16V (145 - 153 cv); EA-111 VHT 1.0 8V Flex (72/76 cv); EA-111 VHT 1.6 8V Flex (99/104 cv); EA-211 MSI 1.6 16V Flex (110/120 cv); EA-211 1.0L MPI 3L 12v Flex (76/82 cv)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "4 marchas, manual (motor Boxer); 5 marchas, manual (motor AP); 5 marchas, automatizado (I-Motion); 6 marchas, automático (Highline)"
+            }
+        ]
+    },
+    "Volkswagen Golf": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Golf",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Golf",
+        "revisao": 72341716,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1974 – presente; 1995 – 2019 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 T, 1.4T 1.6 16v, 2.0T, 3.2 v6 (Brasil), 1.3, 1.4, 1.6 8v Flex, 1.6 Diesel, 1.8 Turbo, 1.9 TDI, 1.9 Blue Motion, 2.0 (Europa), 2.0 Mi, 2.0 Mi Turbo, 2.0 Mi 16v, 2.5 FSi (Jetta), 2.8 Mi VR6, 3.2 Mi VR6"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual 6 vel./Automatizada 7 e 6 vel./ Automática 6 vel."
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1452 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "999 Kg"
+            }
+        ]
+    },
+    "Volkswagen Jetta": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Jetta",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Jetta",
+        "revisao": 71771123,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1979 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.5 (Aspirado, 5 cilindros, 20v) 2.0 (Aspirado, 4 cilindros, 8v) 1.4 TSI (Turbo, 4 cilindros, 16v) 2.0 TSI (Turbo, 4 cilindros, 16v)"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4270 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1600 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1300 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1375 kg (Sedan)"
+            }
+        ]
+    },
+    "Volkswagen Kombi": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Kombi",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Kombi",
+        "revisao": 71688447,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1950 2013"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Van"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1100cc; 1200cc; 1300cc; 1500cc; 1600cc; 1,4L"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Quatro velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4505 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1720 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "2050 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1297 Kg"
+            }
+        ]
+    },
+    "Volkswagen New Beetle": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen New Beetle",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_New_Beetle",
+        "revisao": 70806879,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1997 – 2011"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4L I4 16 válvulas; 1.6L I4; 1.8L I4; 1.9L I4 TDI; 2.0L I4; 2.3L VR5 20 válvula; 2.5L I5 20 válvulas; 3.2L VR6 24 válvulas (RSI)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 4 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "412 cm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "172 cm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "150 cm"
+            }
+        ]
+    },
+    "Volkswagen Nivus": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Nivus",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Nivus",
+        "revisao": 72201177,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2020–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (B)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 L 200 TSI - EA211 - I3"
+            },
+            {
+                "chave": "potencia",
+                "rotulo": "Potência",
+                "valor": "128 cv (E) 116 cv (G) a 5500 rpm"
+            },
+            {
+                "chave": "torque",
+                "rotulo": "Torque",
+                "valor": "20,4 kgfm (E/G) a 2000 rpm"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4266 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1757 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1493 mm"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "52 L"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1199 kg"
+            }
+        ]
+    },
+    "Volkswagen Parati": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Parati",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Parati",
+        "revisao": 71985855,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1982–2012"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0L I4 8V; 1.0L I4 16V; 1.0L I4 16V Turbo; 1.5L I4 8V; 1.6L I4 8V; 1.8L I4 8V; 2.0L I4 8V; 2.0L I4 16V"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "manual de 4 ou 5 marchas"
+            }
+        ]
+    },
+    "Volkswagen Passat": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Passat",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Passat",
+        "revisao": 70798330,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1973 – presente (hatch e perua); 1993 – presente (sedan)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento D"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "2.0 L L4; 3.2 L VR6; 3.6 L VR6"
+            }
+        ]
+    },
+    "Volkswagen Polo": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Polo",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Polo",
+        "revisao": 73136344,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1975 - presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B; \"Compacto premium\" no Brasil"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.0 16v; 1.6 8v; 2.0 8v , 1.8T; 1.0 MPI 12v; 1.6 MSI 16v; 1.0 TSI 12v; 1.4 TSI 16v"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automatica de 6 velocidades"
+            }
+        ]
+    },
+    "Volkswagen Santana": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Santana",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Santana",
+        "revisao": 73139504,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1984 - 2006; 1985 - 2022; (China)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento D"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "AP 1.8/1.8i, AP 2.0/2.0i (Primeira e segunda gerações); 1.0 TSI, 1.4 TSI, 1.6 MSI (Terceira geração (China))"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 marchas ou automático de 4 marchas (Primeira geração); Manual de 5 ou 6 Marchas ou DSG de 7 Marchas (Terceira geração)"
+            }
+        ]
+    },
+    "Volkswagen Saveiro": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Saveiro",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Saveiro",
+        "revisao": 71426971,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1982–presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Picape leve (Segmento B)"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "EA-111 VHT 1.6 8V Flex (101/104 cv); EA-211 MSI 1.6 16V Flex (110/120 cv)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "manual, 5 marchas; tração dianteira"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.493 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.708 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.497 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1020 kg"
+            }
+        ]
+    },
+    "Volkswagen SpaceFox": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen SpaceFox",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_SpaceFox",
+        "revisao": 72849311,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2006 - 2019"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "SportVan/perua compacta"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 8V TotalFlex 101/104 cv"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "5 marchas, manual; 5 marchas, I-Motion automatizado"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.178 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.660 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.547 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1.155 kg"
+            }
+        ]
+    },
+    "Volkswagen T-Cross": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen T-Cross",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_T-Cross",
+        "revisao": 71091639,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (B)"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4218 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1760 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1571 mm - 1575 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1259 kg - 1305 kg"
+            }
+        ]
+    },
+    "Volkswagen Taos": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Taos",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Taos",
+        "revisao": 72263031,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2018–presente (China); 2020–presente (Américas)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover (Segmento C)"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "SUV de 5 portas"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "Gasolina:; 1.2 L TSI 115 I4; 1.4 L TSI 150 I4; 1.5 L TSI 160 I4; 1.6 L MPI 110 I4; 2.0 L TSI 190 I4"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Câmbio manual de 5 velocidades; Câmbio manual de 6 velocidades; Câmbio automático de 6 velocidades; Câmbio automático de 8 velocidades; Câmbio DSG de 7 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4.465 mm; 4.453 mm (China); 4.417 mm (Rússia)"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2.690 mm; 2.680 mm (China); 2.638 mm (Rússia)"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1.841 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1.602–1.635 mm"
+            }
+        ]
+    },
+    "Volkswagen Tiguan": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Tiguan",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Tiguan",
+        "revisao": 72341598,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2008 — presente"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Crossover Segmento C"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.4 TFSI Twincharger; 2.0 TDI"
+            }
+        ]
+    },
+    "Volkswagen Virtus": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Virtus",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Virtus",
+        "revisao": 73135931,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2018 – presente (Brasil) 2020 – dezembro 2023 (GTS) 2022 – presente (Índia) 2023 – presente (China)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento C; Sedan compacto premium"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "1.6 16v MSI; 1.0 12V TSI; 1.4 16V TSI"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "Manual de 5 velocidades; Automática de 6 velocidades"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "4482 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1751 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1472 mm"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "1134 kg"
+            }
+        ]
+    },
+    "Volkswagen Voyage": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Voyage",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Voyage",
+        "revisao": 71776045,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "1981–1996 (1ª geração) 2008–2023 (2ª geração)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento B"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Sedan"
+            },
+            {
+                "chave": "cambio",
+                "rotulo": "Câmbio",
+                "valor": "4 marchas, manual; 5 marchas, manual; 5 marchas, automatizado (I-Motion); 6 marchas, automático"
+            }
+        ]
+    },
+    "Volkswagen up!": {
+        "fonte": "Wikipédia",
+        "pagina": "Volkswagen Up!",
+        "url": "https://pt.wikipedia.org/wiki/Volkswagen_Up!",
+        "revisao": 71182485,
+        "licenca": "CC BY-SA 4.0",
+        "coletado_em": "2026-10-07",
+        "campos": [
+            {
+                "chave": "producao",
+                "rotulo": "Produção",
+                "valor": "2011 — presente (Europa) 2014 — 2021 (Brasil)"
+            },
+            {
+                "chave": "segmento",
+                "rotulo": "Segmento",
+                "valor": "Segmento A"
+            },
+            {
+                "chave": "carroceria",
+                "rotulo": "Carroceria",
+                "valor": "Hatchback"
+            },
+            {
+                "chave": "motores",
+                "rotulo": "Motores",
+                "valor": "EA211 1.0L MPI 3L 12v; EA211 1.0L TSI (turbo com injeção direta) 3L 12v"
+            },
+            {
+                "chave": "comprimento",
+                "rotulo": "Comprimento",
+                "valor": "3605 mm (MPI); 3645 mm (TSI)"
+            },
+            {
+                "chave": "entre_eixos",
+                "rotulo": "Entre-eixos",
+                "valor": "2421 mm"
+            },
+            {
+                "chave": "largura",
+                "rotulo": "Largura",
+                "valor": "1645 mm"
+            },
+            {
+                "chave": "altura",
+                "rotulo": "Altura",
+                "valor": "1500 mm; 1506 mm (Cross Up!)"
+            },
+            {
+                "chave": "peso",
+                "rotulo": "Peso",
+                "valor": "910 kg — 960 kg"
+            },
+            {
+                "chave": "tanque",
+                "rotulo": "Tanque de combustível",
+                "valor": "50 L"
+            }
+        ]
+    }
+}

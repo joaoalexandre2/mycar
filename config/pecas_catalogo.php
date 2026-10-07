@@ -222,6 +222,16 @@ return [
         ['renault', 'stepway', 'hatch', 'Renault Sandero Stepway'],
     ],
 
+    // Título da página na Wikipédia quando difere do nome do modelo (para `modelos:raspar-fichas`).
+    'wikipedia' => [
+        'BMW Série 1 (118i)' => 'BMW Série 1',
+        'BMW Série 1 (120i)' => 'BMW Série 1',
+        'BMW Série 3 (320i)' => 'BMW Série 3',
+        'BMW Série 3 (328i)' => 'BMW Série 3',
+        'BMW Série 3 (330i)' => 'BMW Série 3',
+        'Audi A3 Sedan' => 'Audi A3',
+    ],
+
     // Marca da peça original de cada montadora (chave = primeira marca do modelo).
     'originais' => [
         'fiat' => 'Mopar',
