@@ -34,6 +34,18 @@ return [
         'cache_ttl' => env('FIPE_CACHE_TTL', 86400),
     ],
 
+    // Comparador de preços: API oficial do Mercado Livre (aplicativo gratuito em
+    // developers.mercadolivre.com.br). Sem as duas chaves, o comparador avisa
+    // que não está configurado em vez de tentar raspar a loja.
+    'mercadolivre' => [
+        'client_id' => env('ML_CLIENT_ID'),
+        'client_secret' => env('ML_CLIENT_SECRET'),
+        'url' => env('ML_API_URL', 'https://api.mercadolibre.com'),
+        'site' => env('ML_SITE', 'MLB'),
+        'timeout' => env('ML_API_TIMEOUT', 10),
+        'cache_ttl' => env('ML_CACHE_TTL', 1800),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
