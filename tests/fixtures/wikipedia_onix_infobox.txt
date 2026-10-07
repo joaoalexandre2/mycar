@@ -1,0 +1,35 @@
+{{Info/Automóvel
+ | nome                 = Chevrolet Onix
+ | imagem               = [[File:2023 SAIC-GM-Chevrolet Monza (facelift, front).jpg|Dianteira|300px]][[File:2023 SAIC-GM-Chevrolet Monza (facelift, rear).jpg|Traseira|300px]][[File:2023 SAIC-GM Chevrolet Monza interior.jpg|Interior|300px]]
+ | imagem-tamanho       = 300px
+ | legenda              =Chevrolet Onix (Monza) fotografado na [[China]] 
+ | aka                  = Chevrolet Joy<br/>Chevrolet Monza ([[China]])
+ | construtor           = [[Chevrolet]]
+ | matriz               = [[General Motors]]
+ | produção             = 2013–presente<br>2013-2021 (Primeira Geração)<br>2020-presente (Segunda Geração)
+ | montagem             = [[Gravataí]], [[Rio Grande do Sul|RS]], [[Brasil]]<br>[[São Caetano do Sul]], [[São Paulo (estado)|SP]], [[Brasil]]<br>[[Xangai]], [[China]]<br>[[San Luis Potosí]], [[México]]
+ | classe               = [[Segmento B]]
+ | carroceria           = [[Hatchback]] (5 portas) <br>[[Sedan (automóvel)|Sedan]] Plus (4 portas)
+ | protótipo            =
+ | designer             =
+ | motor                = 1.0 SPE/4 aspirado Flex<br>1.0 aspirado Flex<br>1.4 aspirado flex<br>1.0 turbo Flex
+ | potência             = 82 a 116 cv
+ | torque               = 10,6 -16,8 [[Quilograma-força|kgfm]]
+ | plataforma           = GM Global Small Vehicle Platform (Gamma)
+ | caixa de velocidades = 6 {{pequeno|([[Câmbio manual|MT]] e [[Câmbio automático|AT]])}}
+ | autonomia            = 8,6 km {{pequeno|(urbano)}} <br>17 km {{pequeno|(estrada)}}
+ | comprimento          = {{converter|4163|mm|in|3|o=l}}
+ | entre eixos          = {{converter|2551|mm|in|3|o=l}}
+ | largura              = {{converter|1730|mm|in|3|o=l}}
+ | altura               = {{converter|1473|mm|in|3|o=l}}
+ | altura do chão       =
+ | peso                 = 
+ | vel_max              = {{converter|200|km/h|mph|3|o=l}}
+ | tanque               = {{converter|44|L|US-gal|3|o=l}}
+ | modelos similares    = [[Volkswagen Polo]] <br>[[Toyota Yaris]] <br>[[Renault Sandero]] <br>[[Hyundai HB20]] <br>[[Ford Ka]] <br>[[Fiat Argo]]<br>[[Peugeot 208]]<br>[[Ford Fiesta]]<br>[[Chevrolet Celta]]
+ | antecessor           = [[Chevrolet Corsa]] (1994-2012)<br>[[Chevrolet Celta]] (2000–14)<br>[[Chevrolet Agile]] (2009-2014)<br>[[Chevrolet Aveo|Chevrolet Sonic]] (2012-2014)
+ | sucessor             =[[Chevrolet Monza (China)]]
+ | PVP em Portugal      =
+ | PVP no Brasil        =
+ |modelos relacionados  = [[Chevrolet Prisma]]
+|layout=[[Motor dianteiro, tração dianteira]]}}
