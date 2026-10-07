@@ -15,6 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Fonte de preços do comparador (outras lojas entram trocando esta classe).
+        $this->app->bind(
+            \App\Services\Precos\FontePrecos::class,
+            \App\Services\Precos\MercadoLivreFonte::class
+        );
+
         $this->app->bind(
             OrdemServicoRepositoryInterface::class,
             OrdemServicoRepository::class
