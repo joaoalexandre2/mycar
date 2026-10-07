@@ -40,6 +40,9 @@ class PasswordResetController extends Controller
             $user->forceFill([
                 'password' => $dados['password'],
             ])->save();
+
+            // Quem esqueceu a senha pode ter perdido o aparelho: derruba todas as sessões.
+            $user->revogarSessoes();
         });
 
         if ($status !== Password::PASSWORD_RESET) {

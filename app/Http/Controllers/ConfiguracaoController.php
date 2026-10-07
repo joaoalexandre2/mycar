@@ -53,7 +53,37 @@ class ConfiguracaoController extends Controller
 
         $user->forceFill(['password' => $dados['password']])->save();
 
+        // A senha mudou: as sessões dos outros aparelhos caem; esta continua.
+        $user->revogarSessoes($request->attributes->get('token_hash'));
+
         return response()->json(['message' => 'Senha alterada com sucesso.']);
+    }
+
+    /**
+     * Foto de perfil: o navegador manda a imagem já reduzida (data URI, até 120 KB).
+     * Só aceita JPEG, PNG ou WebP em base64.
+     */
+    public function atualizarFoto(Request $request)
+    {
+        $dados = $request->validate([
+            'foto' => ['required', 'string', 'max:160000', 'regex:/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/'],
+        ], [
+            'foto.regex' => 'A foto precisa ser uma imagem JPEG, PNG ou WebP.',
+            'foto.max' => 'A foto está grande demais. Escolha outra.',
+        ]);
+
+        $user = $request->user();
+        $user->update($dados);
+
+        return response()->json($user->dadosPublicos());
+    }
+
+    public function removerFoto(Request $request)
+    {
+        $user = $request->user();
+        $user->update(['foto' => null]);
+
+        return response()->json($user->dadosPublicos());
     }
 
     public function mostrarOficina(Request $request)

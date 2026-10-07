@@ -7,6 +7,7 @@ use App\Mail\RedefinirSenhaEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'conta_id',
         'tema',
         'cor',
+        'foto',
     ];
 
     /**
@@ -43,6 +45,26 @@ class User extends Authenticatable
         'api_token',
         'verification_token',
     ];
+
+    public function tokensAcesso(): HasMany
+    {
+        return $this->hasMany(TokenAcesso::class);
+    }
+
+    /**
+     * Encerra as sessões da pessoa em todos os aparelhos, menos (opcionalmente)
+     * a que está em uso. Usado ao trocar ou redefinir a senha.
+     */
+    public function revogarSessoes(?string $manterHash = null): void
+    {
+        $this->tokensAcesso()
+            ->when($manterHash, fn ($q) => $q->where('token_hash', '!=', $manterHash))
+            ->delete();
+
+        if ($this->api_token !== null && $this->api_token !== $manterHash) {
+            $this->forceFill(['api_token' => null])->save();
+        }
+    }
 
     public function oficina(): BelongsTo
     {
@@ -77,6 +99,8 @@ class User extends Authenticatable
             // Aparência escolhida em Configurações; null = nunca escolheu.
             'tema' => $this->tema,
             'cor' => $this->cor,
+            // Foto de perfil (imagem pequena em data URI); null = usa as iniciais.
+            'foto' => $this->foto,
         ];
     }
 

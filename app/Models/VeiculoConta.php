@@ -55,6 +55,12 @@ class VeiculoConta extends Model
 
     protected static function booted(): void
     {
+        // Removeu o veículo: os arquivos das fotos precisam sair do disco (o banco
+        // apaga as linhas em cascata, mas sem acionar o model).
+        static::deleting(function (VeiculoConta $veiculo) {
+            $veiculo->fotos()->get()->each->delete();
+        });
+
         // Mudou a data da revisão? O aviso antigo não vale para a nova data.
         static::saving(function (VeiculoConta $veiculo) {
             if ($veiculo->isDirty('revisao_prevista_em')) {
@@ -97,6 +103,11 @@ class VeiculoConta extends Model
             ->get()
             ->filter(fn (Documento $d) => $d->tipo !== 'crlv' || $d->id === $crlvId)
             ->values();
+    }
+
+    public function fotos(): HasMany
+    {
+        return $this->hasMany(FotoVeiculoConta::class, 'veiculo_conta_id');
     }
 
     public function codigosPecas(): HasMany

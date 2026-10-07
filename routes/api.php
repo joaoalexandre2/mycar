@@ -21,6 +21,8 @@ use App\Http\Controllers\CodigoPecaController;
 use App\Http\Controllers\FichaTecnicaContaController;
 use App\Http\Controllers\ComparadorController;
 use App\Http\Controllers\SugestaoController;
+use App\Http\Controllers\FotoVeiculoContaController;
+use App\Http\Controllers\FotoServirController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
 use App\Http\Controllers\RegisterController;
@@ -43,6 +45,11 @@ Route::get('/email/verificar/{id}/{hash}', [EmailVerificationController::class, 
 Route::post('/password/esqueci', [PasswordResetController::class, 'enviar'])->middleware('throttle:5,1');
 Route::post('/password/redefinir', [PasswordResetController::class, 'redefinir'])->middleware('throttle:5,1');
 
+// Foto do álbum de um veículo: link assinado e temporário (o <img> não manda token).
+Route::get('/fotos/{foto}/{tipo}', [FotoServirController::class, 'mostrar'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('fotos.mostrar');
+
 // Painel do operador da plataforma: só quem foi promovido por `admin:promover`.
 Route::middleware(['auth.token', 'super.admin'])->prefix('admin')->group(function () {
     Route::get('/sugestoes', [SugestaoController::class, 'todas']);
@@ -59,6 +66,8 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [ConfiguracaoController::class, 'atualizarPerfil']);
     Route::put('/me/aparencia', [ConfiguracaoController::class, 'atualizarAparencia']);
+    Route::put('/me/foto', [ConfiguracaoController::class, 'atualizarFoto'])->middleware('throttle:20,1');
+    Route::delete('/me/foto', [ConfiguracaoController::class, 'removerFoto']);
 
     // Sugestões para a equipe do MyCar (todos os perfis)
     Route::get('/sugestoes', [SugestaoController::class, 'index']);
@@ -128,6 +137,10 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/despesas', [DespesaController::class, 'index']);
         Route::get('/comparador', [ComparadorController::class, 'index'])->middleware('throttle:20,1');
         Route::get('/pecas-catalogo', [CatalogoPecasController::class, 'index']);
+        Route::get('/veiculos/{id}/fotos', [FotoVeiculoContaController::class, 'index']);
+        Route::post('/veiculos/{id}/fotos', [FotoVeiculoContaController::class, 'store'])->middleware('throttle:60,1');
+        Route::delete('/veiculos/{id}/fotos/{fotoId}', [FotoVeiculoContaController::class, 'destroy']);
+
         Route::get('/veiculos/{id}/ficha-tecnica', [FichaTecnicaContaController::class, 'show']);
         Route::put('/veiculos/{id}/ficha-tecnica', [FichaTecnicaContaController::class, 'update']);
         Route::post('/veiculos/{id}/codigos-pecas', [CodigoPecaController::class, 'store']);
