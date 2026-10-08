@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FotoVeiculoConta;
+use App\Models\SugestaoAnexo;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -23,6 +24,19 @@ class FotoServirController extends Controller
         abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
 
         return Storage::disk('local')->response($caminho, null, [
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /** Imagem anexada a uma sugestão (mesmo esquema: link assinado e temporário). */
+    public function anexoDeSugestao($anexo)
+    {
+        $registro = SugestaoAnexo::find($anexo);
+
+        abort_unless($registro && Storage::disk('local')->exists($registro->caminho), 404);
+
+        return Storage::disk('local')->response($registro->caminho, null, [
             'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
         ]);

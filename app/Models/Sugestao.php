@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** Sugestão de melhoria enviada por um usuário para a equipe do MyCar. */
 class Sugestao extends Model
@@ -15,6 +16,11 @@ class Sugestao extends Model
     protected $table = 'sugestoes';
 
     protected $fillable = ['user_id', 'categoria', 'titulo', 'descricao', 'perfil', 'status', 'resposta'];
+
+    public function anexos(): HasMany
+    {
+        return $this->hasMany(SugestaoAnexo::class);
+    }
 
     public function user(): BelongsTo
     {
