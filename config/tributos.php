@@ -24,6 +24,10 @@ return [
 
     'ano_base' => 2026,
 
+    // A partir de quantos anos de fabricação avisamos que o estado PODE isentar o IPVA.
+    // Só um aviso: a regra e a idade variam por estado e não estão cadastradas aqui.
+    'idade_aviso_isencao_ipva' => 15,
+
     'estados' => [
         'AC' => ['ipva' => 2.0,  'licenciamento' => 200.25],
         'AL' => ['ipva' => null, 'licenciamento' => 36.03],
