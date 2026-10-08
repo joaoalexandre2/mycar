@@ -81,6 +81,8 @@ class FichaTecnicaContaController extends Controller
                 'marca' => $veiculo->marca,
                 'modelo' => $veiculo->modelo,
                 'ano' => $veiculo->ano,
+                'ano_fabricacao' => $veiculo->ano_fabricacao,
+                'ano_completo' => $veiculo->ano_completo,
                 'uf' => $veiculo->uf,
             ],
             'fipe' => $dadosFipe,
