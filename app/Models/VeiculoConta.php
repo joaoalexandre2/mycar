@@ -51,6 +51,7 @@ class VeiculoConta extends Model
         'ano_completo',
         'idade_anos',
         'possivel_isencao_ipva',
+        'foto_capa_url',
         'ipva_estimado',
         'licenciamento_valor',
         'proximo_vencimento_ipva',
@@ -112,6 +113,15 @@ class VeiculoConta extends Model
     public function fotos(): HasMany
     {
         return $this->hasMany(FotoVeiculoConta::class, 'veiculo_conta_id');
+    }
+
+    /**
+     * Link temporário (relativo) da miniatura da foto mais recente do álbum, para a capa
+     * do cartão do veículo. Nulo quando o veículo ainda não tem foto.
+     */
+    public function getFotoCapaUrlAttribute(): ?string
+    {
+        return $this->fotos()->orderByDesc('created_at')->orderByDesc('id')->first()?->urlAssinada('miniatura');
     }
 
     public function codigosPecas(): HasMany

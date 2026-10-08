@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Abastecimento;
+use App\Models\Servico;
 use App\Models\VeiculoConta;
+use App\Services\CalculoConsumo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -15,7 +18,7 @@ class ContaController extends Controller
     /** Janela, em dias, dos vencimentos que aparecem na visão geral. */
     private const DIAS_A_FRENTE = 60;
 
-    public function resumo(Request $request)
+    public function resumo(Request $request, CalculoConsumo $calculo)
     {
         $usuario = $request->user();
         $hoje = now()->startOfDay();
@@ -150,7 +153,69 @@ class ContaController extends Controller
             'valor_total_fipe' => (float) $veiculos->sum('fipe_valor'),
             'vencimentos' => $vencimentos,
             'dias_a_frente' => self::DIAS_A_FRENTE,
+            'consumo' => $this->consumoDaConta($veiculos, $calculo),
+            'gasto_mes' => $this->gastoDoMes(),
         ]);
+    }
+
+    /**
+     * Consumo médio (km/l) da conta: média dos veículos que já têm pelo menos um
+     * intervalo de tanque cheio, e preço médio do litro de tudo que foi abastecido.
+     * Sem dado suficiente, km_por_litro vem nulo (a tela mostra como começar).
+     *
+     * @param \Illuminate\Support\Collection<int, VeiculoConta> $veiculos
+     * @return array{km_por_litro: ?float, preco_medio_litro: ?float, veiculos_com_dados: int}
+     */
+    private function consumoDaConta($veiculos, CalculoConsumo $calculo): array
+    {
+        $consumos = [];
+        $gasto = 0.0;
+        $litros = 0.0;
+
+        foreach ($veiculos as $veiculo) {
+            $resultado = $calculo->calcular($veiculo->abastecimentos()->get()->map(fn (Abastecimento $a) => [
+                'id' => $a->id,
+                'data' => $a->data->toDateString(),
+                'km' => $a->km,
+                'litros' => (float) $a->litros,
+                'valor_total' => (float) $a->valor_total,
+                'tanque_cheio' => $a->tanque_cheio,
+            ]));
+
+            if ($resultado['consumo_medio_km_l'] !== null) {
+                $consumos[] = $resultado['consumo_medio_km_l'];
+            }
+
+            $gasto += $resultado['total_gasto'];
+            $litros += $resultado['total_litros'];
+        }
+
+        return [
+            'km_por_litro' => $consumos ? round(array_sum($consumos) / count($consumos), 1) : null,
+            'preco_medio_litro' => $litros > 0 ? round($gasto / $litros, 2) : null,
+            'veiculos_com_dados' => count($consumos),
+        ];
+    }
+
+    /**
+     * Gasto registrado no mês corrente: combustível (abastecimentos) e serviços
+     * com valor informado. O seguro, que não tem data de pagamento, fica de fora.
+     *
+     * @return array{total: float, combustivel: float, servicos: float}
+     */
+    private function gastoDoMes(): array
+    {
+        $inicio = now()->startOfMonth()->toDateString();
+        $fim = now()->endOfMonth()->toDateString();
+
+        $combustivel = (float) Abastecimento::whereBetween('data', [$inicio, $fim])->sum('valor_total');
+        $servicos = (float) Servico::whereBetween('realizado_em', [$inicio, $fim])->whereNotNull('valor')->sum('valor');
+
+        return [
+            'total' => round($combustivel + $servicos, 2),
+            'combustivel' => round($combustivel, 2),
+            'servicos' => round($servicos, 2),
+        ];
     }
 
     public function preferencias(Request $request)
