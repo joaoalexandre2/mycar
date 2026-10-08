@@ -50,6 +50,11 @@ Route::get('/fotos/{foto}/{tipo}', [FotoServirController::class, 'mostrar'])
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('fotos.mostrar');
 
+// Imagem anexada a uma sugestão: também por link assinado e temporário.
+Route::get('/sugestoes/anexos/{anexo}', [FotoServirController::class, 'anexoDeSugestao'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('sugestoes.anexo');
+
 // Painel do operador da plataforma: só quem foi promovido por `admin:promover`.
 Route::middleware(['auth.token', 'super.admin'])->prefix('admin')->group(function () {
     Route::get('/sugestoes', [SugestaoController::class, 'todas']);

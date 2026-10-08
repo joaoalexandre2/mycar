@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Sugestao;
+use App\Models\SugestaoAnexo;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
@@ -115,5 +118,111 @@ class SugestaoTest extends TestCase
         $this->postJson('/api/sugestoes', $this->dados(), $usuario)->assertStatus(201);
 
         $this->assertArrayNotHasKey('autor', $this->getJson('/api/sugestoes', $usuario)->json('0'));
+    }
+    // ----------------------------------------------------------- imagens anexadas
+
+    /** PNG 1x1 válido. */
+    private const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+
+    /** Arquivo de verdade: o tipo é detectado pelo CONTEÚDO (o UploadedFile::fake adivinha pela extensão). */
+    private function arquivo(string $conteudo, string $nome): UploadedFile
+    {
+        $caminho = tempnam(sys_get_temp_dir(), 'mycar');
+        file_put_contents($caminho, $conteudo);
+
+        return new UploadedFile($caminho, $nome, null, null, true);
+    }
+
+    private function enviarComImagens(array $headers, array $imagens, array $extra = []): \Illuminate\Testing\TestResponse
+    {
+        return $this->post('/api/sugestoes', $this->dados($extra) + ['imagens' => $imagens], $headers + ['Accept' => 'application/json']);
+    }
+
+    public function test_anexa_imagens_e_o_dono_ve_com_link_assinado(): void
+    {
+        Storage::fake('local');
+        [, $headers] = $this->autenticar();
+
+        $r = $this->enviarComImagens($headers, [
+            $this->arquivo(base64_decode(self::PNG), 'print1.png'),
+            $this->arquivo(base64_decode(self::PNG), 'print2.png'),
+        ])->assertStatus(201);
+
+        $r->assertJsonCount(2, 'anexos');
+        $this->assertStringContainsString('/api/sugestoes/anexos/', $r->json('anexos.0.url'));
+        $this->assertStringContainsString('signature=', $r->json('anexos.0.url'));
+
+        $anexo = SugestaoAnexo::first();
+        Storage::disk('local')->assertExists($anexo->caminho);
+        $this->assertSame('image/png', $anexo->mime);
+
+        $this->getJson('/api/sugestoes', $headers)->assertJsonCount(2, '0.anexos');
+        $this->get($r->json('anexos.0.url'))->assertStatus(200)->assertHeader('X-Content-Type-Options', 'nosniff');
+    }
+
+    public function test_sugestao_sem_imagem_continua_valendo(): void
+    {
+        [, $headers] = $this->autenticar();
+
+        $this->postJson('/api/sugestoes', $this->dados(), $headers)->assertStatus(201)->assertJsonCount(0, 'anexos');
+    }
+
+    public function test_valida_as_imagens_pelo_conteudo_e_o_limite(): void
+    {
+        Storage::fake('local');
+        [, $headers] = $this->autenticar();
+
+        $png = fn () => $this->arquivo(base64_decode(self::PNG), 'a.png');
+
+        $this->enviarComImagens($headers, [$png(), $png(), $png(), $png()])
+            ->assertStatus(422)->assertJsonValidationErrors('imagens');
+
+        $this->enviarComImagens($headers, [$this->arquivo('<?php echo "oi"; ?>', 'golpe.png')])
+            ->assertStatus(422)->assertJsonValidationErrors('imagens.0');
+        $this->enviarComImagens($headers, [$this->arquivo('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>', 'a.svg')])
+            ->assertStatus(422);
+        $this->enviarComImagens($headers, [$this->arquivo(base64_decode(self::PNG).str_repeat('0', 4 * 1024 * 1024), 'grande.png')])
+            ->assertStatus(422)->assertJsonValidationErrors('imagens.0');
+
+        $this->assertSame(0, Sugestao::count());
+        $this->assertSame(0, SugestaoAnexo::count());
+    }
+
+    public function test_a_equipe_ve_os_anexos_e_o_link_adulterado_e_barrado(): void
+    {
+        Storage::fake('local');
+        [, $usuario] = $this->autenticar();
+        $url = $this->enviarComImagens($usuario, [$this->arquivo(base64_decode(self::PNG), 'a.png')])->json('anexos.0.url');
+
+        [, $equipe] = $this->autenticarEquipe();
+        $this->getJson('/api/admin/sugestoes', $equipe)->assertJsonCount(1, '0.anexos');
+
+        $this->get(strtok($url, '?'))->assertStatus(403);
+        $this->get(preg_replace('/signature=[a-f0-9]+/', 'signature=000', $url))->assertStatus(403);
+
+        $this->travel(3)->hours();
+        $this->get($url)->assertStatus(403);
+    }
+
+    public function test_outro_usuario_nao_recebe_os_anexos_de_quem_enviou(): void
+    {
+        Storage::fake('local');
+        [, $a] = $this->autenticar();
+        [, $b] = $this->autenticar();
+        $this->enviarComImagens($a, [$this->arquivo(base64_decode(self::PNG), 'a.png')])->assertStatus(201);
+
+        $this->getJson('/api/sugestoes', $b)->assertJsonCount(0);
+    }
+
+    public function test_apagar_o_anexo_remove_o_arquivo(): void
+    {
+        Storage::fake('local');
+        [, $headers] = $this->autenticar();
+        $this->enviarComImagens($headers, [$this->arquivo(base64_decode(self::PNG), 'a.png')])->assertStatus(201);
+
+        $anexo = SugestaoAnexo::first();
+        $anexo->delete();
+
+        Storage::disk('local')->assertMissing($anexo->caminho);
     }
 }
