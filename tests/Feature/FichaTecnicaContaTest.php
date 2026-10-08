@@ -119,7 +119,8 @@ class FichaTecnicaContaTest extends TestCase
             ->assertJsonPath('fipe.valor', 60250.5)
             ->assertJsonPath('fipe.mes_referencia', 'outubro de 2026')
             ->assertJsonPath('manutencao', null)
-            ->assertJsonPath('veiculo.placa', 'AAA1B25');
+            ->assertJsonPath('veiculo.placa', 'AAA1B25')
+            ->assertJsonPath('veiculo.ano_completo', '2020');
 
         $especs = collect($r->json('especificacoes'))->pluck('valor', 'chave');
         $this->assertSame('1.0 litros', $especs['motor']);

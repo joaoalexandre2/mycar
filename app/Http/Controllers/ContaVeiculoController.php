@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\VeiculoConta;
+use App\Rules\AnoFabricacao;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Database\Eloquent\Builder;
@@ -132,6 +133,7 @@ class ContaVeiculoController extends Controller
             'marca' => ['required', 'string', 'max:100'],
             'modelo' => ['required', 'string', 'max:100'],
             'ano' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
+            'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
             'revisao_prevista_em' => ['nullable', 'date'],
             'uf' => ['nullable', 'string', 'size:2', Rule::in(array_keys(config('tributos.estados')))],
             'fipe_marca_id' => ['nullable', 'integer'],

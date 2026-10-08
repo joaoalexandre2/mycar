@@ -23,6 +23,7 @@ class VeiculoConta extends Model
         'marca',
         'modelo',
         'ano',
+        'ano_fabricacao',
         'uf',
         'revisao_prevista_em',
         'fipe_marca_id',
@@ -47,6 +48,9 @@ class VeiculoConta extends Model
     ];
 
     protected $appends = [
+        'ano_completo',
+        'idade_anos',
+        'possivel_isencao_ipva',
         'ipva_estimado',
         'licenciamento_valor',
         'proximo_vencimento_ipva',

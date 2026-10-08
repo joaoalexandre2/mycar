@@ -10,6 +10,39 @@ namespace App\Models\Concerns;
 trait CalculaTributosVeiculo
 {
     /**
+     * Idade, em anos, pelo ano de FABRICAÇÃO (é a que os estados contam); sem ele,
+     * usa o ano do modelo.
+     */
+    public function getIdadeAnosAttribute(): ?int
+    {
+        $base = $this->ano_fabricacao ?: $this->ano;
+
+        return $base ? max(0, now()->year - (int) $base) : null;
+    }
+
+    /** Como no CRLV: "2018/2019" (fabricação/modelo); só "2018" quando é o mesmo ano ou sem fabricação. */
+    public function getAnoCompletoAttribute(): ?string
+    {
+        if (!$this->ano) {
+            return null;
+        }
+
+        return $this->ano_fabricacao && (int) $this->ano_fabricacao !== (int) $this->ano
+            ? "{$this->ano_fabricacao}/{$this->ano}"
+            : (string) $this->ano;
+    }
+
+    /**
+     * Aviso (não um cálculo): alguns estados isentam o IPVA de veículos antigos, contando
+     * pelo ano de fabricação. Não temos a regra de cada estado verificada, então só
+     * sinalizamos que vale conferir na Sefaz. A estimativa de IPVA NÃO muda por isso.
+     */
+    public function getPossivelIsencaoIpvaAttribute(): bool
+    {
+        return ($this->idade_anos ?? 0) >= (int) config('tributos.idade_aviso_isencao_ipva', 15);
+    }
+
+    /**
      * IPVA estimado = valor FIPE × alíquota do estado (config/tributos.php).
      * Null quando falta o estado, o valor FIPE ou a alíquota do estado.
      */

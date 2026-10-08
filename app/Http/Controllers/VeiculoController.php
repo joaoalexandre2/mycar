@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
+use App\Rules\AnoFabricacao;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,6 +40,7 @@ class VeiculoController extends Controller
                 'min:1900',
                 'max:' . (date('Y') + 1),
             ],
+            'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
             'uf' => ['nullable', 'string', 'size:2', 'in:' . implode(',', array_keys(config('tributos.estados')))],
         'fipe_marca_id' => ['nullable', 'integer'],
             'fipe_modelo_id' => ['nullable', 'integer'],
@@ -134,6 +136,7 @@ public function update(Request $request, $id, FipeService $fipe)
             'min:1900',
             'max:' . (date('Y') + 1),
         ],
+        'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
         'uf' => ['nullable', 'string', 'size:2', 'in:' . implode(',', array_keys(config('tributos.estados')))],
         'fipe_marca_id' => ['nullable', 'integer'],
         'fipe_modelo_id' => ['nullable', 'integer'],
