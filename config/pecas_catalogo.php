@@ -232,6 +232,17 @@ return [
         'Audi A3 Sedan' => 'Audi A3',
     ],
 
+    // Título da página usado só para a FOTO (`modelos:raspar-imagens`), quando a página
+    // principal do modelo não tem imagem ou mostra outro carro.
+    'wikipedia_imagem' => [
+        'BMW Série 3 (320i)' => 'BMW Série 3 (F30)',
+        'BMW Série 3 (328i)' => 'BMW Série 3 (F30)',
+        'BMW Série 3 (330i)' => 'BMW Série 3 (G20)',
+        'Ford Ka Sedan' => 'Ford Ka',
+        'Ford Fiesta Sedan' => 'Ford Fiesta',
+        'Renault Sandero Stepway' => 'Renault Sandero',
+    ],
+
     // Marca da peça original de cada montadora (chave = primeira marca do modelo).
     'originais' => [
         'fiat' => 'Mopar',

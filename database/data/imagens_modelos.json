@@ -1,0 +1,1332 @@
+{
+    "Audi A3": {
+        "slug": "audi-a3",
+        "arquivo": "audi-a3.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Audi_A3_8Y_IMG_3116.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi A3 Sedan": {
+        "slug": "audi-a3-sedan",
+        "arquivo": "audi-a3-sedan.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Audi_A3_8Y_IMG_3116.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi A4": {
+        "slug": "audi-a4",
+        "arquivo": "audi-a4.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Audi_A4_Sport_TDi_Quattro_S-A_2.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi A5": {
+        "slug": "audi-a5",
+        "arquivo": "audi-a5.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Audi_A5_S_Line_TDi_S-A_2.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi Q3": {
+        "slug": "audi-q3",
+        "arquivo": "audi-q3.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Audi_Q3_1Y7A4914.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi Q5": {
+        "slug": "audi-q5",
+        "arquivo": "audi-q5.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2021_Audi_Q5_S_Line_45_TFSi_MHEV_Quattro_facelift_2.0_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Audi Q7": {
+        "slug": "audi-q7",
+        "arquivo": "audi-q7.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2020_Audi_Q7_S_Line_TDi_MHEV_Quattro_facelift_3.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW Série 1 (118i)": {
+        "slug": "bmw-serie-1-118i",
+        "arquivo": "bmw-serie-1-118i.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_BMW_116d_SE_Business_1.5_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW Série 1 (120i)": {
+        "slug": "bmw-serie-1-120i",
+        "arquivo": "bmw-serie-1-120i.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_BMW_116d_SE_Business_1.5_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW Série 3 (320i)": {
+        "slug": "bmw-serie-3-320i",
+        "arquivo": "bmw-serie-3-320i.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2012_BMW_318d_Sport_Automatic_2.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW Série 3 (328i)": {
+        "slug": "bmw-serie-3-328i",
+        "arquivo": "bmw-serie-3-328i.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2012_BMW_318d_Sport_Automatic_2.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW Série 3 (330i)": {
+        "slug": "bmw-serie-3-330i",
+        "arquivo": "bmw-serie-3-330i.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_BMW_318d_SE_Automatic_2.0_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "BMW X3": {
+        "slug": "bmw-x3",
+        "arquivo": "bmw-x3.png",
+        "autor": "M Town Citizen",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:BMW_X3_G01_30i_M-Sport.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Agile": {
+        "slug": "chevrolet-agile",
+        "arquivo": "chevrolet-agile.jpg",
+        "autor": "Diego HC",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Agile_front.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Astra": {
+        "slug": "chevrolet-astra",
+        "arquivo": "chevrolet-astra.jpg",
+        "autor": "order_242 from Chile",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Astra_2.0_GLS_2006_(16088287360).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Blazer": {
+        "slug": "chevrolet-blazer",
+        "arquivo": "chevrolet-blazer.jpg",
+        "autor": "Dinkun Chen",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:CHEVROLET_S-10_BLAZER_(CHINA).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Captiva": {
+        "slug": "chevrolet-captiva",
+        "arquivo": "chevrolet-captiva.jpg",
+        "autor": "Chanokchon",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Chevrolet_Captiva_LT.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Celta": {
+        "slug": "chevrolet-celta",
+        "arquivo": "chevrolet-celta.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Celta_2013_in_Uruguay.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Classic": {
+        "slug": "chevrolet-classic",
+        "arquivo": "chevrolet-classic.jpg",
+        "autor": "Matti Blume",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Classic_20150814-DSC05670.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Cobalt": {
+        "slug": "chevrolet-cobalt",
+        "arquivo": "chevrolet-cobalt.jpg",
+        "autor": "RL GNZLZ from Chile",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Cobalt_1.8_LTZ_2017_(38346300391).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Corsa": {
+        "slug": "chevrolet-corsa",
+        "arquivo": "chevrolet-corsa.jpg",
+        "autor": "RL GNZLZ from Chile",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Corsa_Classic_1.6_Swing_2002_(45180540345).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Cruze": {
+        "slug": "chevrolet-cruze",
+        "arquivo": "chevrolet-cruze.jpg",
+        "autor": "Damian B Oh",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Cruze_Turbo_LTZ_D2LC_Modern_Black_(8).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Equinox": {
+        "slug": "chevrolet-equinox",
+        "arquivo": "chevrolet-equinox.jpg",
+        "autor": "Zotyefan",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Equinox_III_facelift_IMG001.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Meriva": {
+        "slug": "chevrolet-meriva",
+        "arquivo": "chevrolet-meriva.jpg",
+        "autor": "M 93",
+        "licenca": "CC BY-SA 3.0 de",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Opel_Meriva_1.4_Design_Edition_(B)_%E2%80%93_Frontansicht,_11._M%C3%A4rz_2012,_Heiligenhaus.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Montana": {
+        "slug": "chevrolet-montana",
+        "arquivo": "chevrolet-montana.jpg",
+        "autor": "Maxi-Napo-99",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Chevrolet_Montana_LTZ_front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Onix": {
+        "slug": "chevrolet-onix",
+        "arquivo": "chevrolet-onix.jpg",
+        "autor": "User3204",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_SAIC-GM-Chevrolet_Monza_(facelift,_front).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Onix Plus": {
+        "slug": "chevrolet-onix-plus",
+        "arquivo": "chevrolet-onix-plus.jpg",
+        "autor": "Just a Man",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2021_Chevrolet_Onix_Plus_1.2_LT.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Prisma": {
+        "slug": "chevrolet-prisma",
+        "arquivo": "chevrolet-prisma.jpg",
+        "autor": "Just a Man",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2021_Chevrolet_Onix_Plus_1.2_LT.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet S10": {
+        "slug": "chevrolet-s10",
+        "arquivo": "chevrolet-s10.jpg",
+        "autor": "Damian B Oh",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Colorado_Z71_2.7T_GMT31XX-2_Sterling_Gray_Metallic_(8).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Spin": {
+        "slug": "chevrolet-spin",
+        "arquivo": "chevrolet-spin.jpg",
+        "autor": "Just a Man",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2025_Chevrolet_Spin_1.8_LT.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Tracker": {
+        "slug": "chevrolet-tracker",
+        "arquivo": "chevrolet-tracker.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Tracker_2021_(front).png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Trailblazer": {
+        "slug": "chevrolet-trailblazer",
+        "arquivo": "chevrolet-trailblazer.jpg",
+        "autor": "Greg Gjerdingen",
+        "licenca": "CC BY 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2017_Chevrolet_Trailblazer_LTZ.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Vectra": {
+        "slug": "chevrolet-vectra",
+        "arquivo": "chevrolet-vectra.jpg",
+        "autor": "Matti Blume",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Chevrolet_Vectra_20150831-20150831_160810.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Chevrolet Zafira": {
+        "slug": "chevrolet-zafira",
+        "arquivo": "chevrolet-zafira.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Opel_Zafira_Life_(Facelift)_DSC_6022.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën Aircross": {
+        "slug": "citroen-aircross",
+        "arquivo": "citroen-aircross.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Citroen_C3_Aircross_Flair_Puretech_1.2_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën Basalt": {
+        "slug": "citroen-basalt",
+        "arquivo": "citroen-basalt.jpg",
+        "autor": "RL GNZLZ",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Citroen_Basalt_Turbo_200_Shine_2025.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën C3": {
+        "slug": "citroen-c3",
+        "arquivo": "citroen-c3.jpg",
+        "autor": "Dairokkan9",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Citroen_C3_CC21_front_20230524_(cropped).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën C3 Aircross": {
+        "slug": "citroen-c3-aircross",
+        "arquivo": "citroen-c3-aircross.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Citroen_C3_Aircross_Flair_Puretech_1.2_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën C4": {
+        "slug": "citroen-c4",
+        "arquivo": "citroen-c4.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Citroen_C4_(2020)_IMG_4202.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën C4 Cactus": {
+        "slug": "citroen-c4-cactus",
+        "arquivo": "citroen-c4-cactus.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Citroen_C4_Cactus_Flair_BlueHDI_S_facelift_1.6_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Citroën C4 Lounge": {
+        "slug": "citroen-c4-lounge",
+        "arquivo": "citroen-c4-lounge.jpg",
+        "autor": "JasonVogel",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:C4_Lounge_2018_Argentina.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Argo": {
+        "slug": "fiat-argo",
+        "arquivo": "fiat-argo.jpg",
+        "autor": "JasonVogel",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Argo_2017b_(cropped).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Cronos": {
+        "slug": "fiat-cronos",
+        "arquivo": "fiat-cronos.jpg",
+        "autor": "Just a Man",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2025_Fiat_Cronos_1.3_GSE_Precision,_facelift_-_03.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Doblò": {
+        "slug": "fiat-doblo",
+        "arquivo": "fiat-doblo.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2016_Fiat_Doblo_Easy_Multijet_1.6_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Fastback": {
+        "slug": "fiat-fastback",
+        "arquivo": "fiat-fastback.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Fiat_Fastback_(Colombia)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Fiorino": {
+        "slug": "fiat-fiorino",
+        "arquivo": "fiat-fiorino.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Fiorino_XMF_2650_in_Punta_del_Este_2015.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Grand Siena": {
+        "slug": "fiat-grand-siena",
+        "arquivo": "fiat-grand-siena.jpg",
+        "autor": "Autor não informado",
+        "licenca": "CC BY-SA 3.0",
+        "licenca_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Siena.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Idea": {
+        "slug": "fiat-idea",
+        "arquivo": "fiat-idea.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2004_Fiat_Idea_Dynamic_1.4.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Mobi": {
+        "slug": "fiat-mobi",
+        "arquivo": "fiat-mobi.jpg",
+        "autor": "Gianluccas2",
+        "licenca": "CC0",
+        "licenca_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Modelo_2017.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Palio": {
+        "slug": "fiat-palio",
+        "arquivo": "fiat-palio.jpg",
+        "autor": "Corvettec6r",
+        "licenca": "CC BY-SA 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Palio_5door.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Pulse": {
+        "slug": "fiat-pulse",
+        "arquivo": "fiat-pulse.jpg",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Fiat_Pulse_Impetus_(Colombia)_front_view_01.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Punto": {
+        "slug": "fiat-punto",
+        "arquivo": "fiat-punto.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2006_Fiat_Grande_Punto_Sporting_T-J_1.4_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Siena": {
+        "slug": "fiat-siena",
+        "arquivo": "fiat-siena.jpg",
+        "autor": "Autor não informado",
+        "licenca": "CC BY-SA 3.0",
+        "licenca_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Siena.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Strada": {
+        "slug": "fiat-strada",
+        "arquivo": "fiat-strada.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Strada_2020_Volcano_in_Montevideo_(front).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Toro": {
+        "slug": "fiat-toro",
+        "arquivo": "fiat-toro.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Toro_2018_in_Punta_del_Este_(front)_01.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Fiat Uno": {
+        "slug": "fiat-uno",
+        "arquivo": "fiat-uno.jpg",
+        "autor": "Rudolf Stricker",
+        "licenca": "CC BY-SA 3.0",
+        "licenca_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Fiat_Uno_front_20070829.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Courier": {
+        "slug": "ford-courier",
+        "arquivo": "ford-courier.jpg",
+        "autor": "Bull-Doser at English Wikipedia",
+        "licenca": "Public domain",
+        "licenca_url": null,
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Courier_Dimasur.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford EcoSport": {
+        "slug": "ford-ecosport",
+        "arquivo": "ford-ecosport.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Ford_Ecosport_ST-Line_TDCi_1.5.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Edge": {
+        "slug": "ford-edge",
+        "arquivo": "ford-edge.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Ford_Edge_facelift_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Fiesta": {
+        "slug": "ford-fiesta",
+        "arquivo": "ford-fiesta.jpg",
+        "autor": "© M 93",
+        "licenca": "CC BY-SA 3.0 de",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Fiesta_ST-Line_(VII,_Facelift)_%E2%80%93_f_30012023.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Fiesta Sedan": {
+        "slug": "ford-fiesta-sedan",
+        "arquivo": "ford-fiesta-sedan.jpg",
+        "autor": "© M 93",
+        "licenca": "CC BY-SA 3.0 de",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Fiesta_ST-Line_(VII,_Facelift)_%E2%80%93_f_30012023.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Focus": {
+        "slug": "ford-focus",
+        "arquivo": "ford-focus.jpg",
+        "autor": "Navigator84",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Focus_IV_sedan_ST_Line_01_China_2019-03-25.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Fusion": {
+        "slug": "ford-fusion",
+        "arquivo": "ford-fusion.jpg",
+        "autor": "OWS Photography",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Fusion_(Mk_II)_Washington_DC_Metro_Area,_USA_(5).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Ka": {
+        "slug": "ford-ka",
+        "arquivo": "ford-ka.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Ford_KA%2B_Zetec_1.0_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Ka Sedan": {
+        "slug": "ford-ka-sedan",
+        "arquivo": "ford-ka-sedan.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Ford_KA%2B_Zetec_1.0_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Maverick": {
+        "slug": "ford-maverick",
+        "arquivo": "ford-maverick.jpg",
+        "autor": "Tiagoribeine",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:1972-ford-maverick-moore.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Ranger": {
+        "slug": "ford-ranger",
+        "arquivo": "ford-ranger.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Ranger_(T6,_P703)_Wildtrak_IMG_7320.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Ford Territory": {
+        "slug": "ford-territory",
+        "arquivo": "ford-territory.jpg",
+        "autor": "Ethan Llamas",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Ford_Territory_CX743MCA_1.5_Titanium_X_Blue_Panther_01.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Honda City": {
+        "slug": "honda-city",
+        "arquivo": "honda-city.jpg",
+        "autor": "Benespit",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:0_Honda_City_(7th_generation)_sedan.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Honda Civic": {
+        "slug": "honda-civic",
+        "arquivo": "honda-civic.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Honda_Civic_Hybrid_(2022,_Europe)_IAA_2023_1X7A0545_(2).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Honda Fit": {
+        "slug": "honda-fit",
+        "arquivo": "honda-fit.jpg",
+        "autor": "© M 93",
+        "licenca": "CC BY-SA 3.0 de",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Honda_Jazz_Hybrid_Executive_(IV)_%E2%80%93_f_18102020.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Honda HR-V": {
+        "slug": "honda-hr-v",
+        "arquivo": "honda-hr-v.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Honda_HR-V_Hybrid_Auto_Zuerich_2021_IMG_0618.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Honda WR-V": {
+        "slug": "honda-wr-v",
+        "arquivo": "honda-wr-v.jpg",
+        "autor": "Tokumeigakarinoaoshima",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Honda_WR-V_Z%2B_(5BA-DG5).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai Azera": {
+        "slug": "hyundai-azera",
+        "arquivo": "hyundai-azera.jpg",
+        "autor": "Benespit",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:0_Hyundai_Grandeur_Hybrid_(GN7)_3.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai Creta": {
+        "slug": "hyundai-creta",
+        "arquivo": "hyundai-creta.png",
+        "autor": "CARS WORLD Kannada",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2024_Hyundai_Creta_1.5_MPi_SX(O)_(India)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai HB20": {
+        "slug": "hyundai-hb20",
+        "arquivo": "hyundai-hb20.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_HB20_1.0_T-GDi_Platinum_Plus_(Brazil)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai HB20S": {
+        "slug": "hyundai-hb20s",
+        "arquivo": "hyundai-hb20s.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_HB20_1.0_T-GDi_Platinum_Plus_(Brazil)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai HB20X": {
+        "slug": "hyundai-hb20x",
+        "arquivo": "hyundai-hb20x.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_HB20_1.0_T-GDi_Platinum_Plus_(Brazil)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai Tucson": {
+        "slug": "hyundai-tucson",
+        "arquivo": "hyundai-tucson.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2021_Hyundai_Tucson_Ultimate_T-GDi_MHEV_1.6.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai Veloster": {
+        "slug": "hyundai-veloster",
+        "arquivo": "hyundai-veloster.jpg",
+        "autor": "Kevauto",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Hyundai_Veloster_1.6T,_front_11.9.19.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai i30": {
+        "slug": "hyundai-i30",
+        "arquivo": "hyundai-i30.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2018_Hyundai_i30_SE_Nav_T-GDi_1.3_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Hyundai ix35": {
+        "slug": "hyundai-ix35",
+        "arquivo": "hyundai-ix35.jpg",
+        "autor": "Dinkun Chen",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:HYUNDAI_TUCSON,_iX35_(LM)_China.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Jeep Commander": {
+        "slug": "jeep-commander",
+        "arquivo": "jeep-commander.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2007_Jeep_Commander_Limited_CRD_Automatic_3.0_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Jeep Compass": {
+        "slug": "jeep-compass",
+        "arquivo": "jeep-compass.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Jeep_Compass_(MP)_PHEV_Facelift_1X7A0140.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Jeep Renegade": {
+        "slug": "jeep-renegade",
+        "arquivo": "jeep-renegade.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Jeep_Renegade_4xe_1X7A6026.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Mitsubishi L200": {
+        "slug": "mitsubishi-l200",
+        "arquivo": "mitsubishi-l200.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2019_Mitsubishi_L200_Barbarian_X_DI-D_Automatic_2.3.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Mitsubishi Pajero": {
+        "slug": "mitsubishi-pajero",
+        "arquivo": "mitsubishi-pajero.jpg",
+        "autor": "Ethan Llamas",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2022_Mitsubishi_Montero_Sport_GLS_(front).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Nissan Frontier": {
+        "slug": "nissan-frontier",
+        "arquivo": "nissan-frontier.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Nissan_Frontier_(D41)_Pro-4X_Automesse_Ludwigsburg_2022_1X7A5885.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Nissan Kicks": {
+        "slug": "nissan-kicks",
+        "arquivo": "nissan-kicks.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2025_Nissan_Kicks_SR_AWD_(United_States)_front_view.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Nissan March": {
+        "slug": "nissan-march",
+        "arquivo": "nissan-march.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2017_Nissan_Micra_N-Connecta_IG-T_900cc_Front_(1).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Peugeot 2008": {
+        "slug": "peugeot-2008",
+        "arquivo": "peugeot-2008.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Peugeot_e-2008_Facelift_Autofr%C3%BChling_Ulm_IMG_9302.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Peugeot 207": {
+        "slug": "peugeot-207",
+        "arquivo": "peugeot-207.jpg",
+        "autor": "EurovisionNim",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2007-2009_Peugeot_207_(A7)_XE_5-door_hatchback_(2018-11-13)_01.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Peugeot 208": {
+        "slug": "peugeot-208",
+        "arquivo": "peugeot-208.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Peugeot_e-208_Sindelfingen_2020_IMG_2409.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Peugeot 308": {
+        "slug": "peugeot-308",
+        "arquivo": "peugeot-308.jpg",
+        "autor": "Tokumeigakarinoaoshima",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Peugeot_308_III_GT_HYBRID_(1).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Captur": {
+        "slug": "renault-captur",
+        "arquivo": "renault-captur.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Renault_Captur_II_at_IAA_2019_IMG_0446.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Clio": {
+        "slug": "renault-clio",
+        "arquivo": "renault-clio.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Renault_Clio_V_(2023)_Esprit_Alpine_Automesse_Ludwigsburg_2023_1X7A0012.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Duster": {
+        "slug": "renault-duster",
+        "arquivo": "renault-duster.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Dacia_Duster_III_Hybrid_Automesse_Ludwigsburg_2024_IMG_1510.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Duster Oroch": {
+        "slug": "renault-duster-oroch",
+        "arquivo": "renault-duster-oroch.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Renault_Duster_Oroch_2016_in_Punta_del_Este_01.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Fluence": {
+        "slug": "renault-fluence",
+        "arquivo": "renault-fluence.jpg",
+        "autor": "ES",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Renaultfluencefl.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Kangoo": {
+        "slug": "renault-kangoo",
+        "arquivo": "renault-kangoo.jpg",
+        "autor": "EurovisionNim",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2016_Renault_Kangoo_(X61_Series_II)_van_(2017-01-30)_01.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Kwid": {
+        "slug": "renault-kwid",
+        "arquivo": "renault-kwid.png",
+        "autor": "Autosdeprimera",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Renault_Kwid_Iconic_(Colombia)_front_view_01.png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Logan": {
+        "slug": "renault-logan",
+        "arquivo": "renault-logan.jpg",
+        "autor": "JanekJankowski",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Dacia_Logan_III_(cropped).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Master": {
+        "slug": "renault-master",
+        "arquivo": "renault-master.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Renault_Master_III_(2019)_IMG_4211.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Mégane": {
+        "slug": "renault-megane",
+        "arquivo": "renault-megane.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2017_Renault_Megane_Dynamique_S_NAV_DC_1.5_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Sandero": {
+        "slug": "renault-sandero",
+        "arquivo": "renault-sandero.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Dacia_Sandero_Stepway_III_DSC_7295.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Renault Sandero Stepway": {
+        "slug": "renault-sandero-stepway",
+        "arquivo": "renault-sandero-stepway.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2023_Dacia_Sandero_Stepway_III_DSC_7295.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota Corolla": {
+        "slug": "toyota-corolla",
+        "arquivo": "toyota-corolla.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Toyota_Corolla_Limousine_Hybrid_Genf_2019_1Y7A5576.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota Corolla Cross": {
+        "slug": "toyota-corolla-cross",
+        "arquivo": "toyota-corolla-cross.jpg",
+        "autor": "Ethan Llamas",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2025_Toyota_Corolla_Cross_1.8_V_HEV_in_Celestite_Gray_Metallic,_front_right.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota Etios": {
+        "slug": "toyota-etios",
+        "arquivo": "toyota-etios.jpg",
+        "autor": "Andra Febrian",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2013_Toyota_Etios_Valco_E_(Indonesia)_front_view.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota Hilux": {
+        "slug": "toyota-hilux",
+        "arquivo": "toyota-hilux.jpg",
+        "autor": "Ethan Llamas",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Toyota_Hilux_2.4_E_4x2_2020.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota SW4": {
+        "slug": "toyota-sw4",
+        "arquivo": "toyota-sw4.jpg",
+        "autor": "Ethan Llamas",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Toyota_Fortuner_GUN165_Legender_2.8_Q_4x2_Platinum_White_Pearl_Mica.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Toyota Yaris": {
+        "slug": "toyota-yaris",
+        "arquivo": "toyota-yaris.jpg",
+        "autor": "Chanokchon",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2021_Toyota_Yaris_ATIV_Play_Limited_Edition_Sport_Premium.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Amarok": {
+        "slug": "volkswagen-amarok",
+        "arquivo": "volkswagen-amarok.jpg",
+        "autor": "Just a Man",
+        "licenca": "CC BY 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2024_Volkswagen_Amarok_Highline_3.0_V6_(facelift,_Argentina)_(3-3).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen CrossFox": {
+        "slug": "volkswagen-crossfox",
+        "arquivo": "volkswagen-crossfox.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Fox_2015_in_Punta_del_Este_01.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Fox": {
+        "slug": "volkswagen-fox",
+        "arquivo": "volkswagen-fox.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Fox_2015_in_Punta_del_Este_01.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Gol": {
+        "slug": "volkswagen-gol",
+        "arquivo": "volkswagen-gol.jpg",
+        "autor": "RL GNZLZ from Chile",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Gol_Highline_2023_(53708009248)_(cropped).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Golf": {
+        "slug": "volkswagen-golf",
+        "arquivo": "volkswagen-golf.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Golf_Style_1.5_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Jetta": {
+        "slug": "volkswagen-jetta",
+        "arquivo": "volkswagen-jetta.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Jetta_VII_GLI_IMG_3138.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Kombi": {
+        "slug": "volkswagen-kombi",
+        "arquivo": "volkswagen-kombi.jpg",
+        "autor": "AlfvanBeem",
+        "licenca": "CC0",
+        "licenca_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_221031_dutch_licence_registration_13-YA-60_pic3.JPG",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen New Beetle": {
+        "slug": "volkswagen-new-beetle",
+        "arquivo": "volkswagen-new-beetle.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2006_Volkswagen_New_Beetle_Luna_1.6_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Nivus": {
+        "slug": "volkswagen-nivus",
+        "arquivo": "volkswagen-nivus.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Taigo_1X7A0350.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Parati": {
+        "slug": "volkswagen-parati",
+        "arquivo": "volkswagen-parati.jpg",
+        "autor": "Goautos Classificados;Levels adjusted and advertising undrawn by uploader Mr.choppers",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:VW_Parati_Track_%27n_Field_G4.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Passat": {
+        "slug": "volkswagen-passat",
+        "arquivo": "volkswagen-passat.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2020_Volkswagen_Passat_GTE_facelift_1.4_Front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Polo": {
+        "slug": "volkswagen-polo",
+        "arquivo": "volkswagen-polo.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Polo_VI_GTI_(2021)_1X7A0344.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Santana": {
+        "slug": "volkswagen-santana",
+        "arquivo": "volkswagen-santana.jpg",
+        "autor": "Alfacevedoa",
+        "licenca": "CC BY-SA 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Santana_GLS_2000_1992_2E.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Saveiro": {
+        "slug": "volkswagen-saveiro",
+        "arquivo": "volkswagen-saveiro.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Saveiro_Mk8_Double_Cab_base_black_in_Maldonado_-_front.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen SpaceFox": {
+        "slug": "volkswagen-spacefox",
+        "arquivo": "volkswagen-spacefox.jpg",
+        "autor": "RL GNZLZ from Chile",
+        "licenca": "CC BY-SA 2.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Suran_1.6_Highline_2016_(28395170599).jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen T-Cross": {
+        "slug": "volkswagen-t-cross",
+        "arquivo": "volkswagen-t-cross.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_T-Cross_(2023)_1X7A1967.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Taos": {
+        "slug": "volkswagen-taos",
+        "arquivo": "volkswagen-taos.jpg",
+        "autor": "Alexander-93",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Taos_1X7A6750.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Tiguan": {
+        "slug": "volkswagen-tiguan",
+        "arquivo": "volkswagen-tiguan.jpg",
+        "autor": "Alexander Migl",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Tiguan_III_DSC_7193.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Virtus": {
+        "slug": "volkswagen-virtus",
+        "arquivo": "volkswagen-virtus.png",
+        "autor": "Darcius Oliveira",
+        "licenca": "CC BY 3.0",
+        "licenca_url": "https://creativecommons.org/licenses/by/3.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:VW_Virtus_MSI_(Brazil,_front_view).png",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen Voyage": {
+        "slug": "volkswagen-voyage",
+        "arquivo": "volkswagen-voyage.jpg",
+        "autor": "NaBUru38",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:Volkswagen_Gol_sed%C3%A1n_Mk6_in_Uruguay.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    },
+    "Volkswagen up!": {
+        "slug": "volkswagen-up",
+        "arquivo": "volkswagen-up.jpg",
+        "autor": "Vauxford",
+        "licenca": "CC BY-SA 4.0",
+        "licenca_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "pagina": "https://commons.wikimedia.org/wiki/File:2013_Volkswagen_Take_UP!_1.0.jpg",
+        "fonte": "Wikimedia Commons",
+        "coletado_em": "2026-10-10"
+    }
+}
