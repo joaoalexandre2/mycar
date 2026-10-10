@@ -27,7 +27,7 @@ class ConfiguracaoController extends Controller
     {
         $dados = $request->validate([
             'tema' => ['required', Rule::in(['claro', 'escuro'])],
-            'cor' => ['required', Rule::in(['blue', 'green', 'purple', 'orange'])],
+            'cor' => ['required', Rule::in(['blue', 'green', 'purple', 'orange', 'red'])],
         ]);
 
         $user = $request->user();

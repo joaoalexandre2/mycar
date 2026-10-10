@@ -46,6 +46,16 @@ class AparenciaTest extends TestCase
             ->assertStatus(200)->assertJsonPath('cor', 'orange');
     }
 
+    public function test_aceita_todas_as_cores_da_lista_inclusive_a_vermelha(): void
+    {
+        [, $headers] = $this->autenticar();
+
+        foreach (['blue', 'green', 'purple', 'orange', 'red'] as $cor) {
+            $this->putJson('/api/me/aparencia', ['tema' => 'claro', 'cor' => $cor], $headers)
+                ->assertStatus(200)->assertJsonPath('cor', $cor);
+        }
+    }
+
     public function test_rejeita_valores_invalidos(): void
     {
         [, $headers] = $this->autenticar();
