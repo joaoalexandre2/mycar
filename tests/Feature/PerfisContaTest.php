@@ -344,18 +344,19 @@ class PerfisContaTest extends TestCase
             $dados['ipva_estimado'],
             0.01
         );
-        $this->assertSame('2026-03-31', $dados['proximo_vencimento_ipva']);        // final 3
+        $this->assertSame('2027-01-31', $dados['proximo_vencimento_ipva']);        // sempre janeiro
         $this->assertSame('2026-05-31', $dados['proximo_vencimento_licenciamento']);
     }
 
     public function test_resumo_lista_o_que_vence_nos_proximos_60_dias_em_ordem(): void
     {
-        Carbon::setTestNow('2026-03-05');
+        // O IPVA vence em 31/01 (hoje, 0 dia) e o licenciamento do final 1 em 31/03 (59 dias).
+        Carbon::setTestNow('2026-01-31');
         [$usuario, $headers] = $this->autenticarConta('frota');
 
-        VeiculoConta::create($this->veiculo(['placa' => 'AAA1B23', 'apelido' => 'Van', 'fipe_valor' => 40000])); // IPVA 31/03; lic. 31/05 (fora)
-        VeiculoConta::create($this->veiculo(['placa' => 'CCC1D21', 'marca' => 'VW', 'modelo' => 'Gol']));        // lic. 31/03; IPVA jan/2027 (fora)
-        VeiculoConta::create($this->veiculo(['placa' => 'EEE1F25', 'uf' => null]));                               // nada na janela
+        VeiculoConta::create($this->veiculo(['placa' => 'AAA1B23', 'apelido' => 'Van', 'fipe_valor' => 40000])); // IPVA 31/01; lic. 31/05 (fora)
+        VeiculoConta::create($this->veiculo(['placa' => 'CCC1D21', 'marca' => 'VW', 'modelo' => 'Gol']));        // IPVA 31/01; lic. 31/03
+        VeiculoConta::create($this->veiculo(['placa' => 'EEE1F25', 'uf' => null]));                               // IPVA 31/01 (mesmo sem estado)
 
         $resposta = $this->getJson('/api/conta/resumo', $headers)->assertStatus(200);
 
@@ -363,14 +364,15 @@ class PerfisContaTest extends TestCase
             ->assertJsonPath('valor_total_fipe', 40000)
             ->assertJsonPath('conta.nome', $usuario->conta->nome)
             ->assertJsonPath('conta.tipo', 'frota')
-            ->assertJsonCount(2, 'vencimentos');
+            ->assertJsonCount(4, 'vencimentos');
 
         $vencimentos = $resposta->json('vencimentos');
 
-        $this->assertSame(['ipva', 'licenciamento'], array_column($vencimentos, 'tipo'));
-        $this->assertSame('Van', $vencimentos[0]['veiculo']);
-        $this->assertSame('VW Gol', $vencimentos[1]['veiculo']);
-        $this->assertSame(26, $vencimentos[0]['dias']);
+        $this->assertSame(['ipva', 'ipva', 'ipva', 'licenciamento'], array_column($vencimentos, 'tipo'));
+        $this->assertSame(0, $vencimentos[0]['dias']);
+        $this->assertSame('2026-01-31', $vencimentos[0]['data']);
+        $this->assertSame('VW Gol', $vencimentos[3]['veiculo']);
+        $this->assertSame(59, $vencimentos[3]['dias']);
     }
 
     public function test_resumo_so_conta_os_veiculos_da_propria_conta(): void

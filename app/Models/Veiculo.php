@@ -41,6 +41,7 @@ class Veiculo extends Model
         'idade_anos',
         'possivel_isencao_ipva',
         'ipva_estimado',
+        'ipva_aliquota_media',
         'licenciamento_valor',
         'proximo_vencimento_licenciamento',
     ];

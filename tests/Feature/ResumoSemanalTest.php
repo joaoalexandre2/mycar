@@ -19,9 +19,9 @@ class ResumoSemanalTest extends TestCase
     use RefreshDatabase;
     use AutenticaUsuario;
 
-    // Com a data fixa em 05/03/2026: final de placa 3 tem IPVA em 31/03 (26 dias)
-    // e licenciamento em 31/05 (fora da janela); final 1 tem o oposto
-    // (IPVA em janeiro/2027 e licenciamento em 31/03).
+    // O IPVA vence sempre em 31/01. Com a data fixa em 05/03/2026: final de placa 3
+    // tem licenciamento em 31/05 (fora da janela) e final 1 em 31/03 (26 dias);
+    // o IPVA só entra na janela nos testes que usam 05/01.
     protected function setUp(): void
     {
         parent::setUp();
@@ -116,12 +116,12 @@ class ResumoSemanalTest extends TestCase
         });
     }
 
-    public function test_inclui_ipva_e_licenciamento_a_vencer_pela_estimativa_da_placa(): void
+    public function test_inclui_licenciamento_a_vencer_pela_estimativa_da_placa(): void
     {
         Mail::fake();
         $this->autenticar();
 
-        $this->criarVeiculo('DDD1E23', 'a@exemplo.com', 'Final Tres');   // IPVA 31/03
+        $this->criarVeiculo('DDD1E23', 'a@exemplo.com', 'Final Tres');   // IPVA só em jan/2027; lic. 31/05 (fora)
         $this->criarVeiculo('EEE1F21', 'b@exemplo.com', 'Final Um');     // licenciamento 31/03
         $this->criarVeiculo('FFF1G25', 'c@exemplo.com', 'Final Cinco');  // nada na janela
 
@@ -130,12 +130,31 @@ class ResumoSemanalTest extends TestCase
         Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $resumo = $mail->resumo;
 
-            return $resumo['ipva']['total'] === 1
-                && $resumo['ipva']['itens'][0]['cliente_nome'] === 'Final Tres'
-                && $resumo['ipva']['itens'][0]['data'] === '31/03/2026'
+            return $resumo['ipva']['total'] === 0
                 && $resumo['licenciamento']['total'] === 1
                 && $resumo['licenciamento']['itens'][0]['cliente_nome'] === 'Final Um'
-                && $resumo['total'] === 2;
+                && $resumo['licenciamento']['itens'][0]['data'] === '31/03/2026'
+                && $resumo['total'] === 1;
+        });
+    }
+
+    public function test_inclui_o_ipva_de_janeiro_para_todos_os_veiculos(): void
+    {
+        Carbon::setTestNow('2026-01-05');
+        Mail::fake();
+        $this->autenticar();
+
+        $this->criarVeiculo('DDD1E23', 'a@exemplo.com', 'Final Tres');
+        $this->criarVeiculo('FFF1G25', 'c@exemplo.com', 'Final Cinco');
+
+        $this->artisan('oficinas:resumo-semanal');
+
+        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+            $resumo = $mail->resumo;
+
+            return $resumo['ipva']['total'] === 2
+                && $resumo['ipva']['itens'][0]['data'] === '31/01/2026'
+                && $resumo['licenciamento']['total'] === 0;
         });
     }
 

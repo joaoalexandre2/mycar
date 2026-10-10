@@ -46,14 +46,25 @@ class VeiculoTributosTest extends TestCase
             ->assertJsonPath('licenciamento_valor', null);
     }
 
-    public function test_estado_sem_aliquota_confirmada_nao_inventa_valor(): void
+    public function test_estado_sem_aliquota_confirmada_usa_a_media_e_avisa_que_e_aproximado(): void
     {
         [, $headers] = $this->autenticar();
         $veiculo = Veiculo::factory()->create(['uf' => 'GO', 'fipe_valor' => 50000]);
 
+        // 3% (config/tributos.php: aliquota_media_ipva) sobre R$ 50.000
         $this->getJson("/api/veiculos/{$veiculo->id}", $headers)
-            ->assertJsonPath('ipva_estimado', null)
+            ->assertJsonPath('ipva_estimado', 1500)
+            ->assertJsonPath('ipva_aliquota_media', true)
             ->assertJsonPath('licenciamento_valor', 251.25);
+    }
+
+    public function test_estado_com_aliquota_confirmada_nao_usa_a_media(): void
+    {
+        [, $headers] = $this->autenticar();
+        $veiculo = Veiculo::factory()->create(['uf' => 'PR', 'fipe_valor' => 50000]);
+
+        $this->getJson("/api/veiculos/{$veiculo->id}", $headers)
+            ->assertJsonPath('ipva_aliquota_media', false);
     }
 
     public function test_rejeita_uf_invalida(): void

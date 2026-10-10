@@ -14,8 +14,8 @@ use Tests\TestCase;
 
 /**
  * Lembretes de IPVA, licenciamento e revisão para pessoa e frota.
- * Data fixa em 05/03/2026: final de placa 3 tem IPVA em 31/03 (26 dias) e
- * licenciamento em 31/05 (fora); final 1 tem licenciamento em 31/03.
+ * O IPVA vence sempre em 31/01. Datas fixas: 05/03/2026 (IPVA só em 2027); final 3
+ * tem licenciamento em 31/05 (fora) e final 1 em 31/03. Os testes de IPVA usam 05/01.
  */
 class LembretesContaTest extends TestCase
 {
@@ -40,28 +40,40 @@ class LembretesContaTest extends TestCase
             'placa' => $placa, 'marca' => 'Fiat', 'modelo' => 'Uno', 'ano' => 2018, 'uf' => 'RS',
         ], $extra));
     }
-
-    public function test_avisa_ipva_licenciamento_e_revisao_em_um_unico_email(): void
+    public function test_avisa_ipva_e_revisao_em_um_unico_email(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         Mail::fake();
         [$usuario] = $this->autenticarConta('pessoa');
 
-        $this->veiculo('AAA1B23', ['apelido' => 'Meu Uno', 'fipe_valor' => 40000]);          // IPVA 31/03
-        $this->veiculo('CCC1D21');                                                            // licenciamento 31/03
-        $this->veiculo('EEE1F25', ['revisao_prevista_em' => '2026-03-20']);                   // revisão em 15 dias
+        $this->veiculo('AAA1B23', ['apelido' => 'Meu Uno', 'fipe_valor' => 40000]);          // IPVA 31/01
+        $this->veiculo('EEE1F25', ['revisao_prevista_em' => '2026-01-20']);                   // revisão em 15 dias
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
 
         Mail::assertSent(LembreteContaEmail::class, 1);
         Mail::assertSent(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($usuario) {
-            $tipos = collect($mail->itens)->pluck('tipo')->sort()->values()->all();
+            $tipos = collect($mail->itens)->pluck('tipo')->unique()->sort()->values()->all();
 
-            return $mail->hasTo($usuario->email) && $tipos === ['ipva', 'licenciamento', 'revisao'];
+            return $mail->hasTo($usuario->email) && $tipos === ['ipva', 'revisao'];
         });
     }
 
+    public function test_avisa_o_licenciamento_pelo_final_da_placa(): void
+    {
+        Mail::fake();
+        [$usuario] = $this->autenticarConta('pessoa');
+
+        $this->veiculo('CCC1D21');  // final 1: licenciamento em 31/03 (26 dias); IPVA só em 2027
+
+        $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
+
+        Mail::assertSent(LembreteContaEmail::class, fn (LembreteContaEmail $mail) => $mail->hasTo($usuario->email)
+            && collect($mail->itens)->pluck('tipo')->all() === ['licenciamento']);
+    }
     public function test_nao_repete_o_aviso_do_mesmo_ciclo(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         Mail::fake();
         $this->autenticarConta('pessoa');
         $veiculo = $this->veiculo('AAA1B23');
@@ -95,14 +107,14 @@ class LembretesContaTest extends TestCase
     {
         Mail::fake();
         $this->autenticarConta('pessoa');
-        $this->veiculo('EEE1F25');                                       // IPVA mai/31, lic. jul/31: fora
+        $this->veiculo('EEE1F25');                                       // IPVA só em jan/2027, lic. jul/31: fora
         $this->veiculo('GGG1H23', ['uf' => null, 'revisao_prevista_em' => '2026-12-01']); // revisão longe
 
         $this->artisan('contas:alertar-vencimentos');
 
-        // Placa final 3 vence IPVA em 31/03 mesmo sem estado; a final 5 não vence nada.
-        Mail::assertSent(LembreteContaEmail::class, 1);
-        Mail::assertSent(LembreteContaEmail::class, fn ($mail) => count($mail->itens) === 1 && $mail->itens[0]['placa'] === 'GGG1H23');
+        // Em março o IPVA só vence em 2027, o licenciamento (finais 3 e 5) é em maio/julho e a
+        // revisão é em dezembro: nada a avisar, tenha a placa estado ou não.
+        Mail::assertNothingSent();
     }
 
     public function test_respeita_a_conta_que_desligou_os_lembretes(): void
@@ -119,6 +131,7 @@ class LembretesContaTest extends TestCase
 
     public function test_so_envia_para_usuarios_de_conta_com_email_confirmado(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         Mail::fake();
         [$confirmado] = $this->autenticarConta('frota');
         $pendente = User::factory()->unverified()->create(['conta_id' => $confirmado->conta_id, 'perfil' => 'frota']);
@@ -147,6 +160,7 @@ class LembretesContaTest extends TestCase
 
     public function test_cada_conta_recebe_so_os_proprios_veiculos(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         Mail::fake();
         [$donoA] = $this->autenticarConta('pessoa');
         $this->veiculo('AAA1B23', ['apelido' => 'Carro da conta A']);
@@ -164,6 +178,7 @@ class LembretesContaTest extends TestCase
 
     public function test_dry_run_nao_envia_nem_marca(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         Mail::fake();
         $this->autenticarConta('pessoa');
         $veiculo = $this->veiculo('AAA1B23');
@@ -178,6 +193,7 @@ class LembretesContaTest extends TestCase
 
     public function test_o_email_renderiza_com_os_dados_e_o_aviso_de_estimativa(): void
     {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
         [$usuario] = $this->autenticarConta('frota');
         $usuario->conta->update(['nome' => 'Transportes Silva']);
         $this->veiculo('AAA1B23', ['apelido' => 'Van da entrega', 'fipe_valor' => 40000]);
@@ -188,7 +204,7 @@ class LembretesContaTest extends TestCase
         $this->assertStringContainsString('Transportes Silva', $html);
         $this->assertStringContainsString('Van da entrega', $html);
         $this->assertStringContainsString('IPVA', $html);
-        $this->assertStringContainsString('31/03/2026', $html);
+        $this->assertStringContainsString('31/01/2026', $html);
         $this->assertStringContainsString('estimativas', $html);
         $this->assertStringContainsString('Configurações', $html);
     }

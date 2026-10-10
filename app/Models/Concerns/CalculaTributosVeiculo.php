@@ -43,18 +43,44 @@ trait CalculaTributosVeiculo
     }
 
     /**
-     * IPVA estimado = valor FIPE × alíquota do estado (config/tributos.php).
-     * Null quando falta o estado, o valor FIPE ou a alíquota do estado.
+     * Alíquota usada na estimativa: a do estado (config/tributos.php) ou, nos
+     * estados ainda sem alíquota confirmada, a média nacional aproximada.
+     * Null sem estado informado.
+     */
+    private function aliquotaIpva(): ?float
+    {
+        if (! $this->uf) {
+            return null;
+        }
+
+        $aliquota = config("tributos.estados.{$this->uf}.ipva");
+
+        return $aliquota ?? config('tributos.aliquota_media_ipva');
+    }
+
+    /**
+     * IPVA estimado = valor FIPE × alíquota. Valor APROXIMADO: null só quando
+     * falta o estado ou o valor FIPE.
      */
     public function getIpvaEstimadoAttribute(): ?float
     {
-        $aliquota = config("tributos.estados.{$this->uf}.ipva");
+        $aliquota = $this->aliquotaIpva();
 
         if ($this->fipe_valor === null || $aliquota === null) {
             return null;
         }
 
         return round((float) $this->fipe_valor * $aliquota / 100, 2);
+    }
+
+    /**
+     * True quando o valor do IPVA usou a alíquota média por não termos a do
+     * estado confirmada; o frontend avisa que é ainda mais aproximado.
+     */
+    public function getIpvaAliquotaMediaAttribute(): bool
+    {
+        return $this->uf
+            && config("tributos.estados.{$this->uf}.ipva") === null;
     }
 
     public function getLicenciamentoValorAttribute(): ?float
@@ -98,16 +124,13 @@ trait CalculaTributosVeiculo
     }
 
     /**
-     * Próximo vencimento estimado do IPVA pelo final da placa
-     * (config/ipva.php). ESTIMATIVA genérica — varia por estado.
+     * Próximo vencimento estimado do IPVA: último dia de janeiro
+     * (config/ipva.php), igual para todos os veículos. ESTIMATIVA — as datas
+     * e o parcelamento variam por estado.
      */
     public function getProximoVencimentoIpvaAttribute(): ?string
     {
-        $mes = config("ipva.meses_por_final_placa.{$this->final_placa}");
-
-        if ($mes === null) {
-            return null;
-        }
+        $mes = (int) config('ipva.mes_vencimento', 1);
 
         $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
 
