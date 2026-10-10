@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Concerns\CalculaTributosVeiculo;
 use App\Models\Concerns\PertenceAConta;
+use App\Services\CatalogoPecas;
+use App\Services\ImagensModelos;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -52,6 +54,7 @@ class VeiculoConta extends Model
         'idade_anos',
         'possivel_isencao_ipva',
         'foto_capa_url',
+        'foto_modelo',
         'ipva_estimado',
         'ipva_aliquota_media',
         'licenciamento_valor',
@@ -123,6 +126,33 @@ class VeiculoConta extends Model
     public function getFotoCapaUrlAttribute(): ?string
     {
         return $this->fotos()->orderByDesc('created_at')->orderByDesc('id')->first()?->urlAssinada('miniatura');
+    }
+
+    /**
+     * Foto livre (Wikimedia) do MODELO deste veículo, usada na capa quando o dono
+     * ainda não subiu uma foto. Traz autor e licença, que a tela mostra junto.
+     * Nulo se o modelo não está no catálogo ou não tem foto.
+     *
+     * @return array<string, string|null>|null
+     */
+    public function getFotoModeloAttribute(): ?array
+    {
+        $modelo = app(CatalogoPecas::class)->modeloDoVeiculo($this->marca, $this->modelo);
+        $imagem = $modelo ? app(ImagensModelos::class)->porNome($modelo['nome']) : null;
+
+        if (!$imagem) {
+            return null;
+        }
+
+        return [
+            'modelo' => $modelo['nome'],
+            'url' => '/api/imagens-modelos/'.$imagem['slug'],
+            'autor' => $imagem['autor'] ?? null,
+            'licenca' => $imagem['licenca'] ?? null,
+            'licenca_url' => $imagem['licenca_url'] ?? null,
+            'pagina' => $imagem['pagina'] ?? null,
+            'fonte' => $imagem['fonte'] ?? 'Wikimedia Commons',
+        ];
     }
 
     public function codigosPecas(): HasMany

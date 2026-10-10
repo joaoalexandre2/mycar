@@ -10,6 +10,7 @@ use App\Http\Controllers\FipeController;
 use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\VeiculoPecaController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AbastecimentoController;
@@ -50,6 +51,11 @@ Route::post('/password/redefinir', [PasswordResetController::class, 'redefinir']
 Route::get('/fotos/{foto}/{tipo}', [FotoServirController::class, 'mostrar'])
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('fotos.mostrar');
+
+// Foto livre de um modelo do catálogo (Wikimedia): pública, sem dado de usuário.
+Route::get('/imagens-modelos/{slug}', [ImagemModeloController::class, 'mostrar'])
+    ->where('slug', '[a-z0-9-]+')
+    ->middleware('throttle:240,1');
 
 // Imagem anexada a uma sugestão: também por link assinado e temporário.
 Route::get('/sugestoes/anexos/{anexo}', [FotoServirController::class, 'anexoDeSugestao'])
