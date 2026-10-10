@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VeiculoConta;
 use App\Rules\AnoFabricacao;
+use App\Rules\PlacaBrasileira;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Database\Eloquent\Builder;
@@ -119,12 +120,14 @@ class ContaVeiculoController extends Controller
      */
     private function validar(Request $request, ?int $ignorarId = null): array
     {
+        $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);
+
         return $request->validate([
             'apelido' => ['nullable', 'string', 'max:60'],
             'placa' => [
                 'required',
                 'string',
-                'max:10',
+                new PlacaBrasileira(),
                 // Única dentro da conta: a mesma placa pode existir em outra conta.
                 Rule::unique('veiculos_conta', 'placa')
                     ->where('conta_id', app('conta.atual'))

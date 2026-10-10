@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Veiculo;
 use App\Rules\AnoFabricacao;
+use App\Rules\PlacaBrasileira;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,6 +14,8 @@ class VeiculoController extends Controller
 {
     public function store(Request $request, FipeService $fipe)
     {
+        $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);
+
         $dados = $request->validate([
             'cliente_id' => [
                 'required',
@@ -21,7 +24,7 @@ class VeiculoController extends Controller
             'placa' => [
                 'required',
                 'string',
-                'max:10',
+                new PlacaBrasileira(),
                 'unique:veiculos,placa',
             ],
             'marca' => [
@@ -109,6 +112,8 @@ public function update(Request $request, $id, FipeService $fipe)
         ], 404);
     }
 
+    $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);
+
     $dados = $request->validate([
         'cliente_id' => [
             'required',
@@ -117,7 +122,7 @@ public function update(Request $request, $id, FipeService $fipe)
         'placa' => [
             'required',
             'string',
-            'max:10',
+            new PlacaBrasileira(),
             'unique:veiculos,placa,' . $id,
         ],
         'marca' => [
