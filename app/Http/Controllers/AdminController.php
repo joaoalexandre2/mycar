@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\DB;
  * Painel do operador da plataforma.
  *
  * Mostra só números e dados de conta (quem se cadastrou, se confirmou o
- * e-mail, quanto usa). Nunca devolve o conteúdo que as oficinas cadastram
- * (clientes, CPFs, telefones, veículos), que é dado pessoal de terceiros e
- * continua isolado por oficina.
+ * e-mail, quanto usa). O conteúdo cadastrado (clientes, CPFs, veículos) só sai
+ * pelo AdminConteudoController, uma conta por vez e com registro de acesso.
  *
  * As consultas usam DB::table de propósito: os models de domínio têm o
  * escopo PertenceAOficina, que falha fechado sem uma oficina vinculada.
