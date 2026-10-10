@@ -10,6 +10,7 @@ use App\Http\Controllers\FipeController;
 use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\VeiculoPecaController;
 use App\Http\Controllers\ConfiguracaoController;
+use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AbastecimentoController;
 use App\Http\Controllers\SeguroController;
@@ -61,6 +62,8 @@ Route::middleware(['auth.token', 'super.admin'])->prefix('admin')->group(functio
     Route::put('/sugestoes/{id}', [SugestaoController::class, 'atualizar']);
     Route::get('/resumo', [AdminController::class, 'resumo']);
     Route::get('/contas', [AdminController::class, 'contas']);
+    Route::get('/contas/{id}/conteudo', [AdminConteudoController::class, 'mostrar'])->middleware('throttle:60,1');
+    Route::get('/acessos', [AdminConteudoController::class, 'acessos']);
     Route::post('/contas/{id}/reenviar-confirmacao', [AdminController::class, 'reenviarConfirmacao'])
         ->middleware('throttle:10,1');
 });
