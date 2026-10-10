@@ -24,6 +24,10 @@ return [
 
     'ano_base' => 2026,
 
+    // Alíquota de IPVA (%) usada, de forma APROXIMADA, nos estados sem alíquota
+    // confirmada abaixo. Média das alíquotas conhecidas (~2,8%), arredondada.
+    'aliquota_media_ipva' => 3.0,
+
     // A partir de quantos anos de fabricação avisamos que o estado PODE isentar o IPVA.
     // Só um aviso: a regra e a idade variam por estado e não estão cadastradas aqui.
     'idade_aviso_isencao_ipva' => 15,

@@ -53,6 +53,7 @@ class VeiculoConta extends Model
         'possivel_isencao_ipva',
         'foto_capa_url',
         'ipva_estimado',
+        'ipva_aliquota_media',
         'licenciamento_valor',
         'proximo_vencimento_ipva',
         'proximo_vencimento_licenciamento',
