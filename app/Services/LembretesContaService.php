@@ -132,7 +132,7 @@ class LembretesContaService
     /**
      * Grava que os itens foram avisados, para não repetir.
      *
-     * @param array<int, array<string, mixed>> $itens
+     * @param  array<int, array<string, mixed>>  $itens
      */
     public function marcarComoAvisados(array $itens): void
     {

@@ -94,8 +94,7 @@ class OrdemServicoService
             ])
         ) {
             throw ValidationException::withMessages([
-                'status' =>
-                    'Uma ordem de serviço finalizada ou cancelada não pode ser excluída.',
+                'status' => 'Uma ordem de serviço finalizada ou cancelada não pode ser excluída.',
             ]);
         }
 
@@ -122,8 +121,7 @@ class OrdemServicoService
             $novoStatus !== $statusAtual
         ) {
             throw ValidationException::withMessages([
-                'status' =>
-                    'Uma ordem de serviço finalizada ou cancelada não pode ter seu status alterado.',
+                'status' => 'Uma ordem de serviço finalizada ou cancelada não pode ter seu status alterado.',
             ]);
         }
 
@@ -143,8 +141,7 @@ class OrdemServicoService
          */
         if ($novoStatus === 'finalizada' && !$dataFechamento) {
             throw ValidationException::withMessages([
-                'data_fechamento' =>
-                    'Uma ordem de serviço finalizada deve possuir data de fechamento.',
+                'data_fechamento' => 'Uma ordem de serviço finalizada deve possuir data de fechamento.',
             ]);
         }
 
@@ -154,8 +151,7 @@ class OrdemServicoService
          */
         if ($novoStatus !== 'finalizada' && $dataFechamento) {
             throw ValidationException::withMessages([
-                'data_fechamento' =>
-                    'A data de fechamento só pode ser informada quando a ordem estiver finalizada.',
+                'data_fechamento' => 'A data de fechamento só pode ser informada quando a ordem estiver finalizada.',
             ]);
         }
 
@@ -192,8 +188,7 @@ class OrdemServicoService
                 )
             ) {
                 throw ValidationException::withMessages([
-                    'status' =>
-                        "Não é permitido alterar o status de '{$statusAtual}' para '{$novoStatus}'.",
+                    'status' => "Não é permitido alterar o status de '{$statusAtual}' para '{$novoStatus}'.",
                 ]);
             }
         }

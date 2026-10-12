@@ -25,7 +25,7 @@ class EspecificacoesDoNome
         };
 
         if (preg_match('/(?<![\d.])(\d\.\d)(?!\d)/', $nome, $m)) {
-            $adicionar('motor', 'Motor (cilindrada)', $m[1].' litros');
+            $adicionar('motor', 'Motor (cilindrada)', $m[1] . ' litros');
         }
 
         if (preg_match('/\b(\d{1,2})V\b/i', $nome, $m)) {

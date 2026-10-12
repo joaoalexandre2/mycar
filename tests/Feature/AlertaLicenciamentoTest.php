@@ -14,8 +14,8 @@ use Tests\TestCase;
 
 class AlertaLicenciamentoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -53,7 +53,7 @@ class AlertaLicenciamentoTest extends TestCase
      * final cujo vencimento caia dentro ou fora da janela de 30 dias,
      * não importa em que dia o teste rode.
      */
-    private function proximoVencimentoParaFinal(int $final): \Illuminate\Support\Carbon
+    private function proximoVencimentoParaFinal(int $final): Carbon
     {
         $mes = config("licenciamento.meses_por_final_placa.{$final}");
         $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();

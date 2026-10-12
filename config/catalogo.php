@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Catalogo\FichaManualCatalogo;
+
 /*
 | Fontes de dados técnicos, em ordem de prioridade. Para plugar um catálogo
 | comercial, crie uma classe que implemente App\Services\Catalogo\CatalogoTecnico
@@ -9,7 +11,7 @@
 return [
 
     'fontes' => [
-        App\Services\Catalogo\FichaManualCatalogo::class,
+        FichaManualCatalogo::class,
     ],
 
 ];

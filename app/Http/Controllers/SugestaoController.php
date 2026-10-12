@@ -35,11 +35,11 @@ class SugestaoController extends Controller
             'categoria' => ['required', Rule::in(Sugestao::CATEGORIAS)],
             'titulo' => ['required', 'string', 'min:4', 'max:120'],
             'descricao' => ['required', 'string', 'min:10', 'max:2000'],
-            'imagens' => ['nullable', 'array', 'max:'.SugestaoAnexo::LIMITE_POR_SUGESTAO],
+            'imagens' => ['nullable', 'array', 'max:' . SugestaoAnexo::LIMITE_POR_SUGESTAO],
             // Tipo conferido pelo conteúdo do arquivo, não pela extensão.
             'imagens.*' => ['file', 'mimetypes:image/jpeg,image/png,image/webp', 'max:4096'],
         ], [
-            'imagens.max' => 'Anexe no máximo '.SugestaoAnexo::LIMITE_POR_SUGESTAO.' imagens.',
+            'imagens.max' => 'Anexe no máximo ' . SugestaoAnexo::LIMITE_POR_SUGESTAO . ' imagens.',
             'imagens.*.mimetypes' => 'Anexe só imagens JPEG, PNG ou WebP.',
             'imagens.*.max' => 'Cada imagem pode ter até 4 MB.',
         ], [
@@ -102,7 +102,7 @@ class SugestaoController extends Controller
     private function anexar(Sugestao $sugestao, UploadedFile $arquivo): void
     {
         $extensao = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'][$arquivo->getMimeType()] ?? 'jpg';
-        $caminho = "sugestoes/{$sugestao->user_id}/{$sugestao->id}/".Str::uuid().".{$extensao}";
+        $caminho = "sugestoes/{$sugestao->user_id}/{$sugestao->id}/" . Str::uuid() . ".{$extensao}";
 
         Storage::disk('local')->put($caminho, $arquivo->get());
 

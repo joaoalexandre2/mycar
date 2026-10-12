@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Cliente;
 use App\Models\Manutencao;
-use App\Models\OrdemServico;
 use App\Models\Oficina;
+use App\Models\OrdemServico;
 use App\Models\Veiculo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -15,8 +15,8 @@ use Tests\TestCase;
 
 class HistoricoVeiculoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

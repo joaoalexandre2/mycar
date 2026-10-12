@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class BackfillFipeHistoricoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_backfill_cria_primeira_linha_so_para_veiculos_com_valor_e_sem_historico(): void
     {

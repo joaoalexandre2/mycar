@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class VeiculoPecaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function payload(array $extra = []): array
     {

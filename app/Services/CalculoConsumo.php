@@ -17,7 +17,7 @@ use Illuminate\Support\Collection;
 class CalculoConsumo
 {
     /**
-     * @param Collection<int, array{id: int, data: string, km: int, litros: float, valor_total: float, tanque_cheio: bool}> $registros
+     * @param  Collection<int, array{id: int, data: string, km: int, litros: float, valor_total: float, tanque_cheio: bool}>  $registros
      * @return array{
      *   registros: array<int, array<string, mixed>>,
      *   consumo_medio_km_l: ?float, custo_por_km: ?float,

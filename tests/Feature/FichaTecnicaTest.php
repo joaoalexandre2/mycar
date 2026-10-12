@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\FichaTecnica;
 use App\Models\Oficina;
 use App\Models\Veiculo;
 use App\Services\Catalogo\CatalogoTecnico;
@@ -14,8 +15,8 @@ use Tests\TestCase;
 
 class FichaTecnicaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_exige_autenticacao(): void
     {
@@ -103,7 +104,8 @@ class FichaTecnicaTest extends TestCase
         $this->autenticar();
         $veiculo = Veiculo::factory()->create();
 
-        $catalogoComercial = new class implements CatalogoTecnico {
+        $catalogoComercial = new class implements CatalogoTecnico
+        {
             public bool $responde = true;
 
             public function nome(): string
@@ -117,14 +119,14 @@ class FichaTecnicaTest extends TestCase
             }
         };
 
-        $servico = new CatalogoTecnicoService([$catalogoComercial, new FichaManualCatalogo()]);
+        $servico = new CatalogoTecnicoService([$catalogoComercial, new FichaManualCatalogo]);
 
         $this->assertSame('comercial', $servico->fichaPara($veiculo)['fonte']);
 
         $catalogoComercial->responde = false;
         $this->assertNull($servico->fichaPara($veiculo));
 
-        \App\Models\FichaTecnica::create(['veiculo_id' => $veiculo->id, 'oleo_viscosidade' => '5W30']);
+        FichaTecnica::create(['veiculo_id' => $veiculo->id, 'oleo_viscosidade' => '5W30']);
         $this->assertSame('manual', $servico->fichaPara($veiculo)['fonte']);
     }
 }

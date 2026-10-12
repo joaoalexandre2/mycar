@@ -23,7 +23,7 @@ class StoreClienteRequest extends FormRequest
      */
     public function rules(): array
     {
-       
+
         return [
             'nome' => 'required|string|max:255',
             // Único dentro da oficina: outra oficina pode ter o mesmo cliente.
@@ -39,21 +39,22 @@ class StoreClienteRequest extends FormRequest
                 Rule::unique('clientes', 'telefone')->where('oficina_id', app('oficina.atual')),
             ],
             'email' => 'nullable|email|max:255',
-            'ativo' => 'boolean'
+            'ativo' => 'boolean',
         ];
-        
+
     }
+
     public function messages(): array
-{
-    return [
-        'nome.required' => 'O nome é obrigatório.',
+    {
+        return [
+            'nome.required' => 'O nome é obrigatório.',
 
-        'cpf.required' => 'O CPF é obrigatório.',
-        'cpf.unique' => 'Já existe um cliente com esse CPF.',
-        'cpf.size' => 'O CPF deve possuir 11 números.',
+            'cpf.required' => 'O CPF é obrigatório.',
+            'cpf.unique' => 'Já existe um cliente com esse CPF.',
+            'cpf.size' => 'O CPF deve possuir 11 números.',
 
-        'telefone.required' => 'O telefone é obrigatório.',
-        'telefone.unique' => 'Já existe um cliente com esse telefone.',
-    ];
-}
+            'telefone.required' => 'O telefone é obrigatório.',
+            'telefone.unique' => 'Já existe um cliente com esse telefone.',
+        ];
+    }
 }

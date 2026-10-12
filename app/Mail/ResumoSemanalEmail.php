@@ -12,13 +12,12 @@ class ResumoSemanalEmail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @param array<string, mixed> $resumo saída de ResumoSemanalService::montar()
+     * @param  array<string, mixed>  $resumo  saída de ResumoSemanalService::montar()
      */
     public function __construct(
         public Oficina $oficina,
         public array $resumo,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

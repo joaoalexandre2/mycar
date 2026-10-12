@@ -36,7 +36,7 @@ class UpdateClienteRequest extends FormRequest
 
             'email' => 'nullable|email|max:255',
 
-            'ativo' => 'boolean'
+            'ativo' => 'boolean',
         ];
     }
 }

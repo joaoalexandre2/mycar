@@ -14,8 +14,7 @@ class ConfirmeSeuEmail extends Mailable
     public function __construct(
         public User $user,
         public string $urlConfirmacao,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

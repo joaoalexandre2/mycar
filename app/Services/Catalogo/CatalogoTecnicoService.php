@@ -7,9 +7,7 @@ use App\Models\Veiculo;
 class CatalogoTecnicoService
 {
     /** @param iterable<CatalogoTecnico> $fontes em ordem de prioridade */
-    public function __construct(private iterable $fontes)
-    {
-    }
+    public function __construct(private iterable $fontes) {}
 
     /**
      * Primeira fonte que souber responder vence.

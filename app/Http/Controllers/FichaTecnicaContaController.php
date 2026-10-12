@@ -23,8 +23,7 @@ class FichaTecnicaContaController extends Controller
     public function __construct(
         private readonly CatalogoPecas $catalogo,
         private readonly FichasModelos $fichasModelos,
-    ) {
-    }
+    ) {}
 
     public function show($id, FipeService $fipe, EspecificacoesDoNome $especificacoes)
     {

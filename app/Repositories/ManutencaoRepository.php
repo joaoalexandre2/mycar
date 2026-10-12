@@ -137,7 +137,7 @@ class ManutencaoRepository implements ManutencaoRepositoryInterface
      * Substitui as peças registradas por esta manutenção. Entram no veículo
      * como "serviço", com a data da própria manutenção.
      *
-     * @param array<int, array<string, mixed>> $pecas
+     * @param  array<int, array<string, mixed>>  $pecas
      */
     private function sincronizarPecas(Manutencao $manutencao, array $pecas): void
     {

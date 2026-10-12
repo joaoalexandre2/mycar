@@ -72,7 +72,7 @@ class DespesaController extends Controller
             ->values();
 
         $porServico = $servicos
-            ->groupBy(fn (Servico $s) => $s->tipo === 'outro' ? 'outro:'.mb_strtolower(trim((string) $s->titulo)) : $s->tipo)
+            ->groupBy(fn (Servico $s) => $s->tipo === 'outro' ? 'outro:' . mb_strtolower(trim((string) $s->titulo)) : $s->tipo)
             ->map(fn ($grupo) => [
                 'tipo' => $grupo->first()->tipo,
                 'rotulo' => $grupo->first()->rotulo,

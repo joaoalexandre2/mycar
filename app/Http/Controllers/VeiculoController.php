@@ -25,7 +25,7 @@ class VeiculoController extends Controller
             'placa' => [
                 'required',
                 'string',
-                new PlacaBrasileira(),
+                new PlacaBrasileira,
                 // Única dentro da oficina: outra oficina pode ter o mesmo carro.
                 Rule::unique('veiculos', 'placa')->where('oficina_id', app('oficina.atual')),
             ],
@@ -47,7 +47,7 @@ class VeiculoController extends Controller
             ],
             'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
             'uf' => ['nullable', 'string', 'size:2', 'in:' . implode(',', array_keys(config('tributos.estados')))],
-        'fipe_marca_id' => ['nullable', 'integer'],
+            'fipe_marca_id' => ['nullable', 'integer'],
             'fipe_modelo_id' => ['nullable', 'integer'],
             'fipe_ano' => ['nullable', 'string', 'max:10'],
         ]);
@@ -92,110 +92,110 @@ class VeiculoController extends Controller
     }
 
     public function show($id)
-{
-    $veiculo = Veiculo::with('cliente')->find($id);
+    {
+        $veiculo = Veiculo::with('cliente')->find($id);
 
-    if (!$veiculo) {
-        return response()->json([
-            'message' => 'Veículo não encontrado.'
-        ], 404);
+        if (!$veiculo) {
+            return response()->json([
+                'message' => 'Veículo não encontrado.',
+            ], 404);
+        }
+
+        return response()->json($veiculo);
     }
 
-    return response()->json($veiculo);
-}
+    public function update(Request $request, $id, FipeService $fipe)
+    {
+        $veiculo = Veiculo::find($id);
 
-public function update(Request $request, $id, FipeService $fipe)
-{
-    $veiculo = Veiculo::find($id);
+        if (!$veiculo) {
+            return response()->json([
+                'message' => 'Veículo não encontrado.',
+            ], 404);
+        }
 
-    if (!$veiculo) {
-        return response()->json([
-            'message' => 'Veículo não encontrado.'
-        ], 404);
+        $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);
+
+        $dados = $request->validate([
+            'cliente_id' => [
+                'required',
+                Rule::exists('clientes', 'id')->where('oficina_id', app('oficina.atual')),
+            ],
+            'placa' => [
+                'required',
+                'string',
+                new PlacaBrasileira,
+                Rule::unique('veiculos', 'placa')
+                    ->where('oficina_id', app('oficina.atual'))
+                    ->ignore($id),
+            ],
+            'marca' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+            'modelo' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+            'ano' => [
+                'required',
+                'integer',
+                'min:1900',
+                'max:' . (date('Y') + 1),
+            ],
+            'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
+            'uf' => ['nullable', 'string', 'size:2', 'in:' . implode(',', array_keys(config('tributos.estados')))],
+            'fipe_marca_id' => ['nullable', 'integer'],
+            'fipe_modelo_id' => ['nullable', 'integer'],
+            'fipe_ano' => ['nullable', 'string', 'max:10'],
+        ]);
+
+        $veiculo->update($dados);
+
+        $codigosMudaram = $veiculo->wasChanged(['fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
+
+        if ($codigosMudaram || $veiculo->fipe_valor === null) {
+            $this->preencherValorFipe($veiculo, $fipe);
+        }
+
+        return response()->json($veiculo);
     }
 
-    $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);
+    public function consultarFipe($id, FipeService $fipe)
+    {
+        $veiculo = Veiculo::find($id);
 
-    $dados = $request->validate([
-        'cliente_id' => [
-            'required',
-            Rule::exists('clientes', 'id')->where('oficina_id', app('oficina.atual')),
-        ],
-        'placa' => [
-            'required',
-            'string',
-            new PlacaBrasileira(),
-            Rule::unique('veiculos', 'placa')
-                ->where('oficina_id', app('oficina.atual'))
-                ->ignore($id),
-        ],
-        'marca' => [
-            'required',
-            'string',
-            'max:100',
-        ],
-        'modelo' => [
-            'required',
-            'string',
-            'max:100',
-        ],
-        'ano' => [
-            'required',
-            'integer',
-            'min:1900',
-            'max:' . (date('Y') + 1),
-        ],
-        'ano_fabricacao' => ['nullable', 'integer', 'min:1900', 'max:' . date('Y'), new AnoFabricacao($request->input('ano'))],
-        'uf' => ['nullable', 'string', 'size:2', 'in:' . implode(',', array_keys(config('tributos.estados')))],
-        'fipe_marca_id' => ['nullable', 'integer'],
-        'fipe_modelo_id' => ['nullable', 'integer'],
-        'fipe_ano' => ['nullable', 'string', 'max:10'],
-    ]);
+        if (!$veiculo) {
+            return response()->json([
+                'message' => 'Veículo não encontrado.',
+            ], 404);
+        }
 
-    $veiculo->update($dados);
+        if (!$veiculo->fipe_marca_id || !$veiculo->fipe_modelo_id || !$veiculo->fipe_ano) {
+            return response()->json([
+                'message' => 'Veículo sem código FIPE (marca, modelo e ano) cadastrado.',
+            ], 422);
+        }
 
-    $codigosMudaram = $veiculo->wasChanged(['fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
+        try {
+            $resultado = $fipe->valor(
+                'carros',
+                $veiculo->fipe_marca_id,
+                $veiculo->fipe_modelo_id,
+                $veiculo->fipe_ano
+            );
+        } catch (FipeIndisponivelException) {
+            return response()->json([
+                'message' => 'Não foi possível consultar a tabela FIPE no momento.',
+            ], 502);
+        }
 
-    if ($codigosMudaram || $veiculo->fipe_valor === null) {
-        $this->preencherValorFipe($veiculo, $fipe);
+        $this->gravarValorFipe($veiculo, $this->valorParaDecimal($resultado['Valor'] ?? ''));
+
+        return response()->json($veiculo);
     }
-
-    return response()->json($veiculo);
-}
-
-public function consultarFipe($id, FipeService $fipe)
-{
-    $veiculo = Veiculo::find($id);
-
-    if (!$veiculo) {
-        return response()->json([
-            'message' => 'Veículo não encontrado.'
-        ], 404);
-    }
-
-    if (!$veiculo->fipe_marca_id || !$veiculo->fipe_modelo_id || !$veiculo->fipe_ano) {
-        return response()->json([
-            'message' => 'Veículo sem código FIPE (marca, modelo e ano) cadastrado.'
-        ], 422);
-    }
-
-    try {
-        $resultado = $fipe->valor(
-            'carros',
-            $veiculo->fipe_marca_id,
-            $veiculo->fipe_modelo_id,
-            $veiculo->fipe_ano
-        );
-    } catch (FipeIndisponivelException) {
-        return response()->json([
-            'message' => 'Não foi possível consultar a tabela FIPE no momento.'
-        ], 502);
-    }
-
-    $this->gravarValorFipe($veiculo, $this->valorParaDecimal($resultado['Valor'] ?? ''));
-
-    return response()->json($veiculo);
-}
 
     public function historico($id)
     {
@@ -203,7 +203,7 @@ public function consultarFipe($id, FipeService $fipe)
 
         if (!$veiculo) {
             return response()->json([
-                'message' => 'Veículo não encontrado.'
+                'message' => 'Veículo não encontrado.',
             ], 404);
         }
 
@@ -265,22 +265,22 @@ public function consultarFipe($id, FipeService $fipe)
         return (float) str_replace(['.', ','], ['', '.'], preg_replace('/[^\d.,]/', '', $valor));
     }
 
-public function destroy($id)
-{
-    $veiculo = Veiculo::find($id);
+    public function destroy($id)
+    {
+        $veiculo = Veiculo::find($id);
 
-    if (!$veiculo) {
+        if (!$veiculo) {
+            return response()->json([
+                'message' => 'Veículo não encontrado.',
+            ], 404);
+        }
+
+        $veiculo->delete();
+
         return response()->json([
-            'message' => 'Veículo não encontrado.'
-        ], 404);
+            'message' => 'Veículo removido com sucesso.',
+        ]);
     }
-
-    $veiculo->delete();
-
-    return response()->json([
-        'message' => 'Veículo removido com sucesso.'
-    ]);
-}
 
     private function aplicarBusca(Builder $query, ?string $busca): Builder
     {

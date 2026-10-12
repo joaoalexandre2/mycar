@@ -28,7 +28,7 @@ class SessoesTest extends TestCase
             ->postJson('/api/login', ['email' => $usuario->email, 'password' => 'senha-segura-123'])
             ->assertStatus(200);
 
-        return ['Authorization' => 'Bearer '.$r->json('token')];
+        return ['Authorization' => 'Bearer ' . $r->json('token')];
     }
 
     public function test_entrar_no_computador_nao_derruba_o_celular(): void

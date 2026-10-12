@@ -8,6 +8,7 @@ use App\Services\CatalogoPecas;
 use App\Services\ImagensModelos;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * Veículo de uma conta (pessoa ou frota). Os carros dos clientes de uma
@@ -101,7 +102,7 @@ class VeiculoConta extends Model
      * Documentos com vencimento que valem para avisos: de CRLV só o mais
      * recente (os anteriores são histórico).
      *
-     * @return \Illuminate\Support\Collection<int, Documento>
+     * @return Collection<int, Documento>
      */
     public function documentosComVencimento()
     {
@@ -146,7 +147,7 @@ class VeiculoConta extends Model
 
         return [
             'modelo' => $modelo['nome'],
-            'url' => '/api/imagens-modelos/'.$imagem['slug'],
+            'url' => '/api/imagens-modelos/' . $imagem['slug'],
             'autor' => $imagem['autor'] ?? null,
             'licenca' => $imagem['licenca'] ?? null,
             'licenca_url' => $imagem['licenca_url'] ?? null,
@@ -182,7 +183,7 @@ class VeiculoConta extends Model
     /**
      * Só o serviço mais recente de cada tipo vale para avisos.
      *
-     * @return \Illuminate\Support\Collection<int, Servico>
+     * @return Collection<int, Servico>
      */
     public function servicosVigentes()
     {

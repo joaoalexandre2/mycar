@@ -168,7 +168,7 @@ class WikipediaInfobox
         $valor = preg_replace('/<!--.*?-->/su', '', $valor);
 
         // {{converter|4163|mm|in|3}} -> "4163 mm" (só a medida original).
-        $valor = preg_replace_callback('/\{\{\s*(?:converter|convert|conv)\s*\|([^|}]+)\|([^|}]+)[^}]*\}\}/iu', fn ($m) => trim($m[1]).' '.trim($m[2]), $valor);
+        $valor = preg_replace_callback('/\{\{\s*(?:converter|convert|conv)\s*\|([^|}]+)\|([^|}]+)[^}]*\}\}/iu', fn ($m) => trim($m[1]) . ' ' . trim($m[2]), $valor);
 
         // Templates de formatação: fica o conteúdo. Outros templates somem.
         for ($i = 0; $i < 4; $i++) {

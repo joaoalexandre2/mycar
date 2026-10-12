@@ -15,8 +15,8 @@ use Tests\TestCase;
  */
 class AdminConteudoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     /**
      * @return array{0: User, 1: array<string, string>}

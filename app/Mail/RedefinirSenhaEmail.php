@@ -14,8 +14,7 @@ class RedefinirSenhaEmail extends Mailable
     public function __construct(
         public User $user,
         public string $urlRedefinir,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

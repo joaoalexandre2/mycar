@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\VeiculoConta;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Tests\Concerns\AutenticaUsuario;
@@ -18,8 +19,8 @@ use Tests\TestCase;
  */
 class PerfisContaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function tearDown(): void
     {
@@ -321,7 +322,7 @@ class PerfisContaTest extends TestCase
             ->assertJsonPath('fipe_valor', '55000.00')
             ->json('id');
 
-        \Illuminate\Support\Facades\Cache::flush();
+        Cache::flush();
 
         $this->postJson("/api/conta/veiculos/{$comCodigos}/fipe", [], $headers)
             ->assertStatus(200)

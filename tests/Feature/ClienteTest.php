@@ -9,8 +9,8 @@ use Tests\TestCase;
 
 class ClienteTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_listar_clientes_exige_autenticacao(): void
     {

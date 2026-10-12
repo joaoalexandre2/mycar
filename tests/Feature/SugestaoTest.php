@@ -8,13 +8,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class SugestaoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function dados(array $extra = []): array
     {
@@ -133,7 +134,7 @@ class SugestaoTest extends TestCase
         return new UploadedFile($caminho, $nome, null, null, true);
     }
 
-    private function enviarComImagens(array $headers, array $imagens, array $extra = []): \Illuminate\Testing\TestResponse
+    private function enviarComImagens(array $headers, array $imagens, array $extra = []): TestResponse
     {
         return $this->post('/api/sugestoes', $this->dados($extra) + ['imagens' => $imagens], $headers + ['Accept' => 'application/json']);
     }
@@ -181,7 +182,7 @@ class SugestaoTest extends TestCase
             ->assertStatus(422)->assertJsonValidationErrors('imagens.0');
         $this->enviarComImagens($headers, [$this->arquivo('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>', 'a.svg')])
             ->assertStatus(422);
-        $this->enviarComImagens($headers, [$this->arquivo(base64_decode(self::PNG).str_repeat('0', 4 * 1024 * 1024), 'grande.png')])
+        $this->enviarComImagens($headers, [$this->arquivo(base64_decode(self::PNG) . str_repeat('0', 4 * 1024 * 1024), 'grande.png')])
             ->assertStatus(422)->assertJsonValidationErrors('imagens.0');
 
         $this->assertSame(0, Sugestao::count());

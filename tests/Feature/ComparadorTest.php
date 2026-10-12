@@ -13,8 +13,8 @@ use Tests\TestCase;
 
 class ComparadorTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -65,7 +65,7 @@ class ComparadorTest extends TestCase
 
         $this->getJson('/api/conta/comparador', $headers)->assertStatus(422)->assertJsonValidationErrors('q');
         $this->getJson('/api/conta/comparador?q=ab', $headers)->assertStatus(422);
-        $this->getJson('/api/conta/comparador?q='.str_repeat('a', 121), $headers)->assertStatus(422);
+        $this->getJson('/api/conta/comparador?q=' . str_repeat('a', 121), $headers)->assertStatus(422);
     }
 
     public function test_sem_chaves_do_mercado_livre_avisa_e_nao_chama_a_loja(): void
@@ -165,9 +165,18 @@ class ComparadorTest extends TestCase
 
     public function test_com_poucas_ofertas_nao_descarta_nenhuma(): void
     {
-        $fonte = new class implements FontePrecos {
-            public function nome(): string { return 'Teste'; }
-            public function configurada(): bool { return true; }
+        $fonte = new class implements FontePrecos
+        {
+            public function nome(): string
+            {
+                return 'Teste';
+            }
+
+            public function configurada(): bool
+            {
+                return true;
+            }
+
             public function buscar(string $consulta, int $limite = 50): array
             {
                 return [
@@ -186,9 +195,18 @@ class ComparadorTest extends TestCase
 
     public function test_excecao_da_fonte_vira_status_indisponivel(): void
     {
-        $fonte = new class implements FontePrecos {
-            public function nome(): string { return 'Teste'; }
-            public function configurada(): bool { return true; }
+        $fonte = new class implements FontePrecos
+        {
+            public function nome(): string
+            {
+                return 'Teste';
+            }
+
+            public function configurada(): bool
+            {
+                return true;
+            }
+
             public function buscar(string $consulta, int $limite = 50): array
             {
                 throw new FontePrecosIndisponivelException('fora');

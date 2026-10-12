@@ -16,8 +16,7 @@ class ImagensModelos
     public function __construct(
         private readonly ?string $json = null,
         private readonly ?string $pasta = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string, mixed>|null slug, arquivo, autor, licença, link e fonte
@@ -32,7 +31,7 @@ class ImagensModelos
     {
         foreach ($this->todas() as $imagem) {
             if (($imagem['slug'] ?? null) === $slug) {
-                $caminho = ($this->pasta ?? base_path('database/data/imagens_modelos')).'/'.basename($imagem['arquivo']);
+                $caminho = ($this->pasta ?? base_path('database/data/imagens_modelos')) . '/' . basename($imagem['arquivo']);
 
                 return is_file($caminho) ? $caminho : null;
             }

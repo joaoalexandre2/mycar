@@ -1,16 +1,13 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\OrdemServico;
-use App\Models\Manutencao;
+
 use App\Models\Concerns\CalculaTributosVeiculo;
 use App\Models\Concerns\PertenceAOficina;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Veiculo extends Model
 {
@@ -51,15 +48,15 @@ class Veiculo extends Model
         return $this->belongsTo(Cliente::class);
     }
 
-     public function ordensServico(): HasMany
+    public function ordensServico(): HasMany
     {
         return $this->hasMany(OrdemServico::class);
     }
 
     public function manutencoes(): HasMany
-{
-    return $this->hasMany(Manutencao::class);
-}
+    {
+        return $this->hasMany(Manutencao::class);
+    }
 
     public function historicoFipe(): HasMany
     {

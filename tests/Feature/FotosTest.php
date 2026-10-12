@@ -7,13 +7,15 @@ use App\Models\VeiculoConta;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class FotosTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     /** PNG 1x1 válido. */
     private const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
@@ -46,7 +48,7 @@ class FotosTest extends TestCase
         return $this->arquivo(base64_decode(self::PNG), $nome);
     }
 
-    private function enviar(array $headers, VeiculoConta $v, array $extra = []): \Illuminate\Testing\TestResponse
+    private function enviar(array $headers, VeiculoConta $v, array $extra = []): TestResponse
     {
         return $this->post("/api/conta/veiculos/{$v->id}/fotos", array_merge([
             'foto' => $this->imagem('foto.png'),
@@ -59,7 +61,7 @@ class FotosTest extends TestCase
     public function test_perfil_guarda_e_remove_a_foto(): void
     {
         [$user, $headers] = $this->autenticar();
-        $foto = 'data:image/png;base64,'.self::PNG;
+        $foto = 'data:image/png;base64,' . self::PNG;
 
         $this->getJson('/api/me', $headers)->assertJsonPath('foto', null);
 
@@ -80,12 +82,12 @@ class FotosTest extends TestCase
         $this->putJson('/api/me/foto', ['foto' => 'https://exemplo.com/foto.png'], $headers)->assertStatus(422);
         $this->putJson('/api/me/foto', ['foto' => 'data:image/svg+xml;base64,PHN2Zz48L3N2Zz4='], $headers)->assertStatus(422);
         $this->putJson('/api/me/foto', ['foto' => 'data:text/html;base64,PHNjcmlwdD4='], $headers)->assertStatus(422);
-        $this->putJson('/api/me/foto', ['foto' => 'data:image/png;base64,'.str_repeat('A', 160001)], $headers)->assertStatus(422);
+        $this->putJson('/api/me/foto', ['foto' => 'data:image/png;base64,' . str_repeat('A', 160001)], $headers)->assertStatus(422);
     }
 
     public function test_perfil_exige_autenticacao(): void
     {
-        $this->putJson('/api/me/foto', ['foto' => 'data:image/png;base64,'.self::PNG])->assertStatus(401);
+        $this->putJson('/api/me/foto', ['foto' => 'data:image/png;base64,' . self::PNG])->assertStatus(401);
         $this->deleteJson('/api/me/foto')->assertStatus(401);
     }
 
@@ -140,7 +142,7 @@ class FotosTest extends TestCase
         // Sem assinatura, com assinatura trocada, com o id de outra foto e expirado.
         $this->get(strtok($url, '?'))->assertStatus(403);
         $this->get(preg_replace('/signature=[a-f0-9]+/', 'signature=000', $url))->assertStatus(403);
-        $this->get(str_replace('/fotos/'.$foto->json('fotos.0.id').'/', '/fotos/999/', $url))->assertStatus(403);
+        $this->get(str_replace('/fotos/' . $foto->json('fotos.0.id') . '/', '/fotos/999/', $url))->assertStatus(403);
 
         $this->travel(3)->hours();
         $this->get($url)->assertStatus(403);
@@ -154,7 +156,7 @@ class FotosTest extends TestCase
             'conta_id' => $v->conta_id, 'veiculo_conta_id' => $v->id, 'caminho' => 'x.png', 'caminho_miniatura' => 'y.png', 'mime' => 'image/png', 'tamanho' => 1,
         ]);
 
-        $url = \Illuminate\Support\Facades\URL::temporarySignedRoute('fotos.mostrar', now()->addHour(), ['foto' => $foto->id, 'tipo' => 'original'], absolute: false);
+        $url = URL::temporarySignedRoute('fotos.mostrar', now()->addHour(), ['foto' => $foto->id, 'tipo' => 'original'], absolute: false);
 
         $this->get($url)->assertStatus(404);
     }
@@ -176,7 +178,7 @@ class FotosTest extends TestCase
         $this->enviar($headers, $v, ['foto' => $svg])->assertStatus(422);
 
         // Grande demais.
-        $grande = $this->arquivo(base64_decode(self::PNG).str_repeat('0', 5 * 1024 * 1024), 'g.png');
+        $grande = $this->arquivo(base64_decode(self::PNG) . str_repeat('0', 5 * 1024 * 1024), 'g.png');
         $this->enviar($headers, $v, ['foto' => $grande])->assertStatus(422)->assertJsonValidationErrors('foto');
 
         $this->assertSame(0, FotoVeiculoConta::withoutGlobalScopes()->count());

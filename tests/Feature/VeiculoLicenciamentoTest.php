@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class VeiculoLicenciamentoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_calcula_vencimento_no_ano_atual_quando_mes_ainda_nao_passou(): void
     {

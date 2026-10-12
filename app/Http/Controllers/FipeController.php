@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class FipeController extends Controller
 {
-    public function __construct(private FipeService $fipe)
-    {
-    }
+    public function __construct(private FipeService $fipe) {}
 
     public function marcas(Request $request)
     {

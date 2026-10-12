@@ -11,9 +11,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class AnoFabricacao implements ValidationRule
 {
-    public function __construct(private readonly mixed $anoModelo)
-    {
-    }
+    public function __construct(private readonly mixed $anoModelo) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

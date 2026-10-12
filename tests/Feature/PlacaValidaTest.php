@@ -15,8 +15,8 @@ use Tests\TestCase;
  */
 class PlacaValidaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public static function placasInvalidas(): array
     {

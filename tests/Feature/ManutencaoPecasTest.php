@@ -11,8 +11,8 @@ use Tests\TestCase;
 
 class ManutencaoPecasTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function payload(Veiculo $veiculo, array $extra = []): array
     {

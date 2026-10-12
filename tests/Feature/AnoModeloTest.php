@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cliente;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\Concerns\AutenticaUsuario;
@@ -13,8 +14,8 @@ use Tests\TestCase;
  */
 class AnoModeloTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -51,7 +52,7 @@ class AnoModeloTest extends TestCase
     public function test_oficina_tambem_aceita_o_ano_modelo_do_ano_seguinte(): void
     {
         [, $headers] = $this->autenticar();
-        $cliente = \App\Models\Cliente::factory()->create();
+        $cliente = Cliente::factory()->create();
 
         $dados = ['cliente_id' => $cliente->id, 'placa' => 'BBB2C36', 'marca' => 'Fiat', 'modelo' => 'Pulse', 'ano' => 2027];
 

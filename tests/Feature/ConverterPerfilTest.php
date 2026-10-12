@@ -15,6 +15,7 @@ use App\Models\VeiculoConta;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Testing\PendingCommand;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
@@ -24,8 +25,8 @@ use Tests\TestCase;
  */
 class ConverterPerfilTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -73,7 +74,7 @@ class ConverterPerfilTest extends TestCase
         return [$usuario, $headers, $veiculo];
     }
 
-    private function converter(User $usuario, array $opcoes = []): \Illuminate\Testing\PendingCommand
+    private function converter(User $usuario, array $opcoes = []): PendingCommand
     {
         return $this->artisan('admin:converter-perfil', ['email' => $usuario->email] + $opcoes);
     }

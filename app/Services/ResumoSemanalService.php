@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cliente;
 use App\Models\Manutencao;
 use App\Models\Veiculo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -93,7 +94,7 @@ class ResumoSemanalService
      * refeitas: se existe uma manutenção posterior do mesmo tipo no mesmo
      * veículo, a "próxima data" da antiga perdeu o sentido.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Manutencao>
+     * @return Collection<int, Manutencao>
      */
     private function manutencoesPendentes(Carbon $limite)
     {
@@ -152,7 +153,7 @@ class ResumoSemanalService
     }
 
     /**
-     * @param array<int, array<string, mixed>> $itens
+     * @param  array<int, array<string, mixed>>  $itens
      * @return array<int, array<string, mixed>>
      */
     private function ordenarPorData(array $itens): array
@@ -165,7 +166,7 @@ class ResumoSemanalService
     /**
      * Limita a lista para o e-mail não ficar enorme e informa quantos ficaram de fora.
      *
-     * @param array<int, array<string, mixed>> $itens
+     * @param  array<int, array<string, mixed>>  $itens
      * @return array{itens: array<int, array<string, mixed>>, total: int, restantes: int}
      */
     private function secao(array $itens): array

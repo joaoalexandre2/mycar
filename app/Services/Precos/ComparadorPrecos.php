@@ -17,9 +17,7 @@ class ComparadorPrecos
     /** Preço acima disto da mediana costuma ser kit ou atacado. */
     private const TETO_DA_MEDIANA = 3.0;
 
-    public function __construct(private readonly FontePrecos $fonte)
-    {
-    }
+    public function __construct(private readonly FontePrecos $fonte) {}
 
     /**
      * @return array{status: string, fonte: string, consulta: string, itens: array<int, array<string, mixed>>, mais_barato: ?array<string, mixed>, total_encontrado: int, mediana: ?float}
@@ -43,7 +41,7 @@ class ComparadorPrecos
 
         try {
             $ofertas = Cache::remember(
-                'precos:'.md5(mb_strtolower($consulta)),
+                'precos:' . md5(mb_strtolower($consulta)),
                 (int) config('services.mercadolivre.cache_ttl'),
                 fn () => $this->fonte->buscar($consulta),
             );
@@ -73,7 +71,7 @@ class ComparadorPrecos
     }
 
     /**
-     * @param array<int, array<string, mixed>> $ofertas
+     * @param  array<int, array<string, mixed>>  $ofertas
      * @return array<int, array<string, mixed>>
      */
     private function descartarDestoantes(array $ofertas): array

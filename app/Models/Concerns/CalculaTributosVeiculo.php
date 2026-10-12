@@ -49,7 +49,7 @@ trait CalculaTributosVeiculo
      */
     private function aliquotaIpva(): ?float
     {
-        if (! $this->uf) {
+        if (!$this->uf) {
             return null;
         }
 

@@ -18,8 +18,8 @@ use Tests\TestCase;
  */
 class IsolamentoOficinaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_clientes_de_uma_oficina_nao_aparecem_para_outra(): void
     {

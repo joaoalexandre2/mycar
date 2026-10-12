@@ -14,8 +14,8 @@ use Tests\TestCase;
 
 class FichaTecnicaContaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function veiculo(array $extra = []): VeiculoConta
     {
@@ -28,7 +28,7 @@ class FichaTecnicaContaTest extends TestCase
 
     public function test_le_o_que_esta_escrito_no_nome_da_versao(): void
     {
-        $le = fn (string $nome) => collect((new EspecificacoesDoNome())->extrair($nome))->pluck('valor', 'chave')->all();
+        $le = fn (string $nome) => collect((new EspecificacoesDoNome)->extrair($nome))->pluck('valor', 'chave')->all();
 
         $this->assertSame(
             ['motor' => '1.4 litros', 'valvulas' => '8', 'combustivel' => 'Flex (gasolina e etanol)', 'cambio' => 'Manual', 'portas' => '5'],
@@ -48,15 +48,15 @@ class FichaTecnicaContaTest extends TestCase
 
     public function test_nao_inventa_o_que_nao_esta_no_nome(): void
     {
-        $this->assertSame([], (new EspecificacoesDoNome())->extrair('Modelo Qualquer'));
-        $this->assertSame([], (new EspecificacoesDoNome())->extrair(null));
+        $this->assertSame([], (new EspecificacoesDoNome)->extrair('Modelo Qualquer'));
+        $this->assertSame([], (new EspecificacoesDoNome)->extrair(null));
     }
 
     // ------------------------------------------------------ leitura do infobox
 
     public function test_le_o_infobox_da_wikipedia_e_deixa_o_consumo_de_fora(): void
     {
-        $campos = (new WikipediaInfobox())->extrair(file_get_contents(base_path('tests/fixtures/wikipedia_onix_infobox.txt')));
+        $campos = (new WikipediaInfobox)->extrair(file_get_contents(base_path('tests/fixtures/wikipedia_onix_infobox.txt')));
         $porChave = collect($campos)->pluck('valor', 'chave');
 
         $this->assertSame('82 a 116 cv', $porChave['potencia']);
@@ -75,12 +75,12 @@ class FichaTecnicaContaTest extends TestCase
 
     public function test_pagina_sem_infobox_de_automovel_devolve_nulo(): void
     {
-        $this->assertNull((new WikipediaInfobox())->extrair("'''Algo''' sem infobox. {{Outro|a=b}}"));
+        $this->assertNull((new WikipediaInfobox)->extrair("'''Algo''' sem infobox. {{Outro|a=b}}"));
     }
 
     public function test_as_fichas_coletadas_tem_fonte_e_campos(): void
     {
-        $fichas = new FichasModelos();
+        $fichas = new FichasModelos;
 
         $this->assertGreaterThan(0, $fichas->total());
         $onix = $fichas->porNome('Chevrolet Onix');

@@ -15,8 +15,8 @@ use Tests\TestCase;
  */
 class AnoFabricacaoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

@@ -4,19 +4,21 @@ namespace Tests\Feature;
 
 use App\Mail\LembreteContaEmail;
 use App\Models\Abastecimento;
+use App\Models\Conta;
 use App\Models\Servico;
 use App\Models\VeiculoConta;
 use App\Services\LembretesContaService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class ServicoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -36,7 +38,7 @@ class ServicoTest extends TestCase
         return VeiculoConta::create(['placa' => 'AAA1B25', 'marca' => 'Fiat', 'modelo' => 'Uno', 'ano' => 2018]);
     }
 
-    private function servico(array $headers, VeiculoConta $veiculo, array $extra = []): \Illuminate\Testing\TestResponse
+    private function servico(array $headers, VeiculoConta $veiculo, array $extra = []): TestResponse
     {
         return $this->postJson('/api/conta/servicos', array_merge([
             'veiculo_conta_id' => $veiculo->id,
@@ -203,7 +205,7 @@ class ServicoTest extends TestCase
 
     public function test_email_mostra_o_km_que_falta(): void
     {
-        $conta = new \App\Models\Conta(['nome' => 'X', 'tipo' => 'pessoa']);
+        $conta = new Conta(['nome' => 'X', 'tipo' => 'pessoa']);
 
         $email = new LembreteContaEmail($conta, [[
             'tipo' => 'servico', 'rotulo' => 'Troca de óleo', 'veiculo' => 'Uno', 'placa' => 'AAA1B25',

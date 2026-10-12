@@ -12,13 +12,12 @@ class LembreteContaEmail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * @param array<int, array<string, mixed>> $itens saída de LembretesContaService::pendentes()
+     * @param  array<int, array<string, mixed>>  $itens  saída de LembretesContaService::pendentes()
      */
     public function __construct(
         public Conta $conta,
         public array $itens,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

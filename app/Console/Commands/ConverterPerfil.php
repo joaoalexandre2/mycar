@@ -109,7 +109,7 @@ class ConverterPerfil extends Command
                     continue;
                 }
 
-                (new VeiculoConta())->forceFill([
+                (new VeiculoConta)->forceFill([
                     'conta_id' => $conta->id,
                     'placa' => $veiculo->placa,
                     'marca' => $veiculo->marca,

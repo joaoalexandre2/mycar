@@ -9,13 +9,14 @@ use App\Services\ComparadorSeguro;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class SeguroTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -37,7 +38,7 @@ class SeguroTest extends TestCase
         ], $extra));
     }
 
-    private function seguro(array $headers, VeiculoConta $veiculo, array $extra): \Illuminate\Testing\TestResponse
+    private function seguro(array $headers, VeiculoConta $veiculo, array $extra): TestResponse
     {
         return $this->postJson("/api/conta/veiculos/{$veiculo->id}/seguros", array_merge([
             'tipo' => 'proposta', 'seguradora' => 'Seguradora A', 'valor_anual' => 2400,
@@ -48,7 +49,7 @@ class SeguroTest extends TestCase
 
     public function test_faixa_de_referencia_e_comparacao_das_propostas(): void
     {
-        $r = (new ComparadorSeguro())->comparar(collect([
+        $r = (new ComparadorSeguro)->comparar(collect([
             ['id' => 1, 'tipo' => 'apolice', 'valor_anual' => 3000.0, 'vigencia_fim' => '2026-06-30'],
             ['id' => 2, 'tipo' => 'proposta', 'valor_anual' => 2400.0, 'vigencia_fim' => null],
             ['id' => 3, 'tipo' => 'proposta', 'valor_anual' => 3300.0, 'vigencia_fim' => null],
@@ -69,7 +70,7 @@ class SeguroTest extends TestCase
 
     public function test_sem_valor_fipe_nao_ha_referencia(): void
     {
-        $r = (new ComparadorSeguro())->comparar(collect([
+        $r = (new ComparadorSeguro)->comparar(collect([
             ['id' => 1, 'tipo' => 'proposta', 'valor_anual' => 2400.0, 'vigencia_fim' => null],
         ]), null);
 

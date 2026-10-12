@@ -11,8 +11,8 @@ use Tests\TestCase;
 /** O veículo traz a capa do cartão: a miniatura da foto mais recente do álbum. */
 class FotoCapaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function veiculo(string $placa = 'AAA1B25'): VeiculoConta
     {

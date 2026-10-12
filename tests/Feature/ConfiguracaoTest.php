@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class ConfiguracaoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_exige_autenticacao(): void
     {

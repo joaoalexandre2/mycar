@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class OrdemServicoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_listar_ordens_exige_autenticacao(): void
     {
