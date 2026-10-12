@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cliente;
 use App\Models\Veiculo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -11,8 +12,8 @@ use Tests\TestCase;
 
 class FipeTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -109,7 +110,7 @@ class FipeTest extends TestCase
         Http::fake(['*/carros/marcas/23/modelos/1/anos/2020-1' => Http::response(['Valor' => 'R$ 60.250,50'])]);
 
         $this->postJson('/api/veiculos', [
-            'cliente_id' => \App\Models\Cliente::factory()->create()->id,
+            'cliente_id' => Cliente::factory()->create()->id,
             'placa' => 'FIP1A23',
             'marca' => 'GM - Chevrolet',
             'modelo' => 'Onix',
@@ -128,7 +129,7 @@ class FipeTest extends TestCase
         Http::fake(['*' => Http::response('erro', 500)]);
 
         $this->postJson('/api/veiculos', [
-            'cliente_id' => \App\Models\Cliente::factory()->create()->id,
+            'cliente_id' => Cliente::factory()->create()->id,
             'placa' => 'FIP2B34',
             'marca' => 'GM - Chevrolet',
             'modelo' => 'Onix',

@@ -1,35 +1,35 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\VeiculoController;
-use App\Http\Controllers\OrdemServicoController;
-use App\Http\Controllers\ManutencaoController;
-use App\Http\Controllers\FipeController;
-use App\Http\Controllers\FichaTecnicaController;
-use App\Http\Controllers\VeiculoPecaController;
-use App\Http\Controllers\ConfiguracaoController;
-use App\Http\Controllers\ImagemModeloController;
+use App\Http\Controllers\AbastecimentoController;
 use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AbastecimentoController;
-use App\Http\Controllers\SeguroController;
-use App\Http\Controllers\DocumentoController;
-use App\Http\Controllers\ServicoController;
-use App\Http\Controllers\DespesaController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogoPecasController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CodigoPecaController;
-use App\Http\Controllers\FichaTecnicaContaController;
 use App\Http\Controllers\ComparadorController;
-use App\Http\Controllers\SugestaoController;
-use App\Http\Controllers\FotoVeiculoContaController;
-use App\Http\Controllers\FotoServirController;
+use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DespesaController;
+use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\FichaTecnicaContaController;
+use App\Http\Controllers\FichaTecnicaController;
+use App\Http\Controllers\FipeController;
+use App\Http\Controllers\FotoServirController;
+use App\Http\Controllers\FotoVeiculoContaController;
+use App\Http\Controllers\ImagemModeloController;
+use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SeguroController;
+use App\Http\Controllers\ServicoController;
+use App\Http\Controllers\SugestaoController;
+use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\VeiculoPecaController;
+use Illuminate\Support\Facades\Route;
 
 // Autenticação
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');

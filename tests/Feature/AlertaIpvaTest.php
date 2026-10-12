@@ -14,12 +14,13 @@ use Tests\TestCase;
 
 class AlertaIpvaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     // O IPVA vence sempre em 31/01, qualquer que seja o final da placa. Com a
     // data fixa em 05/01 ele está próximo; em 05/03 o próximo é só em 2027.
     private const FINAL_PROXIMO = 3;
+
     private const FINAL_DISTANTE = 5;
 
     protected function setUp(): void

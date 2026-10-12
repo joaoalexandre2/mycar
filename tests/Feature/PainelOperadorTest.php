@@ -10,14 +10,15 @@ use App\Models\OrdemServico;
 use App\Models\User;
 use App\Models\Veiculo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class PainelOperadorTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     /**
      * @return array{0: User, 1: array<string, string>}
@@ -290,13 +291,13 @@ class PainelOperadorTest extends TestCase
             'oficina_id' => Oficina::factory()->create()->id,
         ]);
 
-        $codigo = \Illuminate\Support\Facades\Artisan::call('admin:promover', [
+        $codigo = Artisan::call('admin:promover', [
             'email' => 'dono@exemplo.com',
             '--no-interaction' => true,
         ]);
 
         $this->assertSame(1, $codigo);
-        $this->assertStringContainsString('nada foi alterado', \Illuminate\Support\Facades\Artisan::output());
+        $this->assertStringContainsString('nada foi alterado', Artisan::output());
         $this->assertFalse((bool) $usuario->fresh()->is_super_admin);
     }
 }

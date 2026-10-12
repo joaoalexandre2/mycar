@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('cliente_id')
-                  ->constrained('clientes')
-                  ->onDelete('cascade');
+                ->constrained('clientes')
+                ->onDelete('cascade');
 
             $table->string('placa', 10)->unique();
             $table->string('marca');

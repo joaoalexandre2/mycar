@@ -13,6 +13,7 @@ class Manutencao extends Model
     use HasFactory, PertenceAOficina;
 
     protected $table = 'manutencoes';
+
     protected $fillable = [
         'veiculo_id',
         'tipo',

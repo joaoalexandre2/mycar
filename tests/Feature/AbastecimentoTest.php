@@ -7,13 +7,14 @@ use App\Models\VeiculoConta;
 use App\Services\CalculoConsumo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class AbastecimentoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -32,7 +33,7 @@ class AbastecimentoTest extends TestCase
         return VeiculoConta::create(['placa' => $placa, 'marca' => 'Fiat', 'modelo' => 'Uno', 'ano' => 2018]);
     }
 
-    private function abastecer(array $headers, VeiculoConta $veiculo, array $extra): \Illuminate\Testing\TestResponse
+    private function abastecer(array $headers, VeiculoConta $veiculo, array $extra): TestResponse
     {
         return $this->postJson("/api/conta/veiculos/{$veiculo->id}/abastecimentos", array_merge([
             'data' => '2026-06-01', 'km' => 10000, 'litros' => 40, 'valor_total' => 240, 'tanque_cheio' => true,
@@ -43,7 +44,7 @@ class AbastecimentoTest extends TestCase
 
     public function test_calculo_usa_o_tanque_cheio_e_ignora_o_primeiro_como_ponto_de_partida(): void
     {
-        $r = (new CalculoConsumo())->calcular(collect([
+        $r = (new CalculoConsumo)->calcular(collect([
             ['id' => 1, 'data' => '2026-01-01', 'km' => 1000, 'litros' => 30.0, 'valor_total' => 180.0, 'tanque_cheio' => true],
             ['id' => 2, 'data' => '2026-01-10', 'km' => 1400, 'litros' => 40.0, 'valor_total' => 240.0, 'tanque_cheio' => true],   // 400 km / 40 l = 10
             ['id' => 3, 'data' => '2026-01-20', 'km' => 1700, 'litros' => 20.0, 'valor_total' => 100.0, 'tanque_cheio' => false],  // parcial
@@ -68,19 +69,19 @@ class AbastecimentoTest extends TestCase
 
     public function test_calculo_sem_dois_tanques_cheios_nao_inventa_consumo(): void
     {
-        $um = (new CalculoConsumo())->calcular(collect([
+        $um = (new CalculoConsumo)->calcular(collect([
             ['id' => 1, 'data' => '2026-01-01', 'km' => 1000, 'litros' => 30.0, 'valor_total' => 180.0, 'tanque_cheio' => true],
         ]));
         $this->assertNull($um['consumo_medio_km_l']);
         $this->assertSame(6.0, $um['preco_medio_litro']);
 
-        $parciais = (new CalculoConsumo())->calcular(collect([
+        $parciais = (new CalculoConsumo)->calcular(collect([
             ['id' => 1, 'data' => '2026-01-01', 'km' => 1000, 'litros' => 10.0, 'valor_total' => 60.0, 'tanque_cheio' => false],
             ['id' => 2, 'data' => '2026-01-05', 'km' => 1100, 'litros' => 10.0, 'valor_total' => 60.0, 'tanque_cheio' => false],
         ]));
         $this->assertNull($parciais['consumo_medio_km_l']);
 
-        $vazio = (new CalculoConsumo())->calcular(collect());
+        $vazio = (new CalculoConsumo)->calcular(collect());
         $this->assertNull($vazio['km_atual']);
         $this->assertNull($vazio['preco_medio_litro']);
     }

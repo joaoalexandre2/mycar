@@ -6,6 +6,7 @@ use App\Mail\LembreteContaEmail;
 use App\Models\Conta;
 use App\Models\User;
 use App\Models\VeiculoConta;
+use App\Services\LembretesContaService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -19,8 +20,8 @@ use Tests\TestCase;
  */
 class LembretesContaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -40,6 +41,7 @@ class LembretesContaTest extends TestCase
             'placa' => $placa, 'marca' => 'Fiat', 'modelo' => 'Uno', 'ano' => 2018, 'uf' => 'RS',
         ], $extra));
     }
+
     public function test_avisa_ipva_e_revisao_em_um_unico_email(): void
     {
         Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
@@ -71,6 +73,7 @@ class LembretesContaTest extends TestCase
         Mail::assertSent(LembreteContaEmail::class, fn (LembreteContaEmail $mail) => $mail->hasTo($usuario->email)
             && collect($mail->itens)->pluck('tipo')->all() === ['licenciamento']);
     }
+
     public function test_nao_repete_o_aviso_do_mesmo_ciclo(): void
     {
         Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
@@ -198,7 +201,7 @@ class LembretesContaTest extends TestCase
         $usuario->conta->update(['nome' => 'Transportes Silva']);
         $this->veiculo('AAA1B23', ['apelido' => 'Van da entrega', 'fipe_valor' => 40000]);
 
-        $itens = app(\App\Services\LembretesContaService::class)->pendentes();
+        $itens = app(LembretesContaService::class)->pendentes();
         $html = (new LembreteContaEmail($usuario->conta->fresh(), $itens))->render();
 
         $this->assertStringContainsString('Transportes Silva', $html);

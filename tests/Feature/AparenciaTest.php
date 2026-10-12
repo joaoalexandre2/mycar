@@ -9,8 +9,8 @@ use Tests\TestCase;
 
 class AparenciaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_exige_autenticacao(): void
     {

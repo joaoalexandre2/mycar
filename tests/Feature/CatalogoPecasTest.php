@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\CodigoPeca;
 use App\Models\VeiculoConta;
 use App\Services\CatalogoPecas;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,8 +11,8 @@ use Tests\TestCase;
 
 class CatalogoPecasTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function veiculo(string $marca, string $modelo, string $placa = 'AAA1B25'): VeiculoConta
     {
@@ -27,7 +28,7 @@ class CatalogoPecasTest extends TestCase
         $nomes = [];
 
         foreach (config('pecas_catalogo.pecas') as $linha) {
-            $this->assertCount(7, $linha, 'Peça com colunas a mais ou a menos: '.json_encode($linha));
+            $this->assertCount(7, $linha, 'Peça com colunas a mais ou a menos: ' . json_encode($linha));
             [$sis, $nome, , $posicao, $km, , $cats] = $linha;
 
             $this->assertContains($sis, $sistemas, $nome);
@@ -52,7 +53,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_acha_o_modelo_pelo_nome_que_vem_da_fipe(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $this->assertSame('Volkswagen Gol', $catalogo->modeloDoVeiculo('VW - VolksWagen', 'Gol 1.0 City (Flex)')['nome']);
         $this->assertSame('Chevrolet Onix', $catalogo->modeloDoVeiculo('GM - Chevrolet', 'Onix Hatch LTZ 1.4 8V FlexPower 5p Mec.')['nome']);
@@ -64,7 +65,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_o_modelo_mais_especifico_vence(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $this->assertSame('Toyota Corolla Cross', $catalogo->modeloDoVeiculo('Toyota', 'Corolla Cross XRE 2.0')['nome']);
         $this->assertSame('Toyota Corolla', $catalogo->modeloDoVeiculo('Toyota', 'Corolla XEi 2.0 Flex')['nome']);
@@ -74,7 +75,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_marca_errada_ou_modelo_fora_do_catalogo_nao_casa(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $this->assertNull($catalogo->modeloDoVeiculo('Lexus', 'IS 250 2.5 V6'));
         $this->assertNull($catalogo->modeloDoVeiculo('Ford', 'Gol 1.0')); // Gol existe, mas na VW
@@ -85,7 +86,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_busca_ignora_acento_caixa_e_plural(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $nomes = fn (string $q) => array_column($catalogo->pecas(null, $q), 'nome');
 
@@ -102,7 +103,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_busca_com_varias_palavras_exige_todas(): void
     {
-        $nomes = array_column((new CatalogoPecas())->pecas(null, 'coifa amortecedor'), 'nome');
+        $nomes = array_column((new CatalogoPecas)->pecas(null, 'coifa amortecedor'), 'nome');
 
         $this->assertContains('Kit coifa e batente do amortecedor (dianteiro)', $nomes);
         $this->assertNotContains('Coifa da caixa de direção', $nomes);
@@ -110,7 +111,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_acertar_o_nome_vem_antes_de_acertar_so_o_sinonimo(): void
     {
-        $nomes = array_column((new CatalogoPecas())->pecas(null, 'amortecedor'), 'nome');
+        $nomes = array_column((new CatalogoPecas)->pecas(null, 'amortecedor'), 'nome');
 
         $this->assertSame('Amortecedor dianteiro', $nomes[0]);
     }
@@ -206,7 +207,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_acha_bmw_e_audi_pelo_nome_da_fipe(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $bmw = $catalogo->modeloDoVeiculo('BMW', '320iA 2.0 TB M Sport A.Flex/M.Sport 4p');
         $this->assertSame('BMW Série 3 (320i)', $bmw['nome']);
@@ -221,7 +222,7 @@ class CatalogoPecasTest extends TestCase
 
     public function test_marca_da_peca_original_por_montadora(): void
     {
-        $catalogo = new CatalogoPecas();
+        $catalogo = new CatalogoPecas;
 
         $this->assertSame('ACDelco', $catalogo->modeloDoVeiculo('GM - Chevrolet', 'Onix LT 1.0')['original']);
         $this->assertSame('Mopar', $catalogo->modeloDoVeiculo('Fiat', 'Uno Way 1.0')['original']);
@@ -244,11 +245,11 @@ class CatalogoPecasTest extends TestCase
 
     public function test_pecas_trazem_as_marcas_comuns(): void
     {
-        $pecas = collect((new CatalogoPecas())->pecas(null, 'amortecedor'))->keyBy('nome');
+        $pecas = collect((new CatalogoPecas)->pecas(null, 'amortecedor'))->keyBy('nome');
 
         $this->assertContains('Cofap', $pecas['Amortecedor dianteiro']['marcas']);
         $this->assertContains('Monroe', $pecas['Amortecedor dianteiro']['marcas']);
-        $this->assertSame([], collect((new CatalogoPecas())->pecas(null, 'buzina'))->first()['marcas']);
+        $this->assertSame([], collect((new CatalogoPecas)->pecas(null, 'buzina'))->first()['marcas']);
     }
 
     public function test_guarda_o_meu_codigo_e_devolve_junto_da_peca(): void
@@ -296,6 +297,6 @@ class CatalogoPecasTest extends TestCase
 
         $this->postJson("/api/conta/veiculos/{$veiculoA->id}/codigos-pecas", ['peca_id' => 'bateria', 'codigo' => 'X'], $headersB)->assertStatus(404);
         $this->deleteJson("/api/conta/veiculos/{$veiculoA->id}/codigos-pecas/{$id}", [], $headersB)->assertStatus(404);
-        $this->assertSame(1, \App\Models\CodigoPeca::withoutGlobalScopes()->count());
+        $this->assertSame(1, CodigoPeca::withoutGlobalScopes()->count());
     }
 }

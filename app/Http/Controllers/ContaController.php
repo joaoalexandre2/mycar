@@ -8,6 +8,7 @@ use App\Models\VeiculoConta;
 use App\Services\CalculoConsumo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Visão geral da conta (perfis pessoa e frota): quantos veículos, quanto
@@ -163,7 +164,7 @@ class ContaController extends Controller
      * intervalo de tanque cheio, e preço médio do litro de tudo que foi abastecido.
      * Sem dado suficiente, km_por_litro vem nulo (a tela mostra como começar).
      *
-     * @param \Illuminate\Support\Collection<int, VeiculoConta> $veiculos
+     * @param  Collection<int, VeiculoConta>  $veiculos
      * @return array{km_por_litro: ?float, preco_medio_litro: ?float, veiculos_com_dados: int}
      */
     private function consumoDaConta($veiculos, CalculoConsumo $calculo): array

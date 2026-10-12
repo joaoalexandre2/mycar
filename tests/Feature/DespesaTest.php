@@ -13,8 +13,8 @@ use Tests\TestCase;
 
 class DespesaTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

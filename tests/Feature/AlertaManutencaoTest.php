@@ -14,8 +14,8 @@ use Tests\TestCase;
 
 class AlertaManutencaoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function criarManutencao(?string $proximaData = null, ?string $email = 'cliente@exemplo.com'): Manutencao
     {

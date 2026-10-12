@@ -10,13 +10,14 @@ use App\Services\LembretesContaService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
 class DocumentoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {
@@ -38,7 +39,7 @@ class DocumentoTest extends TestCase
         ], $extra));
     }
 
-    private function documento(array $headers, VeiculoConta $veiculo, array $extra = []): \Illuminate\Testing\TestResponse
+    private function documento(array $headers, VeiculoConta $veiculo, array $extra = []): TestResponse
     {
         return $this->postJson("/api/conta/veiculos/{$veiculo->id}/documentos", array_merge([
             'tipo' => 'crlv', 'vencimento' => '2026-03-20',

@@ -11,8 +11,8 @@ use Tests\TestCase;
 /** Foto livre do modelo (Wikimedia): vem no veículo e é servida por rota pública. */
 class ImagemModeloTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     private function slugDoStrada(): string
     {
@@ -31,7 +31,7 @@ class ImagemModeloTest extends TestCase
         $dados = $this->getJson('/api/conta/veiculos?all=1', $headers)->assertStatus(200)->json('0');
 
         $this->assertSame('Fiat Strada', $dados['foto_modelo']['modelo']);
-        $this->assertSame('/api/imagens-modelos/'.$this->slugDoStrada(), $dados['foto_modelo']['url']);
+        $this->assertSame('/api/imagens-modelos/' . $this->slugDoStrada(), $dados['foto_modelo']['url']);
         $this->assertNotEmpty($dados['foto_modelo']['autor']);
         $this->assertStringStartsWith('CC', $dados['foto_modelo']['licenca']);
         $this->assertStringContainsString('commons.wikimedia.org', $dados['foto_modelo']['pagina']);
@@ -48,7 +48,7 @@ class ImagemModeloTest extends TestCase
 
     public function test_a_foto_do_modelo_e_publica_e_vem_com_cache(): void
     {
-        $resposta = $this->get('/api/imagens-modelos/'.$this->slugDoStrada());
+        $resposta = $this->get('/api/imagens-modelos/' . $this->slugDoStrada());
 
         $resposta->assertStatus(200);
         $this->assertStringContainsString('image/', (string) $resposta->headers->get('Content-Type'));
@@ -70,7 +70,7 @@ class ImagemModeloTest extends TestCase
         $this->assertNotEmpty($json);
 
         foreach ($json as $nome => $imagem) {
-            $this->assertFileExists(base_path('database/data/imagens_modelos/'.$imagem['arquivo']), $nome);
+            $this->assertFileExists(base_path('database/data/imagens_modelos/' . $imagem['arquivo']), $nome);
             $this->assertNotEmpty($imagem['autor'], $nome);
             $this->assertMatchesRegularExpression('/^(CC BY|CC0|Public domain)/i', $imagem['licenca'], $nome);
             $this->assertStringNotContainsString('logo', strtolower($imagem['pagina']), $nome);

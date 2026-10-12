@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class ComparadorSeguro
 {
     /**
-     * @param Collection<int, array{id: int, tipo: string, valor_anual: float}> $seguros
+     * @param  Collection<int, array{id: int, tipo: string, valor_anual: float}>  $seguros
      * @return array{
      *   referencia: ?array{baixo: float, medio: float, alto: float},
      *   apolice_atual_id: ?int, melhor_proposta_id: ?int,

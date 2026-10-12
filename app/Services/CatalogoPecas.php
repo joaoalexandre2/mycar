@@ -59,7 +59,7 @@ class CatalogoPecas
                     'categoria' => $categoria,
                     'categoria_rotulo' => config("pecas_catalogo.categorias.{$categoria}"),
                     // Marca da peça original da montadora (ex.: ACDelco para a Chevrolet).
-                    'original' => config('pecas_catalogo.originais.'.explode('|', $marcas)[0]),
+                    'original' => config('pecas_catalogo.originais.' . explode('|', $marcas)[0]),
                 ];
             }
         }
@@ -71,7 +71,7 @@ class CatalogoPecas
      * "320*" casa qualquer palavra que comece com 320 (320i, 320ia...);
      * sem asterisco, a palavra tem que ser igual.
      *
-     * @param array<int, string> $tokens
+     * @param  array<int, string>  $tokens
      */
     private function temPalavra(string $palavra, array $tokens): bool
     {
@@ -109,8 +109,8 @@ class CatalogoPecas
     }
 
     /**
-     * @param string|null $categoria null = catálogo inteiro; valor = só as peças que valem para ela;
-     *                               'universal' = só as peças comuns a qualquer carro
+     * @param  string|null  $categoria  null = catálogo inteiro; valor = só as peças que valem para ela;
+     *                                  'universal' = só as peças comuns a qualquer carro
      * @return array<int, array<string, mixed>>
      */
     public function pecas(?string $categoria, string $busca = '', ?string $sistema = null): array
@@ -168,7 +168,7 @@ class CatalogoPecas
      * 0 = não casa. Todas as palavras da busca precisam aparecer (no nome,
      * nos sinônimos ou no sistema); acertar no nome vale mais.
      *
-     * @param array<int, string> $tokens
+     * @param  array<int, string>  $tokens
      */
     private function pontuar(array $tokens, string $nome, string $termos, string $sistemaRotulo): int
     {
@@ -177,7 +177,7 @@ class CatalogoPecas
         }
 
         $nomeN = self::normalizar($nome);
-        $resto = self::normalizar($termos.' '.$sistemaRotulo);
+        $resto = self::normalizar($termos . ' ' . $sistemaRotulo);
         $pontos = 0;
 
         foreach ($tokens as $token) {

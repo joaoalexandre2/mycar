@@ -14,8 +14,7 @@ class AlertaManutencaoEmail extends Mailable
     public function __construct(
         public Manutencao $manutencao,
         public bool $atrasada,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

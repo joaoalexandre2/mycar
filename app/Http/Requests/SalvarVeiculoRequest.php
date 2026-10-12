@@ -33,7 +33,7 @@ class SalvarVeiculoRequest extends FormRequest
             'placa' => [
                 'required',
                 'string',
-                new PlacaBrasileira(),
+                new PlacaBrasileira,
                 // Única dentro da oficina: outra oficina pode ter o mesmo carro.
                 Rule::unique('veiculos', 'placa')
                     ->where('oficina_id', app('oficina.atual'))

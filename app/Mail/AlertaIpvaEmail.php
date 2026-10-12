@@ -16,8 +16,7 @@ class AlertaIpvaEmail extends Mailable
         public Veiculo $veiculo,
         public string $vencimento,
         public bool $atrasado,
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

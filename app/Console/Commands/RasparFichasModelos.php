@@ -91,7 +91,7 @@ class RasparFichasModelos extends Command
             $atual[$nome] = [
                 'fonte' => 'Wikipédia',
                 'pagina' => $dados['title'],
-                'url' => 'https://pt.wikipedia.org/wiki/'.str_replace(' ', '_', $dados['title']),
+                'url' => 'https://pt.wikipedia.org/wiki/' . str_replace(' ', '_', $dados['title']),
                 'revisao' => $dados['revid'] ?? null,
                 'licenca' => 'CC BY-SA 4.0',
                 'coletado_em' => now()->toDateString(),
@@ -103,7 +103,7 @@ class RasparFichasModelos extends Command
         }
 
         ksort($atual);
-        file_put_contents($saida, json_encode($atual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL);
+        file_put_contents($saida, json_encode($atual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL);
 
         $this->info("Concluído: {$ok} com ficha, {$semInfobox} sem página/infobox, {$erros} com erro. Arquivo: {$saida}");
 

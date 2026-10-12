@@ -16,6 +16,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class PlacaBrasileira implements ValidationRule
 {
     private const ANTIGA = '/^[A-Z]{3}[0-9]{4}$/';
+
     private const MERCOSUL = '/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/';
 
     public static function normalizar(mixed $placa): mixed

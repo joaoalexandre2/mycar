@@ -13,8 +13,8 @@ use Tests\TestCase;
 /** O resumo da tela Início traz o consumo médio, o preço do litro e o gasto do mês. */
 class ResumoConsumoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     protected function setUp(): void
     {

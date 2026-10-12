@@ -12,9 +12,7 @@ class FichasModelos
     /** @var array<string, array<string, mixed>>|null */
     private ?array $fichas = null;
 
-    public function __construct(private readonly ?string $arquivo = null)
-    {
-    }
+    public function __construct(private readonly ?string $arquivo = null) {}
 
     /**
      * @return array<string, mixed>|null fonte, url, licença, data da coleta e campos

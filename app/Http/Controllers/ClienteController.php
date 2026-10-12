@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
 use App\Services\ClienteService;
+use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
@@ -15,7 +15,6 @@ class ClienteController extends Controller
     {
         $this->clienteService = $clienteService;
     }
-
 
     public function store(StoreClienteRequest $request)
     {
@@ -60,7 +59,7 @@ class ClienteController extends Controller
     {
         $cliente = $this->clienteService->buscarPorId($id);
 
-        if (! $cliente) {
+        if (!$cliente) {
             return response()->json([
                 'message' => 'Cliente não encontrado.',
             ], 404);
@@ -69,35 +68,34 @@ class ClienteController extends Controller
         return response()->json($cliente, 200);
     }
 
-public function update(UpdateClienteRequest $request, int $id)
-{
-    $cliente = $this->clienteService->atualizar(
-        $id,
-        $request->validated()
-    );
+    public function update(UpdateClienteRequest $request, int $id)
+    {
+        $cliente = $this->clienteService->atualizar(
+            $id,
+            $request->validated()
+        );
 
-    if (! $cliente) {
-        return response()->json([
-            'message' => 'Cliente não encontrado.',
-        ], 404);
+        if (!$cliente) {
+            return response()->json([
+                'message' => 'Cliente não encontrado.',
+            ], 404);
+        }
+
+        return response()->json($cliente, 200);
     }
 
-    return response()->json($cliente, 200);
-}
+    public function destroy(int $id)
+    {
+        $cliente = $this->clienteService->remover($id);
 
-public function destroy(int $id)
-{
-    $cliente = $this->clienteService->remover($id);
+        if (!$cliente) {
+            return response()->json([
+                'message' => 'Cliente não encontrado.',
+            ], 404);
+        }
 
-    if (! $cliente) {
         return response()->json([
-            'message' => 'Cliente não encontrado.',
-        ], 404);
+            'message' => 'Cliente removido com sucesso.',
+        ], 200);
     }
-
-    return response()->json([
-        'message' => 'Cliente removido com sucesso.',
-    ], 200);
-}
-
 }

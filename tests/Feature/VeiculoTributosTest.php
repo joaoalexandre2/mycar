@@ -9,8 +9,8 @@ use Tests\TestCase;
 
 class VeiculoTributosTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_calcula_ipva_estimado_e_licenciamento_pelo_estado(): void
     {

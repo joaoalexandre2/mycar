@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class ManutencaoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_listar_manutencoes_exige_autenticacao(): void
     {

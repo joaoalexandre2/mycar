@@ -31,7 +31,9 @@ class RasparImagensModelos extends Command
     protected $description = 'Coleta uma foto livre de cada modelo na Wikimedia Commons (rodar em desenvolvimento).';
 
     private const WIKIPEDIA = 'https://pt.wikipedia.org/w/api.php';
+
     private const COMMONS = 'https://commons.wikimedia.org/w/api.php';
+
     private const USER_AGENT = 'MyCarBot/1.0 (https://mycar.joaokirst.com.br; joaoalekirst@gmail.com)';
 
     /** Licenças aceitas (comparadas em minúsculas, sem espaços duplicados). */
@@ -103,7 +105,7 @@ class RasparImagensModelos extends Command
                 $binario = Http::withHeaders(['User-Agent' => self::USER_AGENT])->timeout(40)->get($info['miniatura']);
 
                 if (!$binario->successful() || strlen($binario->body()) < 2000) {
-                    throw new \RuntimeException('download falhou ('.$binario->status().')');
+                    throw new \RuntimeException('download falhou (' . $binario->status() . ')');
                 }
 
                 $extensao = Str::lower(pathinfo(parse_url($info['miniatura'], PHP_URL_PATH) ?: '', PATHINFO_EXTENSION)) ?: 'jpg';
@@ -133,7 +135,7 @@ class RasparImagensModelos extends Command
         }
 
         ksort($atual);
-        file_put_contents($json, json_encode($atual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL);
+        file_put_contents($json, json_encode($atual, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL);
 
         $this->info("Concluído: {$ok} novas, {$pulados} já existentes, {$semFoto} sem foto, {$licencaNaoLivre} com licença não livre, {$erros} com erro.");
 
@@ -166,7 +168,7 @@ class RasparImagensModelos extends Command
     {
         $resposta = Http::withHeaders(['User-Agent' => self::USER_AGENT])->timeout(25)->get(self::COMMONS, [
             'action' => 'query',
-            'titles' => 'File:'.$arquivo,
+            'titles' => 'File:' . $arquivo,
             'prop' => 'imageinfo',
             'iiprop' => 'url|extmetadata|mime',
             'iiurlwidth' => $largura,
@@ -195,7 +197,7 @@ class RasparImagensModelos extends Command
             'autor' => $limpar($meta['Artist']['value'] ?? '') ?: 'Autor não informado',
             'licenca' => $limpar($meta['LicenseShortName']['value'] ?? '') ?: 'Licença não informada',
             'licenca_url' => $meta['LicenseUrl']['value'] ?? null,
-            'pagina' => (string) ($info['descriptionurl'] ?? 'https://commons.wikimedia.org/wiki/File:'.str_replace(' ', '_', $arquivo)),
+            'pagina' => (string) ($info['descriptionurl'] ?? 'https://commons.wikimedia.org/wiki/File:' . str_replace(' ', '_', $arquivo)),
         ];
     }
 

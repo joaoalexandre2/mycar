@@ -127,7 +127,7 @@ class ContaVeiculoController extends Controller
             'placa' => [
                 'required',
                 'string',
-                new PlacaBrasileira(),
+                new PlacaBrasileira,
                 // Única dentro da conta: a mesma placa pode existir em outra conta.
                 Rule::unique('veiculos_conta', 'placa')
                     ->where('conta_id', app('conta.atual'))

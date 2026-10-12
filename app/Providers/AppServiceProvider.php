@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Repositories\Interfaces\OrdemServicoRepositoryInterface;
-use App\Repositories\OrdemServicoRepository;
 use App\Repositories\Interfaces\ManutencaoRepositoryInterface;
+use App\Repositories\Interfaces\OrdemServicoRepositoryInterface;
 use App\Repositories\ManutencaoRepository;
+use App\Repositories\OrdemServicoRepository;
+use App\Services\Catalogo\CatalogoTecnicoService;
+use App\Services\Precos\FontePrecos;
+use App\Services\Precos\MercadoLivreFonte;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,8 +20,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Fonte de preços do comparador (outras lojas entram trocando esta classe).
         $this->app->bind(
-            \App\Services\Precos\FontePrecos::class,
-            \App\Services\Precos\MercadoLivreFonte::class
+            FontePrecos::class,
+            MercadoLivreFonte::class
         );
 
         $this->app->bind(
@@ -31,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
             ManutencaoRepository::class
         );
 
-        $this->app->bind(\App\Services\Catalogo\CatalogoTecnicoService::class, function ($app) {
-            return new \App\Services\Catalogo\CatalogoTecnicoService(
+        $this->app->bind(CatalogoTecnicoService::class, function ($app) {
+            return new CatalogoTecnicoService(
                 array_map(fn (string $classe) => $app->make($classe), config('catalogo.fontes'))
             );
         });

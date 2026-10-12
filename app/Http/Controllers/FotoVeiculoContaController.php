@@ -51,7 +51,7 @@ class FotoVeiculoContaController extends Controller
 
         if ($veiculo->fotos()->count() >= FotoVeiculoConta::LIMITE_POR_VEICULO) {
             return response()->json([
-                'message' => 'Este veículo já tem o máximo de '.FotoVeiculoConta::LIMITE_POR_VEICULO.' fotos. Remova alguma para adicionar outra.',
+                'message' => 'Este veículo já tem o máximo de ' . FotoVeiculoConta::LIMITE_POR_VEICULO . ' fotos. Remova alguma para adicionar outra.',
             ], 422);
         }
 

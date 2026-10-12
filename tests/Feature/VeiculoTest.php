@@ -10,8 +10,8 @@ use Tests\TestCase;
 
 class VeiculoTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     public function test_listar_veiculos_exige_autenticacao(): void
     {

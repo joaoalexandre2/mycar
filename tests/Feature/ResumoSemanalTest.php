@@ -8,6 +8,7 @@ use App\Models\Manutencao;
 use App\Models\Oficina;
 use App\Models\User;
 use App\Models\Veiculo;
+use App\Services\ResumoSemanalService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -16,8 +17,8 @@ use Tests\TestCase;
 
 class ResumoSemanalTest extends TestCase
 {
-    use RefreshDatabase;
     use AutenticaUsuario;
+    use RefreshDatabase;
 
     // O IPVA vence sempre em 31/01. Com a data fixa em 05/03/2026: final de placa 3
     // tem licenciamento em 31/05 (fora da janela) e final 1 em 31/03 (26 dias);
@@ -35,7 +36,7 @@ class ResumoSemanalTest extends TestCase
     }
 
     /**
-     * @param string|false|null $email false = gera um e-mail único; null = cliente sem e-mail
+     * @param  string|false|null  $email  false = gera um e-mail único; null = cliente sem e-mail
      */
     private function criarVeiculo(string $placa, string|false|null $email = false, string $nome = 'Cliente Teste'): Veiculo
     {
@@ -324,7 +325,7 @@ class ResumoSemanalTest extends TestCase
         $veiculo = $this->criarVeiculo($this->placaNeutra(), null, 'Fulano de Tal');
         $this->criarManutencao($veiculo, '2026-02-20', 'Freios');
 
-        $resumo = app(\App\Services\ResumoSemanalService::class)->montar();
+        $resumo = app(ResumoSemanalService::class)->montar();
         $html = (new ResumoSemanalEmail($usuario->oficina->fresh(), $resumo))->render();
 
         $this->assertStringContainsString('Oficina do Teste', $html);

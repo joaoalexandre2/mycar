@@ -67,7 +67,7 @@ class Servico extends Model
     /** Serviços do mesmo tipo (e mesmo nome, no "outro") se substituem: vale o mais recente. */
     public function chave(): string
     {
-        return $this->veiculo_conta_id.'|'.$this->tipo.'|'.($this->tipo === 'outro' ? mb_strtolower(trim((string) $this->titulo)) : '');
+        return $this->veiculo_conta_id . '|' . $this->tipo . '|' . ($this->tipo === 'outro' ? mb_strtolower(trim((string) $this->titulo)) : '');
     }
 
     /**
