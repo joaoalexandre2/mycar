@@ -4,6 +4,7 @@ namespace Tests\Concerns;
 
 use App\Models\Conta;
 use App\Models\Oficina;
+use App\Models\TokenAcesso;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -22,9 +23,10 @@ trait AutenticaUsuario
         $token = Str::random(60);
 
         $usuario = User::factory()->create([
-            'api_token' => hash('sha256', $token),
             'oficina_id' => ($oficina ?? Oficina::factory()->create())->id,
         ]);
+
+        $this->abrirSessao($usuario, $token);
 
         // Além do middleware (que faz isso a cada request), já deixamos
         // vinculado agora: qualquer fixture criada em seguida no teste
@@ -47,15 +49,27 @@ trait AutenticaUsuario
         $conta ??= Conta::create(['tipo' => $perfil, 'nome' => "Conta {$perfil} " . Str::random(4)]);
 
         $usuario = User::factory()->create([
-            'api_token' => hash('sha256', $token),
             'oficina_id' => null,
             'perfil' => $perfil,
             'conta_id' => $conta->id,
         ]);
 
+        $this->abrirSessao($usuario, $token);
+
         app()->instance('conta.atual', $conta->id);
         app()->instance('oficina.atual', 0);
 
         return [$usuario, ['Authorization' => "Bearer {$token}"]];
+    }
+
+    /** Registra o token como uma sessão de aparelho do usuário (guarda só o hash). */
+    protected function abrirSessao(User $usuario, string $token): void
+    {
+        TokenAcesso::create([
+            'user_id' => $usuario->id,
+            'token_hash' => hash('sha256', $token),
+            'dispositivo' => 'Teste',
+            'ultimo_uso_em' => now(),
+        ]);
     }
 }

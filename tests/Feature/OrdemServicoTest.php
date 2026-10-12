@@ -65,13 +65,43 @@ class OrdemServicoTest extends TestCase
             ->assertJsonStructure([
                 'data',
                 'meta' => ['current_page', 'last_page', 'per_page', 'total'],
-                'resumo' => ['total', 'abertas', 'emAndamento', 'finalizadas', 'valorTotal'],
+                'resumo' => ['total', 'abertas', 'emAndamento', 'finalizadas', 'valorTotal', 'valorFinalizadas'],
             ])
             ->assertJsonPath('resumo.total', 4)
             ->assertJsonPath('resumo.abertas', 1)
             ->assertJsonPath('resumo.emAndamento', 2)
             ->assertJsonPath('resumo.finalizadas', 1)
-            ->assertJsonPath('resumo.valorTotal', 1000);
+            ->assertJsonPath('resumo.valorTotal', 1000)
+            ->assertJsonPath('resumo.valorFinalizadas', 400);
+    }
+
+    public function test_resumo_separa_o_faturamento_das_ordens_finalizadas(): void
+    {
+        [, $headers] = $this->autenticar();
+
+        OrdemServico::factory()->create(['status' => 'aberta', 'valor' => 500]);
+        OrdemServico::factory()->create(['status' => 'cancelada', 'valor' => 700]);
+        OrdemServico::factory()->create(['status' => 'finalizada', 'valor' => 150.50, 'data_fechamento' => now()]);
+        OrdemServico::factory()->create(['status' => 'finalizada', 'valor' => 49.50, 'data_fechamento' => now()]);
+
+        $this->getJson('/api/ordens-servico', $headers)
+            ->assertStatus(200)
+            ->assertJsonPath('resumo.valorTotal', 1400)
+            ->assertJsonPath('resumo.valorFinalizadas', 200);
+    }
+
+    public function test_faturamento_nao_inclui_ordens_de_outra_oficina(): void
+    {
+        [, $headersA] = $this->autenticar();
+        OrdemServico::factory()->create(['status' => 'finalizada', 'valor' => 900, 'data_fechamento' => now()]);
+
+        [, $headersB] = $this->autenticar();
+        OrdemServico::factory()->create(['status' => 'finalizada', 'valor' => 100, 'data_fechamento' => now()]);
+
+        $this->getJson('/api/ordens-servico', $headersB)
+            ->assertJsonPath('resumo.valorFinalizadas', 100);
+        $this->getJson('/api/ordens-servico', $headersA)
+            ->assertJsonPath('resumo.valorFinalizadas', 900);
     }
 
     public function test_filtro_por_status(): void

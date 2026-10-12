@@ -46,6 +46,8 @@ class OrdemServicoRepository implements OrdemServicoRepositoryInterface
             ])->count(),
             'finalizadas' => OrdemServico::where('status', 'finalizada')->count(),
             'valorTotal' => (float) OrdemServico::sum('valor'),
+            // Faturamento: só o que já foi finalizado (o dashboard usa).
+            'valorFinalizadas' => (float) OrdemServico::where('status', 'finalizada')->sum('valor'),
         ];
     }
 

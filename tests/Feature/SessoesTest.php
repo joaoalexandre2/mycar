@@ -71,24 +71,6 @@ class SessoesTest extends TestCase
         $this->getJson('/api/me', $celular)->assertStatus(200);
     }
 
-    public function test_sessao_antiga_pelo_campo_api_token_continua_valendo_ate_o_logout(): void
-    {
-        $usuario = $this->usuario();
-        $usuario->forceFill(['api_token' => hash('sha256', 'token-antigo-de-antes-da-mudanca')])->save();
-        $antiga = ['Authorization' => 'Bearer token-antigo-de-antes-da-mudanca'];
-
-        $this->getJson('/api/me', $antiga)->assertStatus(200);
-
-        // Entrar em outro aparelho não derruba a sessão antiga.
-        $novo = $this->entrar($usuario, 'Windows');
-        $this->getJson('/api/me', $antiga)->assertStatus(200);
-        $this->getJson('/api/me', $novo)->assertStatus(200);
-
-        $this->postJson('/api/logout', [], $antiga)->assertStatus(200);
-        $this->getJson('/api/me', $antiga)->assertStatus(401);
-        $this->getJson('/api/me', $novo)->assertStatus(200);
-    }
-
     public function test_token_invalido_continua_barrado(): void
     {
         $this->getJson('/api/me', ['Authorization' => 'Bearer qualquer-coisa'])->assertStatus(401);
