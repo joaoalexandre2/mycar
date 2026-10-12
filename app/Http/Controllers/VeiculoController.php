@@ -9,6 +9,7 @@ use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class VeiculoController extends Controller
 {
@@ -19,13 +20,14 @@ class VeiculoController extends Controller
         $dados = $request->validate([
             'cliente_id' => [
                 'required',
-                'exists:clientes,id',
+                Rule::exists('clientes', 'id')->where('oficina_id', app('oficina.atual')),
             ],
             'placa' => [
                 'required',
                 'string',
                 new PlacaBrasileira(),
-                'unique:veiculos,placa',
+                // Única dentro da oficina: outra oficina pode ter o mesmo carro.
+                Rule::unique('veiculos', 'placa')->where('oficina_id', app('oficina.atual')),
             ],
             'marca' => [
                 'required',
@@ -117,13 +119,15 @@ public function update(Request $request, $id, FipeService $fipe)
     $dados = $request->validate([
         'cliente_id' => [
             'required',
-            'exists:clientes,id',
+            Rule::exists('clientes', 'id')->where('oficina_id', app('oficina.atual')),
         ],
         'placa' => [
             'required',
             'string',
             new PlacaBrasileira(),
-            'unique:veiculos,placa,' . $id,
+            Rule::unique('veiculos', 'placa')
+                ->where('oficina_id', app('oficina.atual'))
+                ->ignore($id),
         ],
         'marca' => [
             'required',

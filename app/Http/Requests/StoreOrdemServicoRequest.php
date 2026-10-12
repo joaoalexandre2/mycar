@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOrdemServicoRequest extends FormRequest
 {
@@ -16,7 +17,7 @@ class StoreOrdemServicoRequest extends FormRequest
         return [
             'veiculo_id' => [
                 'required',
-                'exists:veiculos,id',
+                Rule::exists('veiculos', 'id')->where('oficina_id', app('oficina.atual')),
             ],
 
             'descricao' => [

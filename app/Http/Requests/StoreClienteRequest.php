@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreClienteRequest extends FormRequest
 {
@@ -23,10 +24,20 @@ class StoreClienteRequest extends FormRequest
     public function rules(): array
     {
        
-             return [
+        return [
             'nome' => 'required|string|max:255',
-            'cpf' => 'required|digits:11|unique:clientes,cpf',
-            'telefone' => 'required|string|max:20',
+            // Único dentro da oficina: outra oficina pode ter o mesmo cliente.
+            'cpf' => [
+                'required',
+                'digits:11',
+                Rule::unique('clientes', 'cpf')->where('oficina_id', app('oficina.atual')),
+            ],
+            'telefone' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('clientes', 'telefone')->where('oficina_id', app('oficina.atual')),
+            ],
             'email' => 'nullable|email|max:255',
             'ativo' => 'boolean'
         ];
@@ -42,6 +53,7 @@ class StoreClienteRequest extends FormRequest
         'cpf.size' => 'O CPF deve possuir 11 números.',
 
         'telefone.required' => 'O telefone é obrigatório.',
+        'telefone.unique' => 'Já existe um cliente com esse telefone.',
     ];
 }
 }
