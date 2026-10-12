@@ -137,6 +137,53 @@ class VeiculoTest extends TestCase
         $resposta->assertStatus(200)->assertJsonPath('modelo', 'Modelo Novo');
     }
 
+    public function test_atualizar_nao_aceita_placa_de_outro_veiculo_da_oficina(): void
+    {
+        [, $headers] = $this->autenticar();
+
+        $outro = Veiculo::factory()->create(['placa' => 'ABC1D23']);
+        $veiculo = Veiculo::factory()->create(['cliente_id' => $outro->cliente_id, 'placa' => 'XYZ9K88']);
+
+        $this->putJson("/api/veiculos/{$veiculo->id}", [
+            'cliente_id' => $veiculo->cliente_id,
+            'placa' => 'abc-1d23',
+            'marca' => $veiculo->marca,
+            'modelo' => $veiculo->modelo,
+            'ano' => $veiculo->ano,
+        ], $headers)->assertStatus(422)->assertJsonValidationErrors('placa');
+    }
+
+    public function test_atualizar_normaliza_a_placa(): void
+    {
+        [, $headers] = $this->autenticar();
+        $veiculo = Veiculo::factory()->create();
+
+        $this->putJson("/api/veiculos/{$veiculo->id}", [
+            'cliente_id' => $veiculo->cliente_id,
+            'placa' => 'abc-1234',
+            'marca' => $veiculo->marca,
+            'modelo' => $veiculo->modelo,
+            'ano' => $veiculo->ano,
+        ], $headers)->assertStatus(200)->assertJsonPath('placa', 'ABC1234');
+    }
+
+    public function test_veiculo_inexistente_retorna_404(): void
+    {
+        [, $headers] = $this->autenticar();
+        $cliente = Cliente::factory()->create();
+
+        $this->getJson('/api/veiculos/99999', $headers)->assertStatus(404);
+        $this->getJson('/api/veiculos/abc', $headers)->assertStatus(404);
+        $this->deleteJson('/api/veiculos/99999', [], $headers)->assertStatus(404);
+        $this->putJson('/api/veiculos/99999', [
+            'cliente_id' => $cliente->id,
+            'placa' => 'ABC1D23',
+            'marca' => 'Fiat',
+            'modelo' => 'Uno',
+            'ano' => 2020,
+        ], $headers)->assertStatus(404);
+    }
+
     public function test_remover_veiculo(): void
     {
         [, $headers] = $this->autenticar();
