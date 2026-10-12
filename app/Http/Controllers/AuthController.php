@@ -64,11 +64,6 @@ class AuthController extends Controller
 
         $user->tokensAcesso()->where('token_hash', $hash)->delete();
 
-        // Sessão aberta antes de existir um token por aparelho.
-        if ($user->api_token === $hash) {
-            $user->forceFill(['api_token' => null])->save();
-        }
-
         return response()->json([
             'message' => 'Logout realizado com sucesso.',
         ]);

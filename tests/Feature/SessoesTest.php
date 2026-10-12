@@ -71,24 +71,6 @@ class SessoesTest extends TestCase
         $this->getJson('/api/me', $celular)->assertStatus(200);
     }
 
-    public function test_sessao_antiga_pelo_campo_api_token_continua_valendo_ate_o_logout(): void
-    {
-        $usuario = $this->usuario();
-        $usuario->forceFill(['api_token' => hash('sha256', 'token-antigo-de-antes-da-mudanca')])->save();
-        $antiga = ['Authorization' => 'Bearer token-antigo-de-antes-da-mudanca'];
-
-        $this->getJson('/api/me', $antiga)->assertStatus(200);
-
-        // Entrar em outro aparelho não derruba a sessão antiga.
-        $novo = $this->entrar($usuario, 'Windows');
-        $this->getJson('/api/me', $antiga)->assertStatus(200);
-        $this->getJson('/api/me', $novo)->assertStatus(200);
-
-        $this->postJson('/api/logout', [], $antiga)->assertStatus(200);
-        $this->getJson('/api/me', $antiga)->assertStatus(401);
-        $this->getJson('/api/me', $novo)->assertStatus(200);
-    }
-
     public function test_token_invalido_continua_barrado(): void
     {
         $this->getJson('/api/me', ['Authorization' => 'Bearer qualquer-coisa'])->assertStatus(401);
@@ -156,6 +138,48 @@ class SessoesTest extends TestCase
 
         $this->getJson('/api/me', $esquecida)->assertStatus(401);
         $this->assertSame(1, TokenAcesso::where('user_id', $usuario->id)->count());
+    }
+
+    public function test_sessao_sem_uso_ha_muito_tempo_e_recusada_sem_novo_login(): void
+    {
+        $usuario = $this->usuario();
+        $celular = $this->entrar($usuario, 'Celular');
+        $computador = $this->entrar($usuario, 'Computador');
+
+        TokenAcesso::where('dispositivo', 'Celular')
+            ->update(['ultimo_uso_em' => now()->subDays(TokenAcesso::DIAS_SEM_USO + 1)]);
+
+        $this->getJson('/api/me', $celular)->assertStatus(401);
+        $this->assertSame(1, TokenAcesso::where('user_id', $usuario->id)->count());
+
+        // A sessão recente do mesmo usuário não é afetada.
+        $this->getJson('/api/me', $computador)->assertStatus(200);
+    }
+
+    public function test_sessao_logo_antes_do_limite_ainda_vale(): void
+    {
+        $usuario = $this->usuario();
+        $celular = $this->entrar($usuario, 'Celular');
+
+        TokenAcesso::where('user_id', $usuario->id)
+            ->update(['ultimo_uso_em' => now()->subDays(TokenAcesso::DIAS_SEM_USO - 1)]);
+
+        $this->getJson('/api/me', $celular)->assertStatus(200);
+    }
+
+    public function test_usar_a_sessao_renova_o_prazo(): void
+    {
+        $usuario = $this->usuario();
+        $celular = $this->entrar($usuario, 'Celular');
+
+        TokenAcesso::where('user_id', $usuario->id)
+            ->update(['ultimo_uso_em' => now()->subDays(TokenAcesso::DIAS_SEM_USO - 1)]);
+
+        $this->getJson('/api/me', $celular)->assertStatus(200);
+
+        $this->assertTrue(
+            TokenAcesso::where('user_id', $usuario->id)->first()->ultimo_uso_em->gt(now()->subMinute())
+        );
     }
 
     public function test_cada_pessoa_so_ve_a_propria_sessao(): void

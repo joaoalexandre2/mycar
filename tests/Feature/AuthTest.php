@@ -68,9 +68,7 @@ class AuthTest extends TestCase
     {
         $token = Str::random(60);
 
-        User::factory()->create([
-            'api_token' => hash('sha256', $token),
-        ]);
+        $this->sessaoCom($token);
 
         $this->getJson('/api/clientes', [
             'Authorization' => "Bearer {$token}",
@@ -81,9 +79,7 @@ class AuthTest extends TestCase
     {
         $token = Str::random(60);
 
-        User::factory()->create([
-            'api_token' => hash('sha256', $token),
-        ]);
+        $this->sessaoCom($token);
 
         $headers = ['Authorization' => "Bearer {$token}"];
 
@@ -96,12 +92,24 @@ class AuthTest extends TestCase
     {
         $token = Str::random(60);
 
-        $usuario = User::factory()->create([
-            'api_token' => hash('sha256', $token),
-        ]);
+        $usuario = $this->sessaoCom($token);
 
         $this->getJson('/api/me', ['Authorization' => "Bearer {$token}"])
             ->assertStatus(200)
             ->assertJsonPath('email', $usuario->email);
+    }
+
+    /** Cria um usuário com uma sessão aberta para este token. */
+    private function sessaoCom(string $token): User
+    {
+        $usuario = User::factory()->create();
+
+        $usuario->tokensAcesso()->create([
+            'token_hash' => hash('sha256', $token),
+            'dispositivo' => 'Teste',
+            'ultimo_uso_em' => now(),
+        ]);
+
+        return $usuario;
     }
 }

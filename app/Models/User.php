@@ -42,7 +42,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'api_token',
         'verification_token',
     ];
 
@@ -60,10 +59,6 @@ class User extends Authenticatable
         $this->tokensAcesso()
             ->when($manterHash, fn ($q) => $q->where('token_hash', '!=', $manterHash))
             ->delete();
-
-        if ($this->api_token !== null && $this->api_token !== $manterHash) {
-            $this->forceFill(['api_token' => null])->save();
-        }
     }
 
     public function oficina(): BelongsTo

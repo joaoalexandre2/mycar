@@ -15,8 +15,8 @@ class AuthenticateToken
 
     /**
      * Autentica a requisição a partir de um Bearer token emitido pelo endpoint
-     * de login. Cada aparelho tem o seu token (tokens_acesso); o campo antigo
-     * users.api_token segue valendo para sessões abertas antes dessa mudança.
+     * de login. Cada aparelho tem o seu token (tokens_acesso), guardado só como
+     * hash e com prazo de validade por falta de uso.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -31,7 +31,14 @@ class AuthenticateToken
         $hash = hash('sha256', $token);
 
         $acesso = TokenAcesso::with('user')->where('token_hash', $hash)->first();
-        $user = $acesso?->user ?? User::where('api_token', $hash)->first();
+        // Sessão esquecida há mais de DIAS_SEM_USO dias não vale mais, mesmo que
+        // a pessoa não tenha feito login de novo (o login só limpa as dela).
+        if ($acesso && $this->expirou($acesso)) {
+            $acesso->delete();
+            $acesso = null;
+        }
+
+        $user = $acesso?->user;
 
         if (!$user) {
             return response()->json([
@@ -57,5 +64,13 @@ class AuthenticateToken
         app()->instance('conta.atual', $user->conta_id ?? 0);
 
         return $next($request);
+    }
+
+    private function expirou(TokenAcesso $acesso): bool
+    {
+        $ultimoUso = $acesso->ultimo_uso_em ?? $acesso->created_at;
+
+        return $ultimoUso !== null
+            && $ultimoUso->lt(now()->subDays(TokenAcesso::DIAS_SEM_USO));
     }
 }
