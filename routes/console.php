@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TokenAcesso;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -11,6 +12,10 @@ Artisan::command('inspire', function () {
 Schedule::command('manutencoes:alertar')->daily();
 Schedule::command('veiculos:alertar-licenciamento')->daily();
 Schedule::command('veiculos:alertar-ipva')->daily();
+
+// Limpa as sessões (tokens de aparelho) esquecidas há mais de 90 dias.
+Schedule::command('model:prune', ['--model' => [TokenAcesso::class]])
+    ->dailyAt('03:30');
 
 // Lembretes dos perfis pessoa e frota: IPVA, licenciamento e revisão.
 Schedule::command('contas:alertar-vencimentos')->dailyAt('11:00'); // 08h em Brasília
