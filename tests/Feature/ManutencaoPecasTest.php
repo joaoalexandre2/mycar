@@ -240,11 +240,12 @@ class ManutencaoPecasTest extends TestCase
         ]), $headersA)->json('id');
 
         [, $headersB] = $this->autenticar();
+        $veiculoB = Veiculo::factory()->create();
 
         $this->getJson('/api/manutencoes?all=1', $headersB)
             ->assertJsonMissing(['especificacao' => 'Segredo da Oficina A']);
         $this->getJson("/api/manutencoes/{$manutencaoId}", $headersB)->assertStatus(404);
-        $this->putJson("/api/manutencoes/{$manutencaoId}", $this->payload($veiculoA, ['pecas' => []]), $headersB)
+        $this->putJson("/api/manutencoes/{$manutencaoId}", $this->payload($veiculoB, ['pecas' => []]), $headersB)
             ->assertStatus(404);
 
         $this->assertDatabaseHas('veiculo_pecas', ['especificacao' => 'Segredo da Oficina A']);

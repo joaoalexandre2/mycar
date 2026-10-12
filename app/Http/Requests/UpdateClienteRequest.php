@@ -20,10 +20,19 @@ class UpdateClienteRequest extends FormRequest
             'cpf' => [
                 'required',
                 'digits:11',
-                Rule::unique('clientes')->ignore($this->route('id'))
+                Rule::unique('clientes', 'cpf')
+                    ->where('oficina_id', app('oficina.atual'))
+                    ->ignore($this->route('id')),
             ],
 
-            'telefone' => 'required|string|max:20',
+            'telefone' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('clientes', 'telefone')
+                    ->where('oficina_id', app('oficina.atual'))
+                    ->ignore($this->route('id')),
+            ],
 
             'email' => 'nullable|email|max:255',
 

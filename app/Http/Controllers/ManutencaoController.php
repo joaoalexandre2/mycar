@@ -102,7 +102,7 @@ class ManutencaoController extends Controller
         return $request->validate([
             'veiculo_id' => [
                 'required',
-                'exists:veiculos,id',
+                Rule::exists('veiculos', 'id')->where('oficina_id', app('oficina.atual')),
             ],
             'tipo' => [
                 'required',

@@ -82,4 +82,112 @@ class IsolamentoOficinaTest extends TestCase
             'oficina_id' => $oficina->id,
         ]);
     }
+
+    /** @return array<string, mixed> */
+    private function dadosVeiculo(int $clienteId, string $placa = 'XYZ9K88'): array
+    {
+        return [
+            'cliente_id' => $clienteId,
+            'placa' => $placa,
+            'marca' => 'Fiat',
+            'modelo' => 'Uno',
+            'ano' => 2015,
+        ];
+    }
+
+    public function test_nao_aceita_cliente_de_outra_oficina_ao_criar_ou_editar_veiculo(): void
+    {
+        [, $headersA] = $this->autenticar();
+        $clienteA = Cliente::factory()->create();
+
+        [, $headersB] = $this->autenticar();
+        $clienteB = Cliente::factory()->create();
+        $veiculoB = Veiculo::factory()->create(['cliente_id' => $clienteB->id, 'placa' => 'BBB1B11']);
+
+        $this->postJson('/api/veiculos', $this->dadosVeiculo($clienteA->id), $headersB)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('cliente_id');
+
+        $this->putJson("/api/veiculos/{$veiculoB->id}", $this->dadosVeiculo($clienteA->id, 'BBB1B11'), $headersB)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('cliente_id');
+
+        $this->assertDatabaseMissing('veiculos', ['cliente_id' => $clienteA->id]);
+        $this->assertNotNull($headersA);
+    }
+
+    public function test_nao_aceita_veiculo_de_outra_oficina_em_ordem_de_servico_e_manutencao(): void
+    {
+        [, $headersA] = $this->autenticar();
+        $veiculoA = Veiculo::factory()->create();
+
+        [, $headersB] = $this->autenticar();
+        $clienteB = Cliente::factory()->create();
+        $veiculoB = Veiculo::factory()->create(['cliente_id' => $clienteB->id]);
+        $ordemB = OrdemServico::factory()->create(['veiculo_id' => $veiculoB->id]);
+
+        $this->postJson('/api/ordens-servico', [
+            'veiculo_id' => $veiculoA->id,
+            'descricao' => 'Troca de óleo',
+            'data_abertura' => '2026-10-01',
+        ], $headersB)->assertStatus(422)->assertJsonValidationErrors('veiculo_id');
+
+        $this->putJson("/api/ordens-servico/{$ordemB->id}", [
+            'veiculo_id' => $veiculoA->id,
+            'descricao' => 'Troca de óleo',
+            'status' => 'aberta',
+            'data_abertura' => '2026-10-01',
+        ], $headersB)->assertStatus(422)->assertJsonValidationErrors('veiculo_id');
+
+        $this->postJson('/api/manutencoes', [
+            'veiculo_id' => $veiculoA->id,
+            'tipo' => 'Revisão',
+            'data_manutencao' => '2026-10-01',
+        ], $headersB)->assertStatus(422)->assertJsonValidationErrors('veiculo_id');
+
+        $this->assertDatabaseMissing('ordens_servico', ['veiculo_id' => $veiculoA->id, 'descricao' => 'Troca de óleo']);
+        $this->assertDatabaseMissing('manutencoes', ['veiculo_id' => $veiculoA->id, 'tipo' => 'Revisão']);
+        $this->assertNotNull($headersA);
+    }
+
+    public function test_placa_cpf_e_telefone_podem_repetir_em_outra_oficina(): void
+    {
+        [, $headersA] = $this->autenticar();
+        $clienteA = Cliente::factory()->create(['cpf' => '11122233344', 'telefone' => '11911112222']);
+        Veiculo::factory()->create(['cliente_id' => $clienteA->id, 'placa' => 'ABC1D23']);
+
+        [, $headersB] = $this->autenticar();
+
+        $cliente = $this->postJson('/api/clientes', [
+            'nome' => 'Mesmo cliente, outra oficina',
+            'cpf' => '11122233344',
+            'telefone' => '11911112222',
+            'ativo' => true,
+        ], $headersB);
+        $cliente->assertStatus(201);
+
+        $this->postJson('/api/veiculos', $this->dadosVeiculo($cliente->json('id'), 'ABC1D23'), $headersB)
+            ->assertStatus(201);
+
+        $this->assertNotNull($headersA);
+    }
+
+    public function test_placa_cpf_e_telefone_continuam_unicos_dentro_da_oficina(): void
+    {
+        [, $headers] = $this->autenticar();
+        $cliente = Cliente::factory()->create(['cpf' => '11122233344', 'telefone' => '11911112222']);
+        Veiculo::factory()->create(['cliente_id' => $cliente->id, 'placa' => 'ABC1D23']);
+
+        $this->postJson('/api/clientes', [
+            'nome' => 'Outro', 'cpf' => '11122233344', 'telefone' => '11933334444', 'ativo' => true,
+        ], $headers)->assertStatus(422)->assertJsonValidationErrors('cpf');
+
+        $this->postJson('/api/clientes', [
+            'nome' => 'Outro', 'cpf' => '55566677788', 'telefone' => '11911112222', 'ativo' => true,
+        ], $headers)->assertStatus(422)->assertJsonValidationErrors('telefone');
+
+        $this->postJson('/api/veiculos', $this->dadosVeiculo($cliente->id, 'ABC1D23'), $headers)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('placa');
+    }
 }
