@@ -15,8 +15,8 @@ class AuthenticateToken
 
     /**
      * Autentica a requisição a partir de um Bearer token emitido pelo endpoint
-     * de login. Cada aparelho tem o seu token (tokens_acesso); o campo antigo
-     * users.api_token segue valendo para sessões abertas antes dessa mudança.
+     * de login. Cada aparelho tem o seu token (tokens_acesso), guardado só como
+     * hash e com prazo de validade por falta de uso.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -38,7 +38,7 @@ class AuthenticateToken
             $acesso = null;
         }
 
-        $user = $acesso?->user ?? User::where('api_token', $hash)->first();
+        $user = $acesso?->user;
 
         if (!$user) {
             return response()->json([

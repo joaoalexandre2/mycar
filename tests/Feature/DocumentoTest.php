@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\LembreteContaEmail;
 use App\Models\Documento;
+use App\Models\TokenAcesso;
 use App\Models\VeiculoConta;
 use App\Services\LembretesContaService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -131,6 +132,9 @@ class DocumentoTest extends TestCase
         $estimativa = $veiculo->fresh()->proximo_vencimento_licenciamento;
         $this->assertNotNull($estimativa);
         Carbon::setTestNow(Carbon::parse($estimativa)->subDays(10));
+        // O teste viaja no tempo: sem isto a sessão (aberta "hoje") passaria dos
+        // 90 dias sem uso e seria recusada.
+        TokenAcesso::query()->update(['ultimo_uso_em' => Carbon::now()]);
 
         $tipos = fn () => collect($this->getJson('/api/conta/resumo', $headers)->json('vencimentos'))->pluck('tipo');
         $this->assertContains('licenciamento', $tipos());
