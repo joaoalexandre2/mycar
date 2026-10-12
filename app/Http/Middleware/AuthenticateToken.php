@@ -31,6 +31,13 @@ class AuthenticateToken
         $hash = hash('sha256', $token);
 
         $acesso = TokenAcesso::with('user')->where('token_hash', $hash)->first();
+        // Sessão esquecida há mais de DIAS_SEM_USO dias não vale mais, mesmo que
+        // a pessoa não tenha feito login de novo (o login só limpa as dela).
+        if ($acesso && $this->expirou($acesso)) {
+            $acesso->delete();
+            $acesso = null;
+        }
+
         $user = $acesso?->user ?? User::where('api_token', $hash)->first();
 
         if (!$user) {
@@ -57,5 +64,13 @@ class AuthenticateToken
         app()->instance('conta.atual', $user->conta_id ?? 0);
 
         return $next($request);
+    }
+
+    private function expirou(TokenAcesso $acesso): bool
+    {
+        $ultimoUso = $acesso->ultimo_uso_em ?? $acesso->created_at;
+
+        return $ultimoUso !== null
+            && $ultimoUso->lt(now()->subDays(TokenAcesso::DIAS_SEM_USO));
     }
 }
