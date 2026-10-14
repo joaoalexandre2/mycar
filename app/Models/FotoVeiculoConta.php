@@ -17,7 +17,7 @@ class FotoVeiculoConta extends Model
 
     protected $table = 'fotos_veiculo_conta';
 
-    protected $fillable = ['veiculo_conta_id', 'caminho', 'caminho_miniatura', 'mime', 'tamanho', 'legenda'];
+    protected $fillable = ['veiculo_conta_id', 'caminho', 'caminho_miniatura', 'mime', 'tamanho', 'legenda', 'capa'];
 
     protected static function booted(): void
     {
@@ -25,6 +25,11 @@ class FotoVeiculoConta extends Model
         static::deleting(function (FotoVeiculoConta $foto) {
             Storage::disk('local')->delete([$foto->caminho, $foto->caminho_miniatura]);
         });
+    }
+
+    protected function casts(): array
+    {
+        return ['capa' => 'boolean'];
     }
 
     public function veiculo(): BelongsTo

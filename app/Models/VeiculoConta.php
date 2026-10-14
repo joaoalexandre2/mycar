@@ -126,7 +126,7 @@ class VeiculoConta extends Model
      */
     public function getFotoCapaUrlAttribute(): ?string
     {
-        return $this->fotos()->orderByDesc('created_at')->orderByDesc('id')->first()?->urlAssinada('miniatura');
+        return $this->fotos()->orderByDesc('capa')->orderByDesc('created_at')->orderByDesc('id')->first()?->urlAssinada('miniatura');
     }
 
     /**

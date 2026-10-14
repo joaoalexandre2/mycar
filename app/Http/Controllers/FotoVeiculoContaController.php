@@ -6,6 +6,7 @@ use App\Models\FotoVeiculoConta;
 use App\Models\VeiculoConta;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -91,6 +92,29 @@ class FotoVeiculoContaController extends Controller
         return response()->json($this->montar($veiculo));
     }
 
+    /** Define a foto como capa do veículo; a capa anterior deixa de ser. */
+    public function capa($id, $fotoId)
+    {
+        $veiculo = VeiculoConta::find($id);
+
+        if (!$veiculo) {
+            return $this->naoEncontrado('Veículo');
+        }
+
+        $foto = $veiculo->fotos()->find($fotoId);
+
+        if (!$foto) {
+            return $this->naoEncontrado('Foto');
+        }
+
+        DB::transaction(function () use ($veiculo, $foto) {
+            $veiculo->fotos()->where('capa', true)->update(['capa' => false]);
+            $foto->forceFill(['capa' => true])->save();
+        });
+
+        return response()->json($this->montar($veiculo));
+    }
+
     /** O nome do arquivo e a extensão vêm do conteúdo detectado, nunca do que o cliente mandou. */
     private function guardar(UploadedFile $arquivo, string $pasta, string $nome): string
     {
@@ -112,6 +136,7 @@ class FotoVeiculoContaController extends Controller
                     'id' => $f->id,
                     'legenda' => $f->legenda,
                     'criada_em' => $f->created_at?->toIso8601String(),
+                    'capa' => (bool) $f->capa,
                     'url' => $f->urlAssinada('foto'),
                     'url_miniatura' => $f->urlAssinada('miniatura'),
                 ])->values(),
