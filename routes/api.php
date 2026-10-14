@@ -154,6 +154,7 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/veiculos/{id}/fotos', [FotoVeiculoContaController::class, 'index']);
         Route::post('/veiculos/{id}/fotos', [FotoVeiculoContaController::class, 'store'])->middleware('throttle:60,1');
         Route::delete('/veiculos/{id}/fotos/{fotoId}', [FotoVeiculoContaController::class, 'destroy']);
+        Route::put('/veiculos/{id}/fotos/{fotoId}/capa', [FotoVeiculoContaController::class, 'capa']);
 
         Route::get('/veiculos/{id}/ficha-tecnica', [FichaTecnicaContaController::class, 'show']);
         Route::put('/veiculos/{id}/ficha-tecnica', [FichaTecnicaContaController::class, 'update']);
