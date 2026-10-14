@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AlertaManutencaoEmail extends Mailable
+class AlertaManutencaoEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

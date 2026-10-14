@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LembreteContaEmail extends Mailable
+class LembreteContaEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
-class AlertaIpvaEmail extends Mailable
+class AlertaIpvaEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

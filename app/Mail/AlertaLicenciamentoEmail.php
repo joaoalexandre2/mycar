@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 
-class AlertaLicenciamentoEmail extends Mailable
+class AlertaLicenciamentoEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
