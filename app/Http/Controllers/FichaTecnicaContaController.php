@@ -7,6 +7,7 @@ use App\Models\FichaTecnicaConta;
 use App\Models\VeiculoConta;
 use App\Services\CatalogoPecas;
 use App\Services\EspecificacoesDoNome;
+use App\Services\FichasCatalogo;
 use App\Services\FichasModelos;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
@@ -23,6 +24,7 @@ class FichaTecnicaContaController extends Controller
     public function __construct(
         private readonly CatalogoPecas $catalogo,
         private readonly FichasModelos $fichasModelos,
+        private readonly FichasCatalogo $fichasCatalogo,
     ) {}
 
     public function show($id, FipeService $fipe, EspecificacoesDoNome $especificacoes)
@@ -90,6 +92,8 @@ class FichaTecnicaContaController extends Controller
             'especificacoes' => $especificacoes->extrair($dadosFipe['modelo'] ?? $veiculo->modelo),
             // Dados do MODELO (todas as versões e gerações), coletados da Wikipédia.
             'dados_modelo' => $this->dadosDoModelo($veiculo),
+            // Ficha de referência (versão mais recente do modelo), do Ficha Completa.
+            'dados_catalogo' => $this->dadosDoCatalogo($veiculo),
             'manutencao' => $manual ? $manual->only(FichaTecnica::CAMPOS) : null,
         ];
     }
@@ -103,6 +107,14 @@ class FichaTecnicaContaController extends Controller
         $ficha = $this->fichasModelos->porNome($modelo['nome'] ?? null);
 
         return $ficha ? ['modelo' => $modelo['nome']] + $ficha : null;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function dadosDoCatalogo(VeiculoConta $veiculo): ?array
+    {
+        return $this->fichasCatalogo->paraVeiculo($veiculo->marca, $veiculo->modelo);
     }
 
     /**
