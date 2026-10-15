@@ -63,7 +63,7 @@ class AlertaIpvaTest extends TestCase
 
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertSent(AlertaIpvaEmail::class, fn ($m) => $m->veiculo->id === $veiculo->id && $m->atrasado === false);
+        Mail::assertQueued(AlertaIpvaEmail::class, fn ($m) => $m->veiculo->id === $veiculo->id && $m->atrasado === false);
     }
 
     public function test_nao_envia_quando_distante(): void
@@ -75,7 +75,7 @@ class AlertaIpvaTest extends TestCase
 
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_sem_email_do_cliente(): void
@@ -86,7 +86,7 @@ class AlertaIpvaTest extends TestCase
 
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_duas_vezes_no_mesmo_ciclo(): void
@@ -98,7 +98,7 @@ class AlertaIpvaTest extends TestCase
         $this->artisan('veiculos:alertar-ipva');
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertSentCount(1);
+        Mail::assertQueuedCount(1);
     }
 
     public function test_reenvia_em_outro_ciclo(): void
@@ -112,7 +112,7 @@ class AlertaIpvaTest extends TestCase
         $veiculo->saveQuietly();
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertSentCount(2);
+        Mail::assertQueuedCount(2);
     }
 
     public function test_processa_todas_as_oficinas(): void
@@ -126,7 +126,7 @@ class AlertaIpvaTest extends TestCase
 
         $this->artisan('veiculos:alertar-ipva');
 
-        Mail::assertSentCount(2);
+        Mail::assertQueuedCount(2);
     }
 
     public function test_email_renderiza_com_nome_do_veiculo_e_data_formatada(): void

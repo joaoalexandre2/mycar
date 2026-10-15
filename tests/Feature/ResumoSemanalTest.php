@@ -81,7 +81,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal')->assertExitCode(0);
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuario) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuario) {
             $resumo = $mail->resumo;
 
             return $mail->hasTo($usuario->email)
@@ -108,7 +108,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $itens = collect($mail->resumo['manutencoes_proximas']['itens'])->keyBy('cliente_nome');
 
             return $itens['Com Email']['cliente_tem_email'] === true
@@ -128,7 +128,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $resumo = $mail->resumo;
 
             return $resumo['ipva']['total'] === 0
@@ -150,7 +150,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $resumo = $mail->resumo;
 
             return $resumo['ipva']['total'] === 2
@@ -173,7 +173,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $atrasadas = collect($mail->resumo['manutencoes_atrasadas']['itens'])->pluck('descricao')->all();
 
             return $atrasadas === ['Freios'] && $mail->resumo['manutencoes_proximas']['total'] === 0;
@@ -191,7 +191,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal')->assertExitCode(0);
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_respeita_a_oficina_que_desligou_o_resumo(): void
@@ -204,7 +204,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_so_envia_para_usuarios_com_email_confirmado(): void
@@ -217,7 +217,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($confirmado->email) && !$mail->hasTo($pendente->email));
+        Mail::assertQueued(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($confirmado->email) && !$mail->hasTo($pendente->email));
     }
 
     public function test_nao_envia_se_a_oficina_nao_tem_nenhum_usuario_confirmado(): void
@@ -230,7 +230,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_cada_oficina_recebe_so_os_proprios_dados(): void
@@ -245,9 +245,9 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, 2);
+        Mail::assertQueued(ResumoSemanalEmail::class, 2);
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuarioA) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuarioA) {
             if (!$mail->hasTo($usuarioA->email)) {
                 return false;
             }
@@ -257,7 +257,7 @@ class ResumoSemanalTest extends TestCase
             return $clientes === ['Cliente da Oficina A'];
         });
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuarioB) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) use ($usuarioB) {
             if (!$mail->hasTo($usuarioB->email)) {
                 return false;
             }
@@ -280,7 +280,7 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal');
 
-        Mail::assertSent(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
+        Mail::assertQueued(ResumoSemanalEmail::class, function (ResumoSemanalEmail $mail) {
             $secao = $mail->resumo['manutencoes_atrasadas'];
 
             return $secao['total'] === 18 && count($secao['itens']) === 15 && $secao['restantes'] === 3;
@@ -297,7 +297,7 @@ class ResumoSemanalTest extends TestCase
             ->expectsOutputToContain('[teste]')
             ->assertExitCode(0);
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_opcao_oficina_envia_so_para_a_escolhida(): void
@@ -312,9 +312,9 @@ class ResumoSemanalTest extends TestCase
 
         $this->artisan('oficinas:resumo-semanal', ['--oficina' => $usuarioB->oficina_id]);
 
-        Mail::assertSent(ResumoSemanalEmail::class, 1);
-        Mail::assertSent(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($usuarioB->email));
-        Mail::assertNotSent(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($usuarioA->email));
+        Mail::assertQueued(ResumoSemanalEmail::class, 1);
+        Mail::assertQueued(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($usuarioB->email));
+        Mail::assertNotQueued(ResumoSemanalEmail::class, fn (ResumoSemanalEmail $mail) => $mail->hasTo($usuarioA->email));
     }
 
     public function test_o_email_renderiza_com_os_dados_e_o_aviso_de_cliente_sem_email(): void

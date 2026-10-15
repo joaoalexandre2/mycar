@@ -30,7 +30,7 @@ class RegisterTest extends TestCase
         $this->assertDatabaseHas('oficinas', ['nome' => 'Oficina do João']);
         $this->assertDatabaseHas('users', ['email' => 'joao@exemplo.com', 'email_verified_at' => null]);
 
-        Mail::assertSent(ConfirmeSeuEmail::class, function ($mail) {
+        Mail::assertQueued(ConfirmeSeuEmail::class, function ($mail) {
             return $mail->hasTo('joao@exemplo.com');
         });
     }
@@ -126,6 +126,6 @@ class RegisterTest extends TestCase
         ]);
 
         $resposta->assertStatus(200);
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 }
