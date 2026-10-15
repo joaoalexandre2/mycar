@@ -158,7 +158,7 @@ class ConverterPerfilTest extends TestCase
         $this->artisan('manutencoes:alertar')->assertExitCode(0);
         $this->artisan('oficinas:resumo-semanal')->assertExitCode(0);
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
         $this->assertNull(Manutencao::withoutGlobalScopes()->first()->alertado_em);
     }
 
@@ -170,8 +170,8 @@ class ConverterPerfilTest extends TestCase
         $this->artisan('manutencoes:alertar')->assertExitCode(0);
         $this->artisan('oficinas:resumo-semanal')->assertExitCode(0);
 
-        Mail::assertSent(AlertaManutencaoEmail::class, 1);
-        Mail::assertSent(ResumoSemanalEmail::class, 1);
+        Mail::assertQueued(AlertaManutencaoEmail::class, 1);
+        Mail::assertQueued(ResumoSemanalEmail::class, 1);
     }
 
     public function test_dry_run_nao_altera_nada(): void

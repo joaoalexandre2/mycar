@@ -22,7 +22,7 @@ class PasswordResetTest extends TestCase
         $resposta = $this->postJson('/api/password/esqueci', ['email' => 'joao@exemplo.com']);
 
         $resposta->assertStatus(200);
-        Mail::assertSent(RedefinirSenhaEmail::class, fn ($mail) => $mail->hasTo($usuario->email));
+        Mail::assertQueued(RedefinirSenhaEmail::class, fn ($mail) => $mail->hasTo($usuario->email));
     }
 
     public function test_solicitar_redefinicao_para_email_inexistente_nao_revela_nada(): void
@@ -32,7 +32,7 @@ class PasswordResetTest extends TestCase
         $resposta = $this->postJson('/api/password/esqueci', ['email' => 'naoexiste@exemplo.com']);
 
         $resposta->assertStatus(200);
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_redefinir_com_token_valido_troca_a_senha(): void

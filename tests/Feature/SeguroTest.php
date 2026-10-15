@@ -181,8 +181,8 @@ class SeguroTest extends TestCase
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertSent(LembreteContaEmail::class, 1);
-        Mail::assertSent(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($usuario) {
+        Mail::assertQueued(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($usuario) {
             return $mail->hasTo($usuario->email)
                 && $mail->itens[0]['tipo'] === 'seguro'
                 && $mail->itens[0]['dias'] === 40
@@ -200,7 +200,7 @@ class SeguroTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_mudar_a_vigencia_libera_novo_aviso_e_so_conta_a_apolice_mais_longa(): void
@@ -211,16 +211,16 @@ class SeguroTest extends TestCase
         $id = $this->seguro($headers, $veiculo, ['tipo' => 'apolice', 'vigencia_fim' => '2026-04-01'])->json('seguros.0.id');
 
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         // Renovou: a nova vigência é longe, não avisa; depois chega perto de novo.
         Seguro::withoutGlobalScopes()->find($id)->update(['vigencia_fim' => '2027-04-01']);
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         Carbon::setTestNow('2027-03-01');
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, 2);
+        Mail::assertQueued(LembreteContaEmail::class, 2);
     }
 
     public function test_o_fim_do_seguro_aparece_no_resumo_da_conta(): void

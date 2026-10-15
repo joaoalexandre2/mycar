@@ -155,14 +155,14 @@ class DocumentoTest extends TestCase
         $this->documento($headers, $veiculo, ['vencimento' => '2026-03-20']);
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
-        Mail::assertSent(LembreteContaEmail::class, function ($mail) {
+        Mail::assertQueued(LembreteContaEmail::class, function ($mail) {
             return collect($mail->itens)->contains(fn ($l) => $l['tipo'] === 'documento' && $l['rotulo'] === 'CRLV');
         });
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         // Segunda rodada: nada novo.
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         // Nova data de vencimento reabre o aviso.
         $documento = Documento::withoutGlobalScopes()->first();
@@ -170,7 +170,7 @@ class DocumentoTest extends TestCase
         $documento->save();
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
-        Mail::assertSent(LembreteContaEmail::class, 2);
+        Mail::assertQueued(LembreteContaEmail::class, 2);
     }
 
     public function test_so_o_crlv_mais_recente_gera_aviso(): void

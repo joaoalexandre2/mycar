@@ -91,7 +91,7 @@ class AlertaLicenciamentoTest extends TestCase
 
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertSent(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculo->id);
+        Mail::assertQueued(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculo->id);
     }
 
     public function test_nao_envia_quando_vencimento_esta_distante(): void
@@ -102,7 +102,7 @@ class AlertaLicenciamentoTest extends TestCase
 
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_sem_email_do_cliente(): void
@@ -113,7 +113,7 @@ class AlertaLicenciamentoTest extends TestCase
 
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_duas_vezes_no_mesmo_ciclo(): void
@@ -125,7 +125,7 @@ class AlertaLicenciamentoTest extends TestCase
         $this->artisan('veiculos:alertar-licenciamento');
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertSentCount(1);
+        Mail::assertQueuedCount(1);
     }
 
     public function test_reenvia_em_outro_ciclo(): void
@@ -140,7 +140,7 @@ class AlertaLicenciamentoTest extends TestCase
         $veiculo->saveQuietly();
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertSentCount(2);
+        Mail::assertQueuedCount(2);
     }
 
     public function test_processa_todas_as_oficinas(): void
@@ -155,8 +155,8 @@ class AlertaLicenciamentoTest extends TestCase
 
         $this->artisan('veiculos:alertar-licenciamento');
 
-        Mail::assertSentCount(2);
-        Mail::assertSent(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculoA->id);
-        Mail::assertSent(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculoB->id);
+        Mail::assertQueuedCount(2);
+        Mail::assertQueued(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculoA->id);
+        Mail::assertQueued(AlertaLicenciamentoEmail::class, fn ($mail) => $mail->veiculo->id === $veiculoB->id);
     }
 }

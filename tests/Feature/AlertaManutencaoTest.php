@@ -36,7 +36,7 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertSent(AlertaManutencaoEmail::class, function ($mail) use ($manutencao) {
+        Mail::assertQueued(AlertaManutencaoEmail::class, function ($mail) use ($manutencao) {
             return $mail->manutencao->id === $manutencao->id && $mail->atrasada === true;
         });
         $this->assertNotNull($manutencao->fresh()->alertado_em);
@@ -50,7 +50,7 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertSent(AlertaManutencaoEmail::class, function ($mail) use ($manutencao) {
+        Mail::assertQueued(AlertaManutencaoEmail::class, function ($mail) use ($manutencao) {
             return $mail->manutencao->id === $manutencao->id && $mail->atrasada === false;
         });
     }
@@ -63,7 +63,7 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_sem_proxima_data(): void
@@ -74,7 +74,7 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_sem_email_do_cliente(): void
@@ -85,7 +85,7 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_nao_envia_duas_vezes_para_a_mesma_manutencao(): void
@@ -97,7 +97,7 @@ class AlertaManutencaoTest extends TestCase
         $this->artisan('manutencoes:alertar');
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertSentCount(1);
+        Mail::assertQueuedCount(1);
     }
 
     public function test_reenvia_quando_proxima_data_e_alterada_apos_alerta(): void
@@ -113,7 +113,7 @@ class AlertaManutencaoTest extends TestCase
         $manutencao->fresh()->update(['proxima_data' => now()->addDays(10)->toDateString()]);
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertSentCount(2);
+        Mail::assertQueuedCount(2);
     }
 
     public function test_processa_todas_as_oficinas(): void
@@ -128,8 +128,8 @@ class AlertaManutencaoTest extends TestCase
 
         $this->artisan('manutencoes:alertar');
 
-        Mail::assertSentCount(2);
-        Mail::assertSent(AlertaManutencaoEmail::class, fn ($mail) => $mail->manutencao->id === $manutencaoA->id);
-        Mail::assertSent(AlertaManutencaoEmail::class, fn ($mail) => $mail->manutencao->id === $manutencaoB->id);
+        Mail::assertQueuedCount(2);
+        Mail::assertQueued(AlertaManutencaoEmail::class, fn ($mail) => $mail->manutencao->id === $manutencaoA->id);
+        Mail::assertQueued(AlertaManutencaoEmail::class, fn ($mail) => $mail->manutencao->id === $manutencaoB->id);
     }
 }
