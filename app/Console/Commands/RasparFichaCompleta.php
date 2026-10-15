@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\FichaCompletaParser;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -149,20 +150,34 @@ class RasparFichaCompleta extends Command
 
     private function baixar(string $caminho): ?string
     {
-        usleep($this->pausa * 1000);
+        // Falha de rede passageira (DNS, timeout): até 3 tentativas, com espera crescente.
+        for ($tentativa = 1; $tentativa <= 3; $tentativa++) {
+            usleep($this->pausa * 1000 * $tentativa);
 
-        $resposta = Http::withHeaders(['User-Agent' => self::USER_AGENT])
-            ->timeout(25)
-            ->get(self::BASE . $caminho);
+            try {
+                $resposta = Http::withHeaders(['User-Agent' => self::USER_AGENT])
+                    ->timeout(25)
+                    ->get(self::BASE . $caminho);
+            } catch (ConnectionException) {
+                continue;
+            }
 
-        if (!$resposta->successful()) {
-            return null;
+            if ($resposta->serverError()) {
+                continue;
+            }
+
+            // Resposta definitiva (ex.: 403, 404): não insistimos.
+            if (!$resposta->successful()) {
+                return null;
+            }
+
+            $corpo = $resposta->body();
+
+            // Se pedirem captcha, também não.
+            return str_contains(mb_strtolower($corpo), 'captcha') ? null : $corpo;
         }
 
-        $corpo = $resposta->body();
-
-        // Se pedirem captcha, não insistimos.
-        return str_contains(mb_strtolower($corpo), 'captcha') ? null : $corpo;
+        return null;
     }
 
     /** @param array<string, mixed> $dados */
