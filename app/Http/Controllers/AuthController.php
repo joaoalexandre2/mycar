@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TokenAcesso;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -35,18 +33,8 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = Str::random(60);
-
         // Um token por aparelho: entrar aqui não derruba a sessão aberta em outro.
-        $this->descartarSessoesAntigas($user);
-
-        $user->tokensAcesso()->create([
-            'token_hash' => hash('sha256', $token),
-            'dispositivo' => Str::limit((string) $request->userAgent(), 150, ''),
-            'ultimo_uso_em' => now(),
-        ]);
-
-        $user->forceFill(['ultimo_acesso_em' => now()])->save();
+        $token = $user->abrirSessao($request->userAgent());
 
         return response()->json([
             'user' => $user->dadosPublicos(),
@@ -67,23 +55,6 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Logout realizado com sucesso.',
         ]);
-    }
-
-    /**
-     * Limpa sessões esquecidas (sem uso por muito tempo) e abre espaço se a
-     * pessoa já tem o máximo de aparelhos: sai o menos usado.
-     */
-    private function descartarSessoesAntigas(User $user): void
-    {
-        $user->tokensAcesso()
-            ->where('ultimo_uso_em', '<', now()->subDays(TokenAcesso::DIAS_SEM_USO))
-            ->delete();
-
-        $excedente = $user->tokensAcesso()->count() - (TokenAcesso::LIMITE_POR_USUARIO - 1);
-
-        if ($excedente > 0) {
-            $user->tokensAcesso()->orderBy('ultimo_uso_em')->orderBy('id')->limit($excedente)->get()->each->delete();
-        }
     }
 
     /**

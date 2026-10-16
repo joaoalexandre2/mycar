@@ -26,6 +26,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
+use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SugestaoController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\VeiculoPecaController;
@@ -33,6 +34,14 @@ use Illuminate\Support\Facades\Route;
 
 // Autenticação
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+
+// Login com Google/Facebook: o redirect devolve a URL do provedor; o callback
+// volta para o frontend com um código de uso único, trocado por token.
+Route::get('/auth/{provedor}/redirect', [SocialAuthController::class, 'redirecionar'])
+    ->where('provedor', 'google|facebook')->middleware('throttle:20,1');
+Route::get('/auth/{provedor}/callback', [SocialAuthController::class, 'callback'])
+    ->where('provedor', 'google|facebook')->middleware('throttle:20,1');
+Route::post('/auth/social/trocar', [SocialAuthController::class, 'trocar'])->middleware('throttle:20,1');
 
 // Cadastro de uma nova conta + usuário dela: oficina (padrão), pessoa ou frota.
 Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:5,1');
