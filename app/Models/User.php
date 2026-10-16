@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -44,6 +45,40 @@ class User extends Authenticatable
         'remember_token',
         'verification_token',
     ];
+
+    public function contasSociais(): HasMany
+    {
+        return $this->hasMany(ContaSocial::class);
+    }
+
+    /**
+     * Abre uma sessão neste aparelho e devolve o token em texto (só o hash é
+     * guardado). Um token por aparelho; passando do limite, sai o menos usado.
+     */
+    public function abrirSessao(?string $dispositivo = null): string
+    {
+        $token = Str::random(60);
+
+        $this->tokensAcesso()
+            ->where('ultimo_uso_em', '<', now()->subDays(TokenAcesso::DIAS_SEM_USO))
+            ->delete();
+
+        $excedente = $this->tokensAcesso()->count() - (TokenAcesso::LIMITE_POR_USUARIO - 1);
+
+        if ($excedente > 0) {
+            $this->tokensAcesso()->orderBy('ultimo_uso_em')->orderBy('id')->limit($excedente)->get()->each->delete();
+        }
+
+        $this->tokensAcesso()->create([
+            'token_hash' => hash('sha256', $token),
+            'dispositivo' => Str::limit((string) $dispositivo, 150, ''),
+            'ultimo_uso_em' => now(),
+        ]);
+
+        $this->forceFill(['ultimo_acesso_em' => now()])->save();
+
+        return $token;
+    }
 
     public function tokensAcesso(): HasMany
     {
