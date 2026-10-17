@@ -65,7 +65,7 @@ class PerfisContaTest extends TestCase
         $this->assertDatabaseHas('contas', ['id' => $usuario->conta_id, 'tipo' => 'pessoa', 'nome' => 'Fulano de Tal']);
         $this->assertDatabaseCount('oficinas', 0);
 
-        Mail::assertSent(ConfirmeSeuEmail::class, fn ($mail) => $mail->hasTo('fulano@exemplo.com'));
+        Mail::assertQueued(ConfirmeSeuEmail::class, fn ($mail) => $mail->hasTo('fulano@exemplo.com'));
     }
 
     public function test_cadastro_de_frota_exige_o_nome_da_frota(): void

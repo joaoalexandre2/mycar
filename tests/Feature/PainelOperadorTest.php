@@ -174,7 +174,7 @@ class PainelOperadorTest extends TestCase
         $this->postJson("/api/admin/contas/{$pendente->id}/reenviar-confirmacao", [], $headers)
             ->assertStatus(200);
 
-        Mail::assertSent(ConfirmeSeuEmail::class, fn (ConfirmeSeuEmail $mail) => $mail->hasTo('vanessa@exemplo.com'));
+        Mail::assertQueued(ConfirmeSeuEmail::class, fn (ConfirmeSeuEmail $mail) => $mail->hasTo('vanessa@exemplo.com'));
     }
 
     public function test_nao_reenvia_para_email_ja_confirmado_nem_para_usuario_inexistente(): void
@@ -187,7 +187,7 @@ class PainelOperadorTest extends TestCase
         $this->postJson('/api/admin/contas/999999/reenviar-confirmacao', [], $headers)
             ->assertStatus(404);
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_login_registra_ultimo_acesso_e_informa_se_e_admin(): void

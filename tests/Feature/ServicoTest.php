@@ -185,11 +185,11 @@ class ServicoTest extends TestCase
         $this->assertSame(['data', 'km'], $motivos);
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         // Segunda rodada: nada novo.
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
     }
 
     public function test_so_o_servico_vigente_gera_aviso(): void

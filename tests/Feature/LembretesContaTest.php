@@ -53,8 +53,8 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
 
-        Mail::assertSent(LembreteContaEmail::class, 1);
-        Mail::assertSent(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($usuario) {
+        Mail::assertQueued(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($usuario) {
             $tipos = collect($mail->itens)->pluck('tipo')->unique()->sort()->values()->all();
 
             return $mail->hasTo($usuario->email) && $tipos === ['ipva', 'revisao'];
@@ -70,7 +70,7 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
 
-        Mail::assertSent(LembreteContaEmail::class, fn (LembreteContaEmail $mail) => $mail->hasTo($usuario->email)
+        Mail::assertQueued(LembreteContaEmail::class, fn (LembreteContaEmail $mail) => $mail->hasTo($usuario->email)
             && collect($mail->itens)->pluck('tipo')->all() === ['licenciamento']);
     }
 
@@ -84,7 +84,7 @@ class LembretesContaTest extends TestCase
         $this->artisan('contas:alertar-vencimentos');
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
         $this->assertSame(2026, $veiculo->fresh()->makeVisible('ipva_alertado_ano')->ipva_alertado_ano);
     }
 
@@ -95,15 +95,15 @@ class LembretesContaTest extends TestCase
         $veiculo = $this->veiculo('EEE1F25', ['revisao_prevista_em' => '2026-02-20']); // atrasada
 
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, fn ($mail) => $mail->itens[0]['dias'] === -13);
+        Mail::assertQueued(LembreteContaEmail::class, fn ($mail) => $mail->itens[0]['dias'] === -13);
 
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, 1);
+        Mail::assertQueued(LembreteContaEmail::class, 1);
 
         $veiculo->fresh()->update(['revisao_prevista_em' => '2026-03-25']);
 
         $this->artisan('contas:alertar-vencimentos');
-        Mail::assertSent(LembreteContaEmail::class, 2);
+        Mail::assertQueued(LembreteContaEmail::class, 2);
     }
 
     public function test_nao_avisa_o_que_esta_longe_nem_sem_estado(): void
@@ -117,7 +117,7 @@ class LembretesContaTest extends TestCase
 
         // Em março o IPVA só vence em 2027, o licenciamento (finais 3 e 5) é em maio/julho e a
         // revisão é em dezembro: nada a avisar, tenha a placa estado ou não.
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_respeita_a_conta_que_desligou_os_lembretes(): void
@@ -129,7 +129,7 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
     }
 
     public function test_so_envia_para_usuarios_de_conta_com_email_confirmado(): void
@@ -143,7 +143,7 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertSent(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($confirmado->email)
+        Mail::assertQueued(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($confirmado->email)
             && !$mail->hasTo($pendente->email)
             && !$mail->hasTo($voltouParaOficina->email));
     }
@@ -157,7 +157,7 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
         $this->assertNull($veiculo->fresh()->makeVisible('ipva_alertado_ano')->ipva_alertado_ano);
     }
 
@@ -172,10 +172,10 @@ class LembretesContaTest extends TestCase
 
         $this->artisan('contas:alertar-vencimentos');
 
-        Mail::assertSent(LembreteContaEmail::class, 2);
-        Mail::assertSent(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($donoA->email)
+        Mail::assertQueued(LembreteContaEmail::class, 2);
+        Mail::assertQueued(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($donoA->email)
             && collect($mail->itens)->pluck('veiculo')->unique()->all() === ['Carro da conta A']);
-        Mail::assertSent(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($donoB->email)
+        Mail::assertQueued(LembreteContaEmail::class, fn ($mail) => $mail->hasTo($donoB->email)
             && collect($mail->itens)->pluck('veiculo')->unique()->all() === ['Carro da conta B']);
     }
 
@@ -190,7 +190,7 @@ class LembretesContaTest extends TestCase
             ->expectsOutputToContain('[teste]')
             ->assertExitCode(0);
 
-        Mail::assertNothingSent();
+        Mail::assertNothingQueued();
         $this->assertNull($veiculo->fresh()->makeVisible('ipva_alertado_ano')->ipva_alertado_ano);
     }
 
