@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\FichaTecnica;
 use App\Models\FichaTecnicaConta;
 use App\Models\VeiculoConta;
-use App\Services\CatalogoPecas;
 use App\Services\EspecificacoesDoNome;
 use App\Services\FichasCatalogo;
-use App\Services\FichasModelos;
 use App\Services\FipeIndisponivelException;
 use App\Services\FipeService;
 use Illuminate\Http\Request;
@@ -22,8 +20,6 @@ use Illuminate\Http\Request;
 class FichaTecnicaContaController extends Controller
 {
     public function __construct(
-        private readonly CatalogoPecas $catalogo,
-        private readonly FichasModelos $fichasModelos,
         private readonly FichasCatalogo $fichasCatalogo,
     ) {}
 
@@ -90,23 +86,10 @@ class FichaTecnicaContaController extends Controller
             'fipe_status' => $status,
             // Prefere o nome completo da versão que a FIPE devolve; senão, o que foi cadastrado.
             'especificacoes' => $especificacoes->extrair($dadosFipe['modelo'] ?? $veiculo->modelo),
-            // Dados do MODELO (todas as versões e gerações), coletados da Wikipédia.
-            'dados_modelo' => $this->dadosDoModelo($veiculo),
             // Ficha de referência (versão mais recente do modelo), do Ficha Completa.
             'dados_catalogo' => $this->dadosDoCatalogo($veiculo),
             'manutencao' => $manual ? $manual->only(FichaTecnica::CAMPOS) : null,
         ];
-    }
-
-    /**
-     * @return array<string, mixed>|null
-     */
-    private function dadosDoModelo(VeiculoConta $veiculo): ?array
-    {
-        $modelo = $this->catalogo->modeloDoVeiculo($veiculo->marca, $veiculo->modelo);
-        $ficha = $this->fichasModelos->porNome($modelo['nome'] ?? null);
-
-        return $ficha ? ['modelo' => $modelo['nome']] + $ficha : null;
     }
 
     /**

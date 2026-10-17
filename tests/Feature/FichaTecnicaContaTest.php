@@ -127,8 +127,11 @@ class FichaTecnicaContaTest extends TestCase
         $this->assertSame('12', $especs['valvulas']);
         $this->assertSame('Manual', $especs['cambio']);
 
-        // Onix está no catálogo e na coleta: vem a ficha do modelo com a fonte.
-        $r->assertJsonPath('dados_modelo.modelo', 'Chevrolet Onix')->assertJsonPath('dados_modelo.fonte', 'Wikipédia');
+        // Onix está na coleta do Ficha Completa: vem a ficha de referência, e não mais a da Wikipédia.
+        $r->assertJsonPath('dados_catalogo.marca', 'chevrolet')
+            ->assertJsonPath('dados_catalogo.modelo', 'onix')
+            ->assertJsonPath('dados_catalogo.fonte', 'Ficha Completa')
+            ->assertJsonMissingPath('dados_modelo');
     }
 
     public function test_fipe_fora_do_ar_nao_derruba_a_ficha(): void
@@ -145,11 +148,11 @@ class FichaTecnicaContaTest extends TestCase
     public function test_veiculo_sem_codigo_fipe_e_fora_da_coleta(): void
     {
         [, $headers] = $this->autenticarConta('pessoa');
-        $v = $this->veiculo(['marca' => 'Lexus', 'modelo' => 'IS 250 2.5 V6']);
+        $v = $this->veiculo(['marca' => 'Marca Inexistente', 'modelo' => 'Modelo X 2.5 V6']);
 
         $this->getJson("/api/conta/veiculos/{$v->id}/ficha-tecnica", $headers)
             ->assertStatus(200)->assertJsonPath('fipe_status', 'sem_codigo')
-            ->assertJsonPath('dados_modelo', null);
+            ->assertJsonPath('dados_catalogo', null);
     }
 
     public function test_grava_e_devolve_a_ficha_de_manutencao(): void
