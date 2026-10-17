@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VeiculoConta;
 use App\Services\CatalogoPecas;
+use App\Services\PecasAplicacao;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -13,7 +14,7 @@ use Illuminate\Validation\Rule;
  */
 class CatalogoPecasController extends Controller
 {
-    public function index(Request $request, CatalogoPecas $catalogo)
+    public function index(Request $request, CatalogoPecas $catalogo, PecasAplicacao $aplicacao)
     {
         $filtros = $request->validate([
             'q' => ['nullable', 'string', 'max:80'],
@@ -48,10 +49,16 @@ class CatalogoPecasController extends Controller
             ? $veiculo->codigosPecas()->orderBy('id')->get()->groupBy('peca_id')
             : collect();
 
-        $pecas = array_map(function (array $peca) use ($meusCodigos) {
+        // Códigos de fabricante importados de catálogos de aplicação (ano e motor do veículo filtram).
+        $doCatalogo = ($veiculo && $modelo)
+            ? $aplicacao->paraModelo($modelo['nome'], $veiculo->ano, $veiculo->modelo)
+            : [];
+
+        $pecas = array_map(function (array $peca) use ($meusCodigos, $doCatalogo) {
             $peca['meus_codigos'] = $meusCodigos->get($peca['id'], collect())
                 ->map(fn ($c) => CodigoPecaController::formatar($c))
                 ->values();
+            $peca['codigos_catalogo'] = $doCatalogo[$peca['id']] ?? [];
 
             return $peca;
         }, $pecas);
