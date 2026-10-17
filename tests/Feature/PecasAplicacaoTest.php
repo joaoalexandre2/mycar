@@ -129,6 +129,62 @@ class PecasAplicacaoTest extends TestCase
         $this->assertCount(1, $dados['aplicacoes']);
     }
 
+    public function test_linhas_sem_fabricante_e_sem_codigo_sao_ignoradas(): void
+    {
+        $arquivo = $this->csv(implode("\n", [
+            'modelo;ano_de;ano_ate;motor;peca;fabricante;codigo;observacao',
+            'Volkswagen Gol;;;;Filtro de óleo;Marca A;TESTE-1;',
+            'Volkswagen Gol;;;;Filtro de ar do motor;;;',
+            'Modelo Que Nao Existe;;;;Peça Qualquer;;;',
+        ]));
+
+        $this->artisan('pecas:importar', ['arquivo' => $arquivo, '--fonte' => 'Teste', '--pasta' => $this->pasta])
+            ->expectsOutputToContain('1 linha(s), 1 nova(s)')
+            ->expectsOutputToContain('2 linha(s) sem fabricante e sem código foram ignoradas')
+            ->assertSuccessful();
+
+        $dados = json_decode(file_get_contents($this->pasta . '/volkswagen-gol.json'), true);
+        $this->assertCount(1, $dados['aplicacoes']);
+    }
+
+    public function test_gera_a_planilha_de_trabalho_em_branco_e_o_importador_a_aceita(): void
+    {
+        $saida = $this->pasta . '/trabalho.csv';
+
+        $this->artisan('pecas:planilha', ['--saida' => $saida])
+            ->expectsOutputToContain('10 modelo(s) x 11 peça(s) = 110 linha(s)')
+            ->assertSuccessful();
+
+        $conteudo = file_get_contents($saida);
+        $linhas = array_filter(explode("\n", $conteudo));
+
+        $this->assertStringStartsWith("\xEF\xBB\xBFmodelo;ano_de;ano_ate;motor;peca;fabricante;codigo;observacao", $conteudo);
+        $this->assertCount(111, $linhas);
+        $this->assertStringContainsString('"Volkswagen Gol";;;;"Filtro de óleo";;;', $conteudo);
+
+        // Nenhum código vem preenchido, então o importador não grava nada.
+        $this->artisan('pecas:importar', ['arquivo' => $saida, '--fonte' => 'Teste', '--pasta' => $this->pasta])
+            ->expectsOutputToContain('110 linha(s) sem fabricante e sem código foram ignoradas')
+            ->assertSuccessful();
+        $this->assertFileDoesNotExist($this->pasta . '/volkswagen-gol.json');
+    }
+
+    public function test_planilha_aceita_modelos_e_pecas_escolhidos_e_recusa_nome_desconhecido(): void
+    {
+        $saida = $this->pasta . '/escolha.csv';
+
+        $this->artisan('pecas:planilha', ['--saida' => $saida, '--modelos' => 'Fiat Uno', '--pecas' => 'Filtro de óleo|bomba-dagua'])
+            ->expectsOutputToContain('1 modelo(s) x 2 peça(s) = 2 linha(s)')
+            ->assertSuccessful();
+
+        $this->assertCount(3, array_filter(explode("\n", file_get_contents($saida))));
+
+        $this->artisan('pecas:planilha', ['--saida' => $this->pasta . '/x.csv', '--modelos' => 'Modelo Inexistente'])
+            ->expectsOutputToContain('modelo "Modelo Inexistente" não está no catálogo')
+            ->assertFailed();
+        $this->assertFileDoesNotExist($this->pasta . '/x.csv');
+    }
+
     public function test_simular_nao_grava(): void
     {
         $arquivo = $this->csv("modelo;peca;fabricante;codigo\nVolkswagen Gol;Filtro de óleo;Marca A;TESTE-1\n");

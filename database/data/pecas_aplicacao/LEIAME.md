@@ -7,6 +7,19 @@ gerados a partir de planilhas de catálogos de aplicação dos fabricantes.
 **Regra:** nenhum código é digitado de memória. Todo código vem de uma planilha
 ou catálogo com fonte conhecida, gravada em cada linha (`fonte`).
 
+## Planilha de trabalho (começar pelos mais vendidos)
+
+`_planilha-de-trabalho.csv` já traz modelo e peça preenchidos para os 10 modelos
+mais vendidos (Gol, Onix, HB20, Argo, Strada, Uno, Palio, Corolla, Civic, Polo) e
+11 itens (filtros, amortecedores, kits de coifa, coifa da homocinética e bombas),
+com fabricante e código **em branco**. Copie o arquivo, abra no Excel e preencha
+`fabricante` e `codigo` consultando o catálogo oficial do fabricante. Se o catálogo
+separar por ano ou motor, preencha `ano_de`, `ano_ate` e `motor` e **copie a linha**
+para cada variação. Linhas que ficarem sem fabricante e sem código são ignoradas
+na importação, então dá para importar aos poucos.
+
+Para outra lista: `php artisan pecas:planilha --modelos="Fiat Mobi|Renault Kwid" --pecas="Filtro de óleo|Bomba d'água" --saida=outra.csv`
+
 ## Como importar
 
 1. Peça ao fabricante (Cofap, Tecfil, Fram, Nakata, Urba...) o catálogo de

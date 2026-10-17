@@ -51,7 +51,7 @@ class ImportarPecasAplicacao extends Command
             return self::FAILURE;
         }
 
-        [$linhas, $erros] = $this->ler($caminho, $fonte);
+        [$linhas, $erros, $emBranco] = $this->ler($caminho, $fonte);
 
         if ($erros) {
             $this->error(count($erros) . ' problema(s) na planilha. Nada foi gravado:');
@@ -123,11 +123,16 @@ class ImportarPecasAplicacao extends Command
             count($porModelo),
         ));
 
+        if ($emBranco > 0) {
+            $this->line("{$emBranco} linha(s) sem fabricante e sem código foram ignoradas (planilha ainda por preencher).");
+        }
+
         return self::SUCCESS;
     }
 
     /**
-     * @return array{0: array<int, array{modelo: string, aplicacao: array<string, mixed>}>, 1: array<int, string>}
+     * @return array{0: array<int, array{modelo: string, aplicacao: array<string, mixed>}>, 1: array<int, string>, 2: int}
+     *                                                                                                                     linhas válidas, problemas e quantas linhas em branco foram ignoradas
      */
     private function ler(string $caminho, string $fonte): array
     {
@@ -162,10 +167,11 @@ class ImportarPecasAplicacao extends Command
         }
 
         if ($erros) {
-            return [[], $erros];
+            return [[], $erros, 0];
         }
 
         $linhas = [];
+        $emBranco = 0;
         $numero = 1;
         $anoMax = (int) date('Y') + 1;
 
@@ -177,6 +183,14 @@ class ImportarPecasAplicacao extends Command
             }
 
             $d = array_combine($cabecalho, array_pad(array_map('trim', $campos), count($cabecalho), ''));
+
+            // Planilha de trabalho: linha com modelo e peça, mas ainda sem fabricante nem código.
+            if (($d['fabricante'] ?? '') === '' && ($d['codigo'] ?? '') === '') {
+                $emBranco++;
+
+                continue;
+            }
+
             $problemas = [];
 
             $modeloSlug = Str::slug($d['modelo']);
@@ -231,7 +245,7 @@ class ImportarPecasAplicacao extends Command
 
         fclose($arquivo);
 
-        return [$linhas, $erros];
+        return [$linhas, $erros, $emBranco];
     }
 
     /** @param  array<int, string>  $problemas */
