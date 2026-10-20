@@ -113,13 +113,25 @@ class AnoFabricacaoTest extends TestCase
         $this->assertFalse($semFabricacao->possivel_isencao_ipva);
     }
 
-    public function test_o_aviso_nao_altera_a_estimativa_de_ipva(): void
+    public function test_o_aviso_de_possivel_isencao_nao_altera_a_estimativa_de_ipva(): void
     {
-        $antigo = new VeiculoConta(['ano' => 2005, 'ano_fabricacao' => 2005, 'uf' => 'SP', 'fipe_valor' => 20000]);
+        // Entre 15 e 20 anos o estado PODE isentar: só avisamos, a estimativa continua.
+        $antigo = new VeiculoConta(['ano' => 2011, 'ano_fabricacao' => 2011, 'uf' => 'SP', 'fipe_valor' => 20000]);
         $novo = new VeiculoConta(['ano' => 2024, 'uf' => 'SP', 'fipe_valor' => 20000]);
 
         $this->assertTrue($antigo->possivel_isencao_ipva);
+        $this->assertFalse($antigo->isento_ipva);
         $this->assertSame($novo->ipva_estimado, $antigo->ipva_estimado);
+    }
+
+    public function test_com_mais_de_20_anos_a_isencao_e_certa_e_some_a_estimativa(): void
+    {
+        $palio = new VeiculoConta(['ano' => 2001, 'ano_fabricacao' => 2001, 'uf' => 'SP', 'fipe_valor' => 8000]);
+
+        $this->assertTrue($palio->isento_ipva);
+        $this->assertFalse($palio->possivel_isencao_ipva);
+        $this->assertNull($palio->ipva_estimado);
+        $this->assertNull($palio->proximo_vencimento_ipva);
     }
 
     // ----------------------------------------------------------------- oficina

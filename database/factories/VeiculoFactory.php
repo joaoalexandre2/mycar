@@ -23,7 +23,9 @@ class VeiculoFactory extends Factory
             'placa' => strtoupper(fake()->unique()->bothify('???#?##')),
             'marca' => fake()->randomElement(['Fiat', 'Volkswagen', 'Chevrolet', 'Toyota', 'Honda']),
             'modelo' => fake()->word(),
-            'ano' => fake()->numberBetween(1990, (int) date('Y')),
+            // Recente de propósito: carro com mais de 20 anos é isento de IPVA (EC 137/2025),
+            // o que muda vencimento e alertas. Teste de veículo antigo define o ano na mão.
+            'ano' => fake()->numberBetween((int) date('Y') - 15, (int) date('Y')),
         ];
     }
 }

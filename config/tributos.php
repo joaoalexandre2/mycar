@@ -28,8 +28,16 @@ return [
     // confirmada abaixo. Média das alíquotas conhecidas (~2,8%), arredondada.
     'aliquota_media_ipva' => 3.0,
 
-    // A partir de quantos anos de fabricação avisamos que o estado PODE isentar o IPVA.
-    // Só um aviso: a regra e a idade variam por estado e não estão cadastradas aqui.
+    // IPVA NÃO é cobrado de veículo com MAIS de tantos anos de fabricação, em
+    // qualquer estado: Emenda Constitucional 137/2025 (art. 155 da Constituição).
+    // "Mais de 20" é estrito: um carro de exatamente 20 anos fica no aviso abaixo,
+    // porque as fontes divergem se ele já está isento. Vale para carros de passeio,
+    // caminhonetes e veículos de uso misto.
+    'idade_isencao_ipva_constitucional' => 20,
+
+    // A partir de quantos anos de fabricação avisamos que o estado PODE isentar o IPVA
+    // (alguns estados isentam com 10, 15 ou 18 anos). Só um aviso: a regra de cada
+    // estado não está cadastrada aqui. Acima da idade constitucional, a isenção é certa.
     'idade_aviso_isencao_ipva' => 15,
 
     'estados' => [

@@ -33,13 +33,25 @@ trait CalculaTributosVeiculo
     }
 
     /**
-     * Aviso (não um cálculo): alguns estados isentam o IPVA de veículos antigos, contando
-     * pelo ano de fabricação. Não temos a regra de cada estado verificada, então só
-     * sinalizamos que vale conferir na Sefaz. A estimativa de IPVA NÃO muda por isso.
+     * Isento de IPVA em qualquer estado: mais de 20 anos de fabricação (EC 137/2025).
+     * Sem ano de fabricação, vale o ano do modelo, que é igual ou posterior: então
+     * nunca isentamos um carro que ainda não é.
+     */
+    public function getIsentoIpvaAttribute(): bool
+    {
+        return ($this->idade_anos ?? 0) > (int) config('tributos.idade_isencao_ipva_constitucional', 20);
+    }
+
+    /**
+     * Aviso (não um cálculo): alguns estados isentam o IPVA de veículos mais novos que o
+     * limite constitucional (10, 15 ou 18 anos). Não temos a regra de cada estado
+     * verificada, então só sinalizamos que vale conferir na Sefaz. Quem já é isento
+     * pela Constituição não recebe este aviso (ver isento_ipva).
      */
     public function getPossivelIsencaoIpvaAttribute(): bool
     {
-        return ($this->idade_anos ?? 0) >= (int) config('tributos.idade_aviso_isencao_ipva', 15);
+        return !$this->isento_ipva
+            && ($this->idade_anos ?? 0) >= (int) config('tributos.idade_aviso_isencao_ipva', 15);
     }
 
     /**
@@ -64,6 +76,10 @@ trait CalculaTributosVeiculo
      */
     public function getIpvaEstimadoAttribute(): ?float
     {
+        if ($this->isento_ipva) {
+            return null;
+        }
+
         $aliquota = $this->aliquotaIpva();
 
         if ($this->fipe_valor === null || $aliquota === null) {
@@ -130,6 +146,11 @@ trait CalculaTributosVeiculo
      */
     public function getProximoVencimentoIpvaAttribute(): ?string
     {
+        // Veículo isento não tem vencimento: sem lembrete, sem e-mail, sem item no resumo.
+        if ($this->isento_ipva) {
+            return null;
+        }
+
         $mes = (int) config('ipva.mes_vencimento', 1);
 
         $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
