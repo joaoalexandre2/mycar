@@ -30,6 +30,8 @@ return [
 
     'fipe' => [
         'url' => env('FIPE_API_URL', 'https://parallelum.com.br/fipe/api/v1'),
+        // A v2 lista os anos da marca e os modelos de cada ano (a v1 só lista anos depois do modelo).
+        'url_v2' => env('FIPE_API_V2_URL', 'https://fipe.parallelum.com.br/api/v2'),
         'timeout' => env('FIPE_API_TIMEOUT', 10),
         'cache_ttl' => env('FIPE_CACHE_TTL', 86400),
     ],

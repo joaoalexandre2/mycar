@@ -32,6 +32,20 @@ class FipeController extends Controller
         return $this->responder(fn () => $this->fipe->anos($tipo, $marca, $modelo));
     }
 
+    public function anosDaMarca(Request $request, int $marca)
+    {
+        $tipo = $this->tipo($request);
+
+        return $this->responder(fn () => $this->fipe->anosDaMarca($tipo, $marca));
+    }
+
+    public function modelosDoAno(Request $request, int $marca, string $ano)
+    {
+        $tipo = $this->tipo($request);
+
+        return $this->responder(fn () => $this->fipe->modelosDoAno($tipo, $marca, $ano));
+    }
+
     public function valor(Request $request, int $marca, int $modelo, string $ano)
     {
         $tipo = $this->tipo($request);

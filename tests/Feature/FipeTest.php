@@ -57,6 +57,71 @@ class FipeTest extends TestCase
             ->assertJsonPath('0.codigo', '2020-1');
     }
 
+    public function test_lista_os_anos_da_marca_na_v2_com_codigo_e_nome(): void
+    {
+        [, $headers] = $this->autenticar();
+        Http::fake(['*/cars/brands/59/years' => Http::response([
+            ['code' => '2014-5', 'name' => '2014 Flex'],
+            ['code' => '2014-3', 'name' => '2014 Diesel'],
+        ])]);
+
+        $this->getJson('/api/fipe/marcas/59/anos', $headers)
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['codigo' => '2014-5', 'nome' => '2014 Flex'],
+                ['codigo' => '2014-3', 'nome' => '2014 Diesel'],
+            ]);
+
+        Http::assertSent(fn ($r) => str_starts_with((string) $r->url(), 'https://fipe.parallelum.com.br/api/v2/cars/brands/59/years'));
+    }
+
+    public function test_lista_so_os_modelos_da_marca_naquele_ano(): void
+    {
+        [, $headers] = $this->autenticar();
+        Http::fake(['*/cars/brands/59/years/2014-5/models' => Http::response([
+            ['code' => '5940', 'name' => 'AMAROK High.CD 2.0'],
+            ['code' => 7001, 'name' => 'Gol 1.0'],
+        ])]);
+
+        $this->getJson('/api/fipe/marcas/59/anos/2014-5/modelos', $headers)
+            ->assertStatus(200)
+            ->assertExactJson([
+                ['codigo' => '5940', 'nome' => 'AMAROK High.CD 2.0'],
+                ['codigo' => '7001', 'nome' => 'Gol 1.0'],
+            ]);
+    }
+
+    public function test_anos_da_marca_aceitam_motos_e_recusam_tipo_invalido(): void
+    {
+        [, $headers] = $this->autenticar();
+        Http::fake(['*/motorcycles/brands/80/years' => Http::response([['code' => '2020-1', 'name' => '2020 Gasolina']])]);
+
+        $this->getJson('/api/fipe/marcas/80/anos?tipo=motos', $headers)->assertStatus(200)->assertJsonPath('0.codigo', '2020-1');
+        $this->getJson('/api/fipe/marcas/80/anos?tipo=bicicletas', $headers)->assertStatus(422);
+    }
+
+    public function test_codigo_de_ano_invalido_nao_chega_na_fipe(): void
+    {
+        [, $headers] = $this->autenticar();
+        Http::fake();
+
+        $this->getJson('/api/fipe/marcas/59/anos/abc/modelos', $headers)->assertStatus(404);
+        $this->getJson('/api/fipe/marcas/59/anos/2014/modelos', $headers)->assertStatus(404);
+
+        Http::assertNothingSent();
+    }
+
+    public function test_fipe_v2_fora_do_ar_devolve_502_e_exige_autenticacao(): void
+    {
+        [, $headers] = $this->autenticar();
+        Http::fake(['*' => Http::response('erro', 500)]);
+
+        $this->getJson('/api/fipe/marcas/59/anos', $headers)->assertStatus(502);
+        $this->getJson('/api/fipe/marcas/59/anos/2014-5/modelos', $headers)->assertStatus(502);
+
+        $this->getJson('/api/fipe/marcas/59/anos')->assertStatus(401);
+    }
+
     public function test_consulta_valor_fipe(): void
     {
         [, $headers] = $this->autenticar();
