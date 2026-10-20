@@ -7,6 +7,7 @@ use App\Models\Concerns\PertenceAConta;
 use App\Services\CatalogoPecas;
 use App\Services\ImagensModelos;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
@@ -34,6 +35,7 @@ class VeiculoConta extends Model
         'fipe_ano',
         'fipe_valor',
         'fipe_consultado_em',
+        'centro_custo_id',
     ];
 
     protected $casts = [
@@ -78,6 +80,16 @@ class VeiculoConta extends Model
                 $veiculo->revisao_alertada_em = null;
             }
         });
+    }
+
+    public function usos(): HasMany
+    {
+        return $this->hasMany(UsoVeiculo::class);
+    }
+
+    public function centroCusto(): BelongsTo
+    {
+        return $this->belongsTo(CentroCusto::class);
     }
 
     public function documentos(): HasMany
