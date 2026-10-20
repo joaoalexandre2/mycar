@@ -100,6 +100,10 @@ Route::middleware('auth.token')->group(function () {
     // Tabela FIPE (consulta pública, sem dados de nenhuma conta)
     Route::get('/fipe/marcas', [FipeController::class, 'marcas']);
     Route::get('/fipe/marcas/{marca}/modelos', [FipeController::class, 'modelos']);
+    // Ano antes do modelo: anos da marca e, escolhido o ano, só os modelos dele.
+    Route::get('/fipe/marcas/{marca}/anos', [FipeController::class, 'anosDaMarca']);
+    Route::get('/fipe/marcas/{marca}/anos/{ano}/modelos', [FipeController::class, 'modelosDoAno'])
+        ->where('ano', '[0-9]{4,5}-[0-9]');
     Route::get('/fipe/marcas/{marca}/modelos/{modelo}/anos', [FipeController::class, 'anos']);
     Route::get('/fipe/marcas/{marca}/modelos/{modelo}/anos/{ano}', [FipeController::class, 'valor']);
 
