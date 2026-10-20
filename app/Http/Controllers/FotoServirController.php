@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FotoVeiculoConta;
 use App\Models\SugestaoAnexo;
+use App\Models\UsoVeiculo;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -20,6 +21,23 @@ class FotoServirController extends Controller
         // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
         $registro = FotoVeiculoConta::withoutGlobalScopes()->find($foto);
         $caminho = $registro ? ($tipo === 'foto' ? $registro->caminho : $registro->caminho_miniatura) : null;
+
+        abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
+
+        return Storage::disk('local')->response($caminho, null, [
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /** Foto do hodômetro de um uso da frota (mesmo esquema: link assinado e temporário). */
+    public function hodometro($uso, $momento)
+    {
+        abort_unless(in_array($momento, UsoVeiculo::MOMENTOS, true), 404);
+
+        // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
+        $registro = UsoVeiculo::withoutGlobalScopes()->find($uso);
+        $caminho = $registro?->caminhoDaFoto($momento);
 
         abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
 

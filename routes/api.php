@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogoPecasController;
+use App\Http\Controllers\CentroCustoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CodigoPecaController;
 use App\Http\Controllers\ComparadorController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\FotoServirController;
 use App\Http\Controllers\FotoVeiculoContaController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\RegisterController;
@@ -28,6 +30,8 @@ use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SugestaoController;
+use App\Http\Controllers\UsoVeiculoController;
+use App\Http\Controllers\UsoVeiculoImportController;
 use App\Http\Controllers\VeiculoController;
 use App\Http\Controllers\VeiculoPecaController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +69,12 @@ Route::get('/fotos/{foto}/{tipo}', [FotoServirController::class, 'mostrar'])
 Route::get('/imagens-modelos/{slug}', [ImagemModeloController::class, 'mostrar'])
     ->where('slug', '[a-z0-9-]+')
     ->middleware('throttle:240,1');
+
+// Foto do hodômetro de um uso da frota: também por link assinado e temporário.
+Route::get('/hodometros/{uso}/{momento}', [FotoServirController::class, 'hodometro'])
+    ->where('momento', 'saida|chegada')
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('hodometros.mostrar');
 
 // Imagem anexada a uma sugestão: também por link assinado e temporário.
 Route::get('/sugestoes/anexos/{anexo}', [FotoServirController::class, 'anexoDeSugestao'])
@@ -189,5 +199,32 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/veiculos/{id}/abastecimentos', [AbastecimentoController::class, 'index']);
         Route::post('/veiculos/{id}/abastecimentos', [AbastecimentoController::class, 'store']);
         Route::delete('/veiculos/{id}/abastecimentos/{abastecimentoId}', [AbastecimentoController::class, 'destroy']);
+    });
+
+    // Só FROTA: agenda de uso dos veículos, motoristas, centros de custo e km do hodômetro
+    Route::middleware('perfil:frota')->prefix('conta')->group(function () {
+        Route::get('/centros-custo', [CentroCustoController::class, 'index']);
+        Route::post('/centros-custo', [CentroCustoController::class, 'store']);
+        Route::put('/centros-custo/{id}', [CentroCustoController::class, 'update']);
+        Route::delete('/centros-custo/{id}', [CentroCustoController::class, 'destroy']);
+
+        Route::get('/motoristas', [MotoristaController::class, 'index']);
+        Route::post('/motoristas', [MotoristaController::class, 'store']);
+        Route::put('/motoristas/{id}', [MotoristaController::class, 'update']);
+        Route::delete('/motoristas/{id}', [MotoristaController::class, 'destroy']);
+
+        Route::get('/usos', [UsoVeiculoController::class, 'index']);
+        Route::post('/usos', [UsoVeiculoController::class, 'store']);
+        // Planilha de utilização: rotas fixas antes das com {id}
+        Route::get('/usos/planilha-modelo', [UsoVeiculoImportController::class, 'modelo']);
+        Route::post('/usos/importar', [UsoVeiculoImportController::class, 'importar'])->middleware('throttle:10,1');
+        Route::get('/usos/{id}', [UsoVeiculoController::class, 'show']);
+        Route::put('/usos/{id}', [UsoVeiculoController::class, 'update']);
+        Route::delete('/usos/{id}', [UsoVeiculoController::class, 'destroy']);
+        Route::post('/usos/{id}/cancelar', [UsoVeiculoController::class, 'cancelar']);
+        Route::post('/usos/{id}/saida', [UsoVeiculoController::class, 'saida'])->middleware('throttle:60,1');
+        Route::post('/usos/{id}/chegada', [UsoVeiculoController::class, 'chegada'])->middleware('throttle:60,1');
+        Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
+        Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
     });
 });

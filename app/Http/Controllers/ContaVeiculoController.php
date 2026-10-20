@@ -142,6 +142,12 @@ class ContaVeiculoController extends Controller
             'fipe_marca_id' => ['nullable', 'integer'],
             'fipe_modelo_id' => ['nullable', 'integer'],
             'fipe_ano' => ['nullable', 'string', 'max:10'],
+            // Centro de custo padrão da frota; só aceita um centro da própria conta.
+            'centro_custo_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual')),
+            ],
         ]);
     }
 
