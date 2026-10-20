@@ -66,6 +66,23 @@ class AlertaIpvaTest extends TestCase
         Mail::assertQueued(AlertaIpvaEmail::class, fn ($m) => $m->veiculo->id === $veiculo->id && $m->atrasado === false);
     }
 
+    public function test_veiculo_isento_por_idade_nao_recebe_alerta_de_ipva(): void
+    {
+        Mail::fake();
+        $this->autenticar();
+        $cliente = Cliente::factory()->create(['email' => 'cliente@exemplo.com']);
+        // Palio 2001, em janeiro de 2026: 25 anos de fabricação, isento em todo o país.
+        $palio = Veiculo::factory()->create([
+            'cliente_id' => $cliente->id, 'placa' => 'ABC1D23', 'ano' => 2001, 'ano_fabricacao' => 2001,
+        ]);
+
+        $this->assertNull($palio->proximo_vencimento_ipva);
+
+        $this->artisan('veiculos:alertar-ipva');
+
+        Mail::assertNothingQueued();
+    }
+
     public function test_nao_envia_quando_distante(): void
     {
         Carbon::setTestNow('2026-03-05');

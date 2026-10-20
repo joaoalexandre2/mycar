@@ -37,6 +37,7 @@ class Veiculo extends Model
         'ano_completo',
         'idade_anos',
         'possivel_isencao_ipva',
+        'isento_ipva',
         'ipva_estimado',
         'ipva_aliquota_media',
         'licenciamento_valor',

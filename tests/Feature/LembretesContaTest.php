@@ -42,6 +42,30 @@ class LembretesContaTest extends TestCase
         ], $extra));
     }
 
+    public function test_carro_com_mais_de_20_anos_nao_recebe_lembrete_de_ipva_nem_entra_no_resumo(): void
+    {
+        Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias
+        Mail::fake();
+        [, $headers] = $this->autenticarConta('pessoa');
+
+        // Palio 2001 (25 anos): isento de IPVA em todo o país. O Uno 2018 continua pagando.
+        $this->veiculo('AAA1B23', ['modelo' => 'Palio', 'ano' => 2001, 'ano_fabricacao' => 2001, 'fipe_valor' => 8000]);
+        $uno = $this->veiculo('BBB2C34', ['fipe_valor' => 40000]);
+
+        $this->artisan('contas:alertar-vencimentos')->assertExitCode(0);
+
+        Mail::assertQueued(LembreteContaEmail::class, function (LembreteContaEmail $mail) use ($uno) {
+            $ipva = collect($mail->itens)->where('tipo', 'ipva');
+
+            return $ipva->count() === 1 && $ipva->first()['veiculo_id'] === $uno->id;
+        });
+
+        $resumo = $this->getJson('/api/conta/resumo', $headers)->assertOk()->json('vencimentos');
+        $ipvaNoResumo = collect($resumo)->where('tipo', 'ipva');
+
+        $this->assertSame([$uno->id], $ipvaNoResumo->pluck('veiculo_id')->all());
+    }
+
     public function test_avisa_ipva_e_revisao_em_um_unico_email(): void
     {
         Carbon::setTestNow('2026-01-05'); // o IPVA vence em 31/01, 26 dias

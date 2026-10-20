@@ -54,6 +54,7 @@ class VeiculoConta extends Model
         'ano_completo',
         'idade_anos',
         'possivel_isencao_ipva',
+        'isento_ipva',
         'foto_capa_url',
         'foto_modelo',
         'ipva_estimado',
