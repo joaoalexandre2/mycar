@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'oficina_id',
         'perfil',
+        'papel_frota',
         'conta_id',
         'tema',
         'cor',
@@ -107,6 +108,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Papel do usuário dentro da própria conta. Na frota vale papel_frota
+     * (quem é anterior aos papéis conta como administrador); pessoa é dona da
+     * conta; oficina não tem papéis (null).
+     */
+    public function papelNaConta(): ?string
+    {
+        return match ($this->perfil ?? 'oficina') {
+            'frota' => $this->papel_frota ?? 'administrador',
+            'pessoa' => 'administrador',
+            default => null,
+        };
+    }
+
+    /** Cadastro de motorista ligado a este login (só para o papel motorista). */
+    public function motoristaVinculado(): ?Motorista
+    {
+        return Motorista::where('user_id', $this->id)->first();
+    }
+
+    /**
      * Dados do usuário que o frontend guarda e usa. "admin" e "perfil" só
      * servem para escolher menus e telas: quem barra o acesso é o backend.
      *
@@ -123,6 +144,8 @@ class User extends Authenticatable
             'name' => $this->name,
             'email' => $this->email,
             'perfil' => $perfil,
+            // Papel dentro da frota (administrador, gestor, motorista); null fora do perfil frota.
+            'papel' => $perfil === 'frota' ? $this->papelNaConta() : null,
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,

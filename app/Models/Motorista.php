@@ -34,6 +34,27 @@ class Motorista extends Model
         return $this->hasMany(UsoVeiculo::class);
     }
 
+    /**
+     * Motivo de não poder dirigir na data (null = liberado). Motorista sem CNH
+     * cadastrada também fica bloqueado: não há como provar a validade.
+     */
+    public function impedimentoParaDirigir(\DateTimeInterface $em): ?string
+    {
+        if (!$this->ativo) {
+            return "O motorista {$this->nome} está desativado.";
+        }
+
+        if ($this->cnh_validade === null) {
+            return "O motorista {$this->nome} não tem a validade da CNH cadastrada.";
+        }
+
+        if ($this->cnh_validade->toDateString() < $em->format('Y-m-d')) {
+            return "A CNH de {$this->nome} vence em {$this->cnh_validade->format('d/m/Y')}, antes do uso.";
+        }
+
+        return null;
+    }
+
     public function emUso(): bool
     {
         return $this->usos()->exists();

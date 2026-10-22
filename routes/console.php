@@ -25,3 +25,6 @@ Schedule::command('contas:alertar-vencimentos')->dailyAt('11:00'); // 08h em Bra
 Schedule::command('oficinas:resumo-semanal')
     ->weeklyOn(1, '08:00')
     ->timezone('America/Sao_Paulo');
+
+// Frota: foto de hodômetro guardada por 90 dias.
+Schedule::command('frota:limpar-fotos')->dailyAt('03:45');

@@ -5,10 +5,14 @@ namespace Tests\Feature;
 use App\Models\CentroCusto;
 use App\Models\Conta;
 use App\Models\Motorista;
+use App\Models\User;
 use App\Models\UsoVeiculo;
+use App\Models\UsoVeiculoEvento;
+use App\Models\UsoVeiculoFoto;
 use App\Models\VeiculoConta;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
@@ -38,11 +42,16 @@ class FrotaAgendaTest extends TestCase
 
     private function motorista(string $nome = 'Maria Silva'): Motorista
     {
-        return Motorista::create(['nome' => $nome]);
+        return Motorista::create(['nome' => $nome, 'cnh_numero' => '123456', 'cnh_validade' => '2035-01-01']);
     }
 
+    /** Reserva; sem motorista informado, usa um motorista padrão com CNH em dia (a saída exige motorista). */
     private function reservar(VeiculoConta $v, array $extra = [], int $esperado = 201)
     {
+        if (!array_key_exists('motorista_id', $extra)) {
+            $extra['motorista_id'] = (Motorista::where('nome', 'Padrão')->first() ?? $this->motorista('Padrão'))->id;
+        }
+
         return $this->postJson('/api/conta/usos', array_merge([
             'veiculo_conta_id' => $v->id,
             'inicio_previsto' => '2026-11-10 08:00',
@@ -305,7 +314,11 @@ class FrotaAgendaTest extends TestCase
         $this->assertStringContainsString('10000', $r->json('message'));
 
         // O gestor corrige o km do veículo (o único jeito de ele diminuir) e a saída passa.
-        $this->putJson("/api/conta/veiculos/{$v->id}/km", ['km' => 8500], $this->headers)->assertOk()->assertJsonPath('km_atual', 8500);
+        // A correção exige um motivo e fica na trilha de auditoria.
+        $this->putJson("/api/conta/veiculos/{$v->id}/km", ['km' => 8500], $this->headers)->assertStatus(422);
+        $this->putJson("/api/conta/veiculos/{$v->id}/km", ['km' => 8500, 'motivo' => 'Hodômetro digitado errado'], $this->headers)
+            ->assertOk()->assertJsonPath('km_atual', 8500);
+        $this->assertDatabaseHas('usos_veiculo_eventos', ['acao' => 'corrigiu_km', 'veiculo_conta_id' => $v->id, 'motivo' => 'Hodômetro digitado errado']);
         $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 9000], $this->headers)->assertOk();
     }
 
@@ -326,8 +339,163 @@ class FrotaAgendaTest extends TestCase
 
         $this->postJson("/api/conta/usos/{$id}/chegada", ['km_chegada' => 200], $this->headers)->assertStatus(422);
         $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk();
-        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertStatus(422);
+        // Repetir o mesmo pedido (clique duplo) devolve o resultado já gravado; outro km é recusado.
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk()->assertJsonPath('status', 'em_uso');
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 120], $this->headers)->assertStatus(422);
+        $this->assertSame(1, UsoVeiculoEvento::where('uso_veiculo_id', $id)->where('acao', 'saiu')->count());
         $this->postJson("/api/conta/usos/{$id}/cancelar", [], $this->headers)->assertStatus(422);
+    }
+
+    // ------------------------------------------------- Fase 2: motorista, auditoria e papéis
+
+    public function test_cnh_vencida_ou_ausente_bloqueia_a_reserva_e_a_saida(): void
+    {
+        $v = $this->veiculo();
+        $vencida = Motorista::create(['nome' => 'CNH Vencida', 'cnh_numero' => '1', 'cnh_validade' => '2026-11-01']);
+        $semCnh = Motorista::create(['nome' => 'Sem CNH']);
+
+        $r = $this->reservar($v, ['motorista_id' => $vencida->id], 422);
+        $this->assertStringContainsString('CNH', $r->json('message'));
+        $this->reservar($v, ['motorista_id' => $semCnh->id], 422);
+
+        // CNH que vence depois do fim do uso passa; depois vence antes da saída e a saída é barrada.
+        $vencida->update(['cnh_validade' => '2026-11-10']);
+        $id = $this->reservar($v, ['motorista_id' => $vencida->id])->json('id');
+
+        $vencida->update(['cnh_validade' => '2020-01-01']);
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertStatus(422);
+
+        $vencida->update(['cnh_validade' => '2035-01-01', 'ativo' => false]);
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertStatus(422);
+    }
+
+    public function test_saida_exige_motorista_na_reserva(): void
+    {
+        $id = $this->reservar($this->veiculo(), ['motorista_id' => null])->json('id');
+
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)
+            ->assertStatus(422)->assertJsonPath('message', fn ($m) => str_contains($m, 'motorista'));
+    }
+
+    public function test_registra_quem_fez_a_saida_a_origem_do_km_e_a_trilha_de_auditoria(): void
+    {
+        [$usuario] = $this->autenticarConta('frota', Conta::find(app('conta.atual')));
+        $v = $this->veiculo();
+        $id = $this->reservar($v)->json('id');
+
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)
+            ->assertOk()->assertJsonPath('km_saida_origem', 'manual');
+        $this->post("/api/conta/usos/{$id}/chegada", ['km_chegada' => 150, 'foto' => $this->foto()], $this->headers + ['Accept' => 'application/json'])
+            ->assertOk()->assertJsonPath('km_chegada_origem', 'foto');
+
+        $uso = UsoVeiculo::find($id);
+        $this->assertNotNull($uso->saida_por_user_id);
+        $this->assertNotNull($uso->chegada_por_user_id);
+
+        $acoes = $this->getJson("/api/conta/usos/{$id}/eventos", $this->headers)->assertOk()->json();
+        $this->assertSame(['reservou', 'saiu', 'chegou'], array_column($acoes, 'acao'));
+    }
+
+    public function test_editar_registra_o_antes_e_o_depois(): void
+    {
+        $id = $this->reservar($this->veiculo())->json('id');
+
+        $this->putJson("/api/conta/usos/{$id}", [
+            'veiculo_conta_id' => UsoVeiculo::find($id)->veiculo_conta_id,
+            'inicio_previsto' => '2026-11-10 09:00',
+            'fim_previsto' => '2026-11-10 12:00',
+            'finalidade' => 'Entrega',
+        ], $this->headers)->assertOk();
+
+        $evento = UsoVeiculoEvento::where('uso_veiculo_id', $id)->where('acao', 'editou')->firstOrFail();
+        $this->assertSame('Entrega', $evento->dados['depois']['finalidade']);
+        $this->assertNull($evento->dados['antes']['finalidade']);
+    }
+
+    public function test_uso_que_ja_saiu_nao_pode_ser_apagado_mas_agendado_pode_e_deixa_rastro(): void
+    {
+        $agendado = $this->reservar($this->veiculo('AAA1B25'))->json('id');
+        $saiu = $this->reservar($this->veiculo('BBB2C36'), ['motorista_id' => $this->motorista('Outro')->id])->json('id');
+        $this->postJson("/api/conta/usos/{$saiu}/saida", ['km_saida' => 100], $this->headers)->assertOk();
+
+        $this->deleteJson("/api/conta/usos/{$saiu}", [], $this->headers)->assertStatus(422);
+        $this->deleteJson("/api/conta/usos/{$agendado}", [], $this->headers)->assertOk();
+
+        $this->assertDatabaseHas('usos_veiculo_eventos', ['acao' => 'apagou', 'uso_veiculo_id' => null]);
+    }
+
+    public function test_foto_com_mais_de_90_dias_sai_do_disco_mas_o_km_continua(): void
+    {
+        $id = $this->reservar($this->veiculo())->json('id');
+        $this->post("/api/conta/usos/{$id}/saida", ['km_saida' => 100, 'foto' => $this->foto()], $this->headers + ['Accept' => 'application/json'])->assertOk();
+
+        $this->travel(80)->days();
+        $this->artisan('frota:limpar-fotos')->assertSuccessful();
+        $this->assertCount(1, Storage::disk('local')->allFiles('hodometros'), 'com 80 dias ainda guarda');
+
+        $this->travel(15)->days();
+        $this->artisan('frota:limpar-fotos')->assertSuccessful();
+        $this->assertCount(0, Storage::disk('local')->allFiles('hodometros'));
+
+        $uso = UsoVeiculo::withoutGlobalScopes()->find($id);
+        $this->assertNull($uso->foto_saida);
+        $this->assertSame(100, $uso->km_saida);
+    }
+
+    public function test_motorista_so_ve_e_opera_as_proprias_reservas(): void
+    {
+        $contaId = app('conta.atual');
+        $v = $this->veiculo();
+        $maria = $this->motorista('Maria');
+        $joao = $this->motorista('João');
+        $deMaria = $this->reservar($v, ['motorista_id' => $maria->id])->json('id');
+        $deJoao = $this->reservar($v, ['motorista_id' => $joao->id, 'inicio_previsto' => '2026-11-11 08:00', 'fim_previsto' => '2026-11-11 12:00'])->json('id');
+
+        [$userMaria, $headersMaria] = $this->autenticarConta('frota', Conta::find($contaId));
+        $userMaria->forceFill(['papel_frota' => 'motorista'])->save();
+        $maria->forceFill(['user_id' => $userMaria->id])->save();
+        app()->instance('conta.atual', $contaId);
+
+        // Só enxerga a própria reserva.
+        $lista = $this->getJson('/api/conta/usos?de=2026-11-01&ate=2026-11-30', $headersMaria)->assertOk()->json('usos');
+        $this->assertSame([$deMaria], array_column($lista, 'id'));
+        $this->getJson("/api/conta/usos/{$deJoao}", $headersMaria)->assertStatus(404);
+        $this->postJson("/api/conta/usos/{$deJoao}/saida", ['km_saida' => 10], $headersMaria)->assertStatus(404);
+
+        // Opera a própria.
+        $this->postJson("/api/conta/usos/{$deMaria}/saida", ['km_saida' => 10], $headersMaria)->assertOk();
+
+        // Não mexe em gestão: cadastros, edição, exclusão, correção de km, importação.
+        $this->getJson('/api/conta/motoristas', $headersMaria)->assertStatus(403);
+        $this->postJson('/api/conta/centros-custo', ['nome' => 'X'], $headersMaria)->assertStatus(403);
+        $this->deleteJson("/api/conta/usos/{$deMaria}", [], $headersMaria)->assertStatus(403);
+        $this->putJson("/api/conta/veiculos/{$v->id}/km", ['km' => 1, 'motivo' => 'tentativa'], $headersMaria)->assertStatus(403);
+        $this->deleteJson("/api/conta/veiculos/{$v->id}", [], $headersMaria)->assertStatus(403);
+        $this->getJson('/api/conta/veiculos', $headersMaria)->assertOk();
+
+        // Reserva só para si mesmo, ignorando o motorista pedido.
+        $nova = $this->postJson('/api/conta/usos', [
+            'veiculo_conta_id' => $v->id, 'motorista_id' => $joao->id,
+            'inicio_previsto' => '2026-11-20 08:00', 'fim_previsto' => '2026-11-20 10:00',
+        ], $headersMaria)->assertStatus(201);
+        $this->assertSame($maria->id, $nova->json('motorista_id'));
+    }
+
+    public function test_convida_o_motorista_e_cria_o_login_com_papel_motorista(): void
+    {
+        Notification::fake();
+        $maria = $this->motorista('Maria');
+
+        $this->postJson("/api/conta/motoristas/{$maria->id}/acesso", ['email' => 'maria@exemplo.com'], $this->headers)->assertStatus(201);
+
+        $login = User::where('email', 'maria@exemplo.com')->firstOrFail();
+        $this->assertSame('motorista', $login->papelNaConta());
+        $this->assertSame($maria->conta_id, $login->conta_id);
+        $this->assertSame($login->id, $maria->fresh()->user_id);
+
+        // E-mail de outro usuário não pode ser reaproveitado para um novo motorista.
+        $joao = $this->motorista('João');
+        $this->postJson("/api/conta/motoristas/{$joao->id}/acesso", ['email' => 'maria@exemplo.com'], $this->headers)->assertStatus(422);
     }
 
     public function test_km_invalido_e_recusado(): void
@@ -382,11 +550,18 @@ class FrotaAgendaTest extends TestCase
         $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk();
         $this->post("/api/conta/usos/{$id}/foto/saida", ['foto' => $this->foto()], $this->headers + ['Accept' => 'application/json'])->assertOk();
         $this->post("/api/conta/usos/{$id}/foto/saida", ['foto' => $this->foto()], $this->headers + ['Accept' => 'application/json'])->assertOk();
-        $this->assertCount(1, Storage::disk('local')->allFiles('hodometros'), 'a troca apaga a foto anterior');
+        $this->assertCount(2, Storage::disk('local')->allFiles('hodometros'), 'a troca mantém a foto original para auditoria');
+        $this->assertSame(2, UsoVeiculoFoto::where('uso_veiculo_id', $id)->count());
+        $this->assertSame(1, UsoVeiculoFoto::where('uso_veiculo_id', $id)->whereNull('substituida_em')->count());
 
         $this->post("/api/conta/usos/{$id}/foto/inexistente", ['foto' => $this->foto()], $this->headers + ['Accept' => 'application/json'])->assertStatus(404);
 
-        $this->deleteJson("/api/conta/usos/{$id}", [], $this->headers)->assertOk();
+        // Uso que já saiu é histórico: a API não apaga.
+        $this->deleteJson("/api/conta/usos/{$id}", [], $this->headers)->assertStatus(422);
+        $this->assertCount(2, Storage::disk('local')->allFiles('hodometros'));
+
+        // Já apagar o registro (ex.: limpeza administrativa) leva junto todas as versões da foto.
+        UsoVeiculo::find($id)->delete();
         $this->assertCount(0, Storage::disk('local')->allFiles('hodometros'));
     }
 

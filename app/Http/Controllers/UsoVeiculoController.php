@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Motorista;
 use App\Models\UsoVeiculo;
+use App\Models\UsoVeiculoEvento;
+use App\Models\UsoVeiculoFoto;
 use App\Models\VeiculoConta;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -17,6 +21,11 @@ use Illuminate\Validation\Rule;
  * Agenda da frota: quem vai usar qual veículo e quando, com a saída e a chegada
  * (km do hodômetro e foto do painel). Só o perfil frota. Cada saída ou chegada
  * sobe o km atual do veículo, que nunca desce sozinho.
+ *
+ * Papéis: administrador e gestor enxergam e operam tudo; o motorista só vê e
+ * opera as próprias reservas (as rotas de edição, exclusão e correção de km
+ * ficam atrás de `papel:administrador,gestor`). Toda mudança grava um evento
+ * em usos_veiculo_eventos.
  */
 class UsoVeiculoController extends Controller
 {
@@ -25,6 +34,11 @@ class UsoVeiculoController extends Controller
     private const KM_MAXIMO = 9_999_999;
 
     private const MIMES = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+
+    private const RELACOES = ['veiculo', 'motorista', 'centroCusto', 'saidaPor', 'chegadaPor'];
+
+    /** SQLSTATE do PostgreSQL para violação de restrição de exclusão (reserva sobreposta). */
+    private const SQLSTATE_EXCLUSAO = '23P01';
 
     // ------------------------------------------------------------------ agenda
 
@@ -42,9 +56,10 @@ class UsoVeiculoController extends Controller
         $de = isset($filtros['de']) ? Carbon::parse($filtros['de'])->startOfDay() : now()->startOfMonth();
         $ate = isset($filtros['ate']) ? Carbon::parse($filtros['ate'])->endOfDay() : now()->endOfMonth();
 
-        $usos = UsoVeiculo::with(['veiculo', 'motorista', 'centroCusto'])
+        $usos = UsoVeiculo::with(self::RELACOES)
             ->where('inicio_previsto', '<=', $ate)
             ->where('fim_previsto', '>=', $de)
+            ->when($this->ehMotorista($request), fn ($q) => $q->where('motorista_id', $this->meuMotoristaId($request) ?? 0))
             ->when($filtros['veiculo_id'] ?? null, fn ($q, $v) => $q->where('veiculo_conta_id', $v))
             ->when($filtros['motorista_id'] ?? null, fn ($q, $m) => $q->where('motorista_id', $m))
             ->when($filtros['status'] ?? null, fn ($q, $s) => $q->where('status', $s))
@@ -58,30 +73,79 @@ class UsoVeiculoController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $uso = UsoVeiculo::with(['veiculo', 'motorista', 'centroCusto'])->find($id);
+        $uso = $this->usoVisivel($request, $id);
 
-        return $uso ? response()->json($this->formatar($uso)) : $this->naoEncontrado();
+        return $uso ? response()->json($this->formatar($uso->load(self::RELACOES))) : $this->naoEncontrado();
+    }
+
+    /** Trilha de auditoria de um uso (só administrador e gestor). */
+    public function eventos($id)
+    {
+        $uso = UsoVeiculo::find($id);
+
+        if (!$uso) {
+            return $this->naoEncontrado();
+        }
+
+        return response()->json($uso->eventos()->with('usuario')->orderBy('id')->get()->map(fn (UsoVeiculoEvento $e) => [
+            'id' => $e->id,
+            'acao' => $e->acao,
+            'usuario' => $e->usuario?->name,
+            'dados' => $e->dados,
+            'motivo' => $e->motivo,
+            'em' => $e->created_at?->toIso8601String(),
+        ])->values());
     }
 
     public function store(Request $request)
     {
         $dados = $this->validar($request);
-        $veiculo = VeiculoConta::find($dados['veiculo_conta_id']);
 
-        if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'])) {
-            return $erro;
+        if ($this->ehMotorista($request)) {
+            // O motorista só reserva para si mesmo.
+            $meu = $this->meuMotoristaId($request);
+
+            if (!$meu) {
+                return response()->json(['message' => 'Seu login ainda não está ligado a um motorista cadastrado. Peça ao gestor.'], 422);
+            }
+
+            $dados['motorista_id'] = $meu;
         }
 
-        $uso = UsoVeiculo::create($dados + [
-            // Sem centro informado, vale o padrão do veículo.
-            'centro_custo_id' => $dados['centro_custo_id'] ?? $veiculo->centro_custo_id,
-            'status' => 'agendado',
-            'origem' => 'agenda',
-        ]);
+        $veiculo = VeiculoConta::find($dados['veiculo_conta_id']);
 
-        return response()->json($this->formatar($uso->load(['veiculo', 'motorista', 'centroCusto'])), 201);
+        try {
+            return DB::transaction(function () use ($request, $dados, $veiculo) {
+                $this->travar($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null);
+
+                if ($erro = $this->impedimentoDoMotorista($dados['motorista_id'] ?? null, $dados['fim_previsto'])) {
+                    return $erro;
+                }
+
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'])) {
+                    return $erro;
+                }
+
+                $uso = UsoVeiculo::create($dados + [
+                    // Sem centro informado, vale o padrão do veículo.
+                    'centro_custo_id' => $dados['centro_custo_id'] ?? $veiculo->centro_custo_id,
+                    'status' => 'agendado',
+                    'origem' => 'agenda',
+                ]);
+
+                UsoVeiculoEvento::registrar($uso, 'reservou', $request->user()->id, [
+                    'inicio_previsto' => $uso->inicio_previsto->toIso8601String(),
+                    'fim_previsto' => $uso->fim_previsto->toIso8601String(),
+                    'motorista_id' => $uso->motorista_id,
+                ]);
+
+                return response()->json($this->formatar($uso->load(self::RELACOES)), 201);
+            });
+        } catch (QueryException $e) {
+            return $this->tratarConflitoDoBanco($e);
+        }
     }
 
     public function update(Request $request, $id)
@@ -106,18 +170,41 @@ class UsoVeiculoController extends Controller
 
         $motorista = array_key_exists('motorista_id', $dados) ? $dados['motorista_id'] : $uso->motorista_id;
 
-        if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id)) {
-            return $erro;
+        try {
+            return DB::transaction(function () use ($request, $uso, $dados, $motorista) {
+                $this->travar($dados['veiculo_conta_id'], $motorista);
+
+                if ($erro = $this->impedimentoDoMotorista($motorista, $dados['fim_previsto'])) {
+                    return $erro;
+                }
+
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id)) {
+                    return $erro;
+                }
+
+                $antes = $this->instantaneo($uso);
+                $uso->update($dados);
+                $depois = $this->instantaneo($uso->fresh());
+
+                $mudou = array_keys(array_filter($depois, fn ($v, $k) => $v !== $antes[$k], ARRAY_FILTER_USE_BOTH));
+
+                if ($mudou) {
+                    UsoVeiculoEvento::registrar($uso, 'editou', $request->user()->id, [
+                        'antes' => array_intersect_key($antes, array_flip($mudou)),
+                        'depois' => array_intersect_key($depois, array_flip($mudou)),
+                    ]);
+                }
+
+                return response()->json($this->formatar($uso->fresh(self::RELACOES)));
+            });
+        } catch (QueryException $e) {
+            return $this->tratarConflitoDoBanco($e);
         }
-
-        $uso->update($dados);
-
-        return response()->json($this->formatar($uso->fresh(['veiculo', 'motorista', 'centroCusto'])));
     }
 
-    public function cancelar($id)
+    public function cancelar(Request $request, $id)
     {
-        $uso = UsoVeiculo::find($id);
+        $uso = $this->usoVisivel($request, $id);
 
         if (!$uso) {
             return $this->naoEncontrado();
@@ -127,12 +214,16 @@ class UsoVeiculoController extends Controller
             return response()->json(['message' => 'Só dá para cancelar um uso que ainda não saiu.'], 422);
         }
 
+        $motivo = $request->validate(['motivo' => ['nullable', 'string', 'max:255']])['motivo'] ?? null;
+
         $uso->update(['status' => 'cancelado']);
 
-        return response()->json($this->formatar($uso->fresh(['veiculo', 'motorista', 'centroCusto'])));
+        UsoVeiculoEvento::registrar($uso, 'cancelou', $request->user()->id, null, $motivo);
+
+        return response()->json($this->formatar($uso->fresh(self::RELACOES)));
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $uso = UsoVeiculo::find($id);
 
@@ -140,7 +231,16 @@ class UsoVeiculoController extends Controller
             return $this->naoEncontrado();
         }
 
-        $uso->delete(); // apaga as fotos também; o km atual do veículo não volta atrás
+        // Uso que já saiu é histórico da frota: não se apaga (só o importado de planilha, para desfazer engano).
+        if (!in_array($uso->status, ['agendado', 'cancelado'], true) && $uso->origem !== 'planilha') {
+            return response()->json([
+                'message' => 'Um uso que já saiu não pode ser apagado, porque faz parte do histórico. Corrija o km, se for o caso.',
+            ], 422);
+        }
+
+        UsoVeiculoEvento::registrar($uso, 'apagou', $request->user()->id, ['uso_id' => $uso->id] + $this->instantaneo($uso));
+
+        $uso->delete();
 
         return response()->json(['message' => 'Uso removido.']);
     }
@@ -149,85 +249,126 @@ class UsoVeiculoController extends Controller
 
     public function saida(Request $request, $id)
     {
-        $uso = UsoVeiculo::with('veiculo')->find($id);
-
-        if (!$uso) {
-            return $this->naoEncontrado();
-        }
-
-        if ($uso->status !== 'agendado') {
-            return response()->json(['message' => 'A saída só pode ser registrada em um uso agendado.'], 422);
-        }
-
         $dados = $this->validarKm($request, 'km_saida');
 
-        $emUso = UsoVeiculo::with('motorista')
-            ->where('veiculo_conta_id', $uso->veiculo_conta_id)
-            ->where('status', 'em_uso')
-            ->first();
+        return DB::transaction(function () use ($request, $id, $dados) {
+            $uso = $this->usoVisivel($request, $id, travar: true);
 
-        if ($emUso) {
-            $quem = $emUso->motorista?->nome ?? 'outro uso';
-
-            return response()->json([
-                'message' => "Este veículo ainda está em uso ({$quem}): a chegada dele não foi registrada.",
-            ], 422);
-        }
-
-        if ($erro = $this->kmMenorQueOUltimo($uso->veiculo, $dados['km_saida'])) {
-            return $erro;
-        }
-
-        DB::transaction(function () use ($uso, $dados, $request) {
-            $uso->update(['status' => 'em_uso', 'km_saida' => $dados['km_saida'], 'saida_em' => now()]);
-
-            if ($request->hasFile('foto')) {
-                $this->guardarFoto($uso, 'saida', $request->file('foto'));
+            if (!$uso) {
+                return $this->naoEncontrado();
             }
 
-            $this->subirKm($uso->veiculo, $dados['km_saida']);
-        });
+            // Pedido repetido (clique duplo, rede instável): devolve o resultado já gravado.
+            if ($uso->status === 'em_uso' && $uso->saida_por_user_id === $request->user()->id && $uso->km_saida === $dados['km_saida']) {
+                return response()->json($this->formatar($uso->load(self::RELACOES)));
+            }
 
-        return response()->json($this->formatar($uso->fresh(['veiculo', 'motorista', 'centroCusto'])));
+            if ($uso->status !== 'agendado') {
+                return response()->json(['message' => 'A saída só pode ser registrada em um uso agendado.'], 422);
+            }
+
+            $veiculo = VeiculoConta::whereKey($uso->veiculo_conta_id)->lockForUpdate()->first();
+
+            if (!$uso->motorista) {
+                return response()->json(['message' => 'Esta reserva não tem motorista. Edite a reserva e informe quem vai dirigir.'], 422);
+            }
+
+            if ($motivo = $uso->motorista->impedimentoParaDirigir(now())) {
+                return response()->json(['message' => $motivo], 422);
+            }
+
+            $emUso = UsoVeiculo::with('motorista')
+                ->where('veiculo_conta_id', $uso->veiculo_conta_id)
+                ->where('status', 'em_uso')
+                ->first();
+
+            if ($emUso) {
+                $quem = $emUso->motorista?->nome ?? 'outro uso';
+
+                return response()->json([
+                    'message' => "Este veículo ainda está em uso ({$quem}): a chegada dele não foi registrada.",
+                ], 422);
+            }
+
+            if ($erro = $this->kmMenorQueOUltimo($veiculo, $dados['km_saida'])) {
+                return $erro;
+            }
+
+            $origem = $request->hasFile('foto') ? 'foto' : 'manual';
+
+            $uso->update([
+                'status' => 'em_uso',
+                'km_saida' => $dados['km_saida'],
+                'km_saida_origem' => $origem,
+                'saida_em' => now(),
+                'saida_por_user_id' => $request->user()->id,
+            ]);
+
+            if ($request->hasFile('foto')) {
+                $this->guardarFoto($uso, 'saida', $request->file('foto'), $request->user()->id);
+            }
+
+            $this->subirKm($veiculo, $dados['km_saida']);
+
+            UsoVeiculoEvento::registrar($uso, 'saiu', $request->user()->id, ['km' => $dados['km_saida'], 'origem' => $origem]);
+
+            return response()->json($this->formatar($uso->fresh(self::RELACOES)));
+        });
     }
 
     public function chegada(Request $request, $id)
     {
-        $uso = UsoVeiculo::with('veiculo')->find($id);
-
-        if (!$uso) {
-            return $this->naoEncontrado();
-        }
-
-        if ($uso->status !== 'em_uso') {
-            return response()->json(['message' => 'A chegada só pode ser registrada em um uso em andamento.'], 422);
-        }
-
         $dados = $this->validarKm($request, 'km_chegada');
 
-        if ($dados['km_chegada'] < $uso->km_saida) {
-            return response()->json([
-                'message' => "O km de chegada ({$dados['km_chegada']}) é menor que o de saída ({$uso->km_saida}). Confira o hodômetro.",
-            ], 422);
-        }
+        return DB::transaction(function () use ($request, $id, $dados) {
+            $uso = $this->usoVisivel($request, $id, travar: true);
 
-        DB::transaction(function () use ($uso, $dados, $request) {
-            $uso->update(['status' => 'concluido', 'km_chegada' => $dados['km_chegada'], 'chegada_em' => now()]);
-
-            if ($request->hasFile('foto')) {
-                $this->guardarFoto($uso, 'chegada', $request->file('foto'));
+            if (!$uso) {
+                return $this->naoEncontrado();
             }
 
-            $this->subirKm($uso->veiculo, $dados['km_chegada']);
-        });
+            if ($uso->status === 'concluido' && $uso->chegada_por_user_id === $request->user()->id && $uso->km_chegada === $dados['km_chegada']) {
+                return response()->json($this->formatar($uso->load(self::RELACOES)));
+            }
 
-        return response()->json($this->formatar($uso->fresh(['veiculo', 'motorista', 'centroCusto'])));
+            if ($uso->status !== 'em_uso') {
+                return response()->json(['message' => 'A chegada só pode ser registrada em um uso em andamento.'], 422);
+            }
+
+            $veiculo = VeiculoConta::whereKey($uso->veiculo_conta_id)->lockForUpdate()->first();
+
+            if ($dados['km_chegada'] < $uso->km_saida) {
+                return response()->json([
+                    'message' => "O km de chegada ({$dados['km_chegada']}) é menor que o de saída ({$uso->km_saida}). Confira o hodômetro.",
+                ], 422);
+            }
+
+            $origem = $request->hasFile('foto') ? 'foto' : 'manual';
+
+            $uso->update([
+                'status' => 'concluido',
+                'km_chegada' => $dados['km_chegada'],
+                'km_chegada_origem' => $origem,
+                'chegada_em' => now(),
+                'chegada_por_user_id' => $request->user()->id,
+            ]);
+
+            if ($request->hasFile('foto')) {
+                $this->guardarFoto($uso, 'chegada', $request->file('foto'), $request->user()->id);
+            }
+
+            $this->subirKm($veiculo, $dados['km_chegada']);
+
+            UsoVeiculoEvento::registrar($uso, 'chegou', $request->user()->id, ['km' => $dados['km_chegada'], 'origem' => $origem]);
+
+            return response()->json($this->formatar($uso->fresh(self::RELACOES)));
+        });
     }
 
-    /** Envia ou troca a foto do hodômetro de um momento que já foi registrado. */
+    /** Envia ou troca a foto do hodômetro de um momento que já foi registrado (a anterior é mantida). */
     public function foto(Request $request, $id, $momento)
     {
-        $uso = UsoVeiculo::find($id);
+        $uso = $this->usoVisivel($request, $id);
 
         if (!$uso) {
             return $this->naoEncontrado();
@@ -243,12 +384,14 @@ class UsoVeiculoController extends Controller
 
         $request->validate(['foto' => $this->regraDaFoto(true)], $this->mensagensDaFoto());
 
-        $this->guardarFoto($uso, $momento, $request->file('foto'));
+        $this->guardarFoto($uso, $momento, $request->file('foto'), $request->user()->id);
 
-        return response()->json($this->formatar($uso->fresh(['veiculo', 'motorista', 'centroCusto'])));
+        UsoVeiculoEvento::registrar($uso, 'anexou_foto', $request->user()->id, ['momento' => $momento]);
+
+        return response()->json($this->formatar($uso->fresh(self::RELACOES)));
     }
 
-    /** Corrige a quilometragem atual do veículo (único jeito de ela diminuir). */
+    /** Corrige a quilometragem atual do veículo (único jeito de ela diminuir), sempre com motivo. */
     public function definirKm(Request $request, $id)
     {
         $veiculo = VeiculoConta::find($id);
@@ -257,18 +400,106 @@ class UsoVeiculoController extends Controller
             return response()->json(['message' => 'Veículo não encontrado.'], 404);
         }
 
-        $dados = $request->validate(['km' => ['required', 'integer', 'min:0', 'max:' . self::KM_MAXIMO]]);
+        $dados = $request->validate([
+            'km' => ['required', 'integer', 'min:0', 'max:' . self::KM_MAXIMO],
+            'motivo' => ['required', 'string', 'min:5', 'max:255'],
+        ], [
+            'motivo.required' => 'Explique o motivo da correção do km.',
+            'motivo.min' => 'Explique o motivo da correção do km (mínimo 5 letras).',
+        ]);
 
-        $veiculo->forceFill(['km_atual' => $dados['km'], 'km_atualizado_em' => now()])->save();
+        DB::transaction(function () use ($request, $veiculo, $dados) {
+            $veiculo = VeiculoConta::whereKey($veiculo->id)->lockForUpdate()->first();
+            $antes = $veiculo->km_atual;
+
+            $veiculo->forceFill(['km_atual' => $dados['km'], 'km_atualizado_em' => now()])->save();
+
+            UsoVeiculoEvento::registrar(null, 'corrigiu_km', $request->user()->id, [
+                'antes' => $antes,
+                'depois' => $dados['km'],
+            ], $dados['motivo'], $veiculo->id);
+        });
+
+        $veiculo->refresh();
 
         return response()->json([
             'id' => $veiculo->id,
             'km_atual' => $veiculo->km_atual,
-            'km_atualizado_em' => $veiculo->km_atualizado_em?->toIso8601String(),
+            'km_atualizado_em' => $veiculo->km_atualizado_em ? Carbon::parse($veiculo->km_atualizado_em)->toIso8601String() : null,
         ]);
     }
 
     // ---------------------------------------------------------------- internos
+
+    private function ehMotorista(Request $request): bool
+    {
+        return $request->user()->papelNaConta() === 'motorista';
+    }
+
+    private function meuMotoristaId(Request $request): ?int
+    {
+        return $request->user()->motoristaVinculado()?->id;
+    }
+
+    /** O uso, respeitando o papel: o motorista só enxerga os próprios (os demais dão "não encontrado"). */
+    private function usoVisivel(Request $request, $id, bool $travar = false): ?UsoVeiculo
+    {
+        $query = UsoVeiculo::with('motorista')->whereKey($id);
+
+        if ($this->ehMotorista($request)) {
+            $query->where('motorista_id', $this->meuMotoristaId($request) ?? 0);
+        }
+
+        return $travar ? $query->lockForUpdate()->first() : $query->first();
+    }
+
+    /** Trava o veículo e o motorista até o fim da transação, para duas requisições não se atropelarem. */
+    private function travar(int $veiculoId, ?int $motoristaId): void
+    {
+        VeiculoConta::whereKey($veiculoId)->lockForUpdate()->first();
+
+        if ($motoristaId) {
+            Motorista::whereKey($motoristaId)->lockForUpdate()->first();
+        }
+    }
+
+    /** CNH vencida (ou ausente) e motorista desativado bloqueiam a reserva e a saída. */
+    private function impedimentoDoMotorista(?int $motoristaId, $fim): ?JsonResponse
+    {
+        if (!$motoristaId) {
+            return null;
+        }
+
+        $motorista = Motorista::find($motoristaId);
+        $motivo = $motorista?->impedimentoParaDirigir($fim instanceof \DateTimeInterface ? $fim : Carbon::parse($fim));
+
+        return $motivo ? response()->json(['message' => $motivo], 422) : null;
+    }
+
+    /** @return array<string, mixed> */
+    private function instantaneo(UsoVeiculo $uso): array
+    {
+        return [
+            'veiculo_conta_id' => $uso->veiculo_conta_id,
+            'motorista_id' => $uso->motorista_id,
+            'centro_custo_id' => $uso->centro_custo_id,
+            'inicio_previsto' => $uso->inicio_previsto->toIso8601String(),
+            'fim_previsto' => $uso->fim_previsto->toIso8601String(),
+            'finalidade' => $uso->finalidade,
+            'observacoes' => $uso->observacoes,
+            'status' => $uso->status,
+        ];
+    }
+
+    /** Se o banco (PostgreSQL) recusou uma reserva sobreposta que passou na checagem do código. */
+    private function tratarConflitoDoBanco(QueryException $e): JsonResponse
+    {
+        if ((string) $e->getCode() === self::SQLSTATE_EXCLUSAO) {
+            return response()->json(['message' => 'O veículo ou o motorista já está reservado nesse horário.'], 422);
+        }
+
+        throw $e;
+    }
 
     /** @return array<string, mixed> */
     private function validar(Request $request): array
@@ -375,7 +606,7 @@ class UsoVeiculoController extends Controller
     {
         if ($veiculo->km_atual !== null && $km < $veiculo->km_atual) {
             return response()->json([
-                'message' => "O hodômetro informado ({$km} km) é menor que o último registrado ({$veiculo->km_atual} km). Confira o número ou corrija o km do veículo.",
+                'message' => "O hodômetro informado ({$km} km) é menor que o último registrado ({$veiculo->km_atual} km). Confira o número ou peça ao gestor para corrigir o km do veículo.",
             ], 422);
         }
 
@@ -390,7 +621,8 @@ class UsoVeiculoController extends Controller
         }
     }
 
-    private function guardarFoto(UsoVeiculo $uso, string $momento, UploadedFile $arquivo): void
+    /** Guarda a foto como uma nova versão: a anterior continua no disco (some só pela retenção de 90 dias). */
+    private function guardarFoto(UsoVeiculo $uso, string $momento, UploadedFile $arquivo, ?int $userId): void
     {
         $extensao = self::MIMES[$arquivo->getMimeType()] ?? 'jpg';
         $caminho = "hodometros/{$uso->conta_id}/{$uso->veiculo_conta_id}/{$uso->id}-{$momento}-" . Str::uuid() . ".{$extensao}";
@@ -398,10 +630,17 @@ class UsoVeiculoController extends Controller
 
         Storage::disk('local')->put($caminho, $arquivo->get());
 
-        // Troca de foto: o arquivo anterior sai do disco.
-        if ($anterior = $uso->{$campo}) {
-            Storage::disk('local')->delete($anterior);
-        }
+        UsoVeiculoFoto::where('uso_veiculo_id', $uso->id)
+            ->where('momento', $momento)
+            ->whereNull('substituida_em')
+            ->update(['substituida_em' => now()]);
+
+        UsoVeiculoFoto::create([
+            'uso_veiculo_id' => $uso->id,
+            'momento' => $momento,
+            'caminho' => $caminho,
+            'user_id' => $userId,
+        ]);
 
         $uso->forceFill([$campo => $caminho])->save();
     }
@@ -430,9 +669,13 @@ class UsoVeiculoController extends Controller
             'status' => $uso->status,
             'km_saida' => $uso->km_saida,
             'km_chegada' => $uso->km_chegada,
+            'km_saida_origem' => $uso->km_saida_origem,
+            'km_chegada_origem' => $uso->km_chegada_origem,
             'km_rodados' => $uso->kmRodados(),
             'saida_em' => $uso->saida_em?->toIso8601String(),
             'chegada_em' => $uso->chegada_em?->toIso8601String(),
+            'saida_por' => $uso->saidaPor?->name,
+            'chegada_por' => $uso->chegadaPor?->name,
             'url_foto_saida' => $uso->urlDaFoto('saida'),
             'url_foto_chegada' => $uso->urlDaFoto('chegada'),
             'origem' => $uso->origem,

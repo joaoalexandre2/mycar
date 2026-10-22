@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AuthenticateToken;
+use App\Http\Middleware\ExigePapel;
 use App\Http\Middleware\ExigePerfil;
 use App\Http\Middleware\SomenteSuperAdmin;
 use Illuminate\Foundation\Application;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.token' => AuthenticateToken::class,
             'super.admin' => SomenteSuperAdmin::class,
             'perfil' => ExigePerfil::class,
+            'papel' => ExigePapel::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

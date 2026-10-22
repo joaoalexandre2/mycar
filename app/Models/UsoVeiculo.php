@@ -6,6 +6,7 @@ use App\Models\Concerns\PertenceAConta;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -26,6 +27,9 @@ class UsoVeiculo extends Model
 
     public const MOMENTOS = ['saida', 'chegada'];
 
+    /** De onde veio o km informado: lido junto de uma foto ou digitado sem foto. */
+    public const ORIGENS_KM = ['foto', 'manual'];
+
     protected $table = 'usos_veiculo';
 
     protected $fillable = [
@@ -38,8 +42,12 @@ class UsoVeiculo extends Model
         'status',
         'km_saida',
         'km_chegada',
+        'km_saida_origem',
+        'km_chegada_origem',
         'saida_em',
         'chegada_em',
+        'saida_por_user_id',
+        'chegada_por_user_id',
         'origem',
         'observacoes',
     ];
@@ -53,15 +61,37 @@ class UsoVeiculo extends Model
 
     protected static function booted(): void
     {
-        // Apagou o uso: apaga as fotos do hodômetro também.
+        // Apagou o uso: apaga as fotos do hodômetro também, inclusive as versões substituídas.
         static::deleting(function (UsoVeiculo $uso) {
-            Storage::disk('local')->delete(array_filter([$uso->foto_saida, $uso->foto_chegada]));
+            $versoes = $uso->fotos()->pluck('caminho')->all();
+
+            Storage::disk('local')->delete(array_filter(array_merge([$uso->foto_saida, $uso->foto_chegada], $versoes)));
         });
     }
 
     public function veiculo(): BelongsTo
     {
         return $this->belongsTo(VeiculoConta::class, 'veiculo_conta_id');
+    }
+
+    public function fotos(): HasMany
+    {
+        return $this->hasMany(UsoVeiculoFoto::class, 'uso_veiculo_id');
+    }
+
+    public function eventos(): HasMany
+    {
+        return $this->hasMany(UsoVeiculoEvento::class, 'uso_veiculo_id');
+    }
+
+    public function saidaPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'saida_por_user_id');
+    }
+
+    public function chegadaPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'chegada_por_user_id');
     }
 
     public function motorista(): BelongsTo
