@@ -158,15 +158,19 @@ Route::middleware('auth.token')->group(function () {
         Route::delete('/manutencoes/{id}', [ManutencaoController::class, 'destroy']);
     });
 
-    // Perfis PESSOA (Cuidados com seu carro) e FROTA: veículos da própria conta
+    // Perfis PESSOA e FROTA, qualquer papel (o motorista da frota só consulta os veículos)
     Route::middleware('perfil:pessoa,frota')->prefix('conta')->group(function () {
+        Route::get('/veiculos', [ContaVeiculoController::class, 'index']);
+        Route::get('/veiculos/{id}', [ContaVeiculoController::class, 'show']);
+    });
+
+    // Perfis PESSOA (Cuidados com seu carro) e FROTA (administrador e gestor): veículos da própria conta
+    Route::middleware(['perfil:pessoa,frota', 'papel:administrador,gestor'])->prefix('conta')->group(function () {
         Route::get('/resumo', [ContaController::class, 'resumo']);
         Route::get('/preferencias', [ContaController::class, 'preferencias']);
         Route::put('/preferencias', [ContaController::class, 'atualizarPreferencias']);
 
-        Route::get('/veiculos', [ContaVeiculoController::class, 'index']);
         Route::post('/veiculos', [ContaVeiculoController::class, 'store']);
-        Route::get('/veiculos/{id}', [ContaVeiculoController::class, 'show']);
         Route::put('/veiculos/{id}', [ContaVeiculoController::class, 'update']);
         Route::delete('/veiculos/{id}', [ContaVeiculoController::class, 'destroy']);
         Route::post('/veiculos/{id}/fipe', [ContaVeiculoController::class, 'consultarFipe']);
@@ -201,8 +205,19 @@ Route::middleware('auth.token')->group(function () {
         Route::delete('/veiculos/{id}/abastecimentos/{abastecimentoId}', [AbastecimentoController::class, 'destroy']);
     });
 
-    // Só FROTA: agenda de uso dos veículos, motoristas, centros de custo e km do hodômetro
+    // FROTA, qualquer papel: o motorista só enxerga e opera as próprias reservas (filtrado no controller)
     Route::middleware('perfil:frota')->prefix('conta')->group(function () {
+        Route::get('/usos', [UsoVeiculoController::class, 'index']);
+        Route::post('/usos', [UsoVeiculoController::class, 'store']);
+        Route::get('/usos/{id}', [UsoVeiculoController::class, 'show'])->whereNumber('id');
+        Route::post('/usos/{id}/cancelar', [UsoVeiculoController::class, 'cancelar']);
+        Route::post('/usos/{id}/saida', [UsoVeiculoController::class, 'saida'])->middleware('throttle:60,1');
+        Route::post('/usos/{id}/chegada', [UsoVeiculoController::class, 'chegada'])->middleware('throttle:60,1');
+        Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
+    });
+
+    // FROTA, administrador e gestor: cadastros, edição, correções, importação e auditoria
+    Route::middleware(['perfil:frota', 'papel:administrador,gestor'])->prefix('conta')->group(function () {
         Route::get('/centros-custo', [CentroCustoController::class, 'index']);
         Route::post('/centros-custo', [CentroCustoController::class, 'store']);
         Route::put('/centros-custo/{id}', [CentroCustoController::class, 'update']);
@@ -212,19 +227,15 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/motoristas', [MotoristaController::class, 'store']);
         Route::put('/motoristas/{id}', [MotoristaController::class, 'update']);
         Route::delete('/motoristas/{id}', [MotoristaController::class, 'destroy']);
+        // Convida o motorista a entrar no sistema (cria o login e envia o link para definir a senha)
+        Route::post('/motoristas/{id}/acesso', [MotoristaController::class, 'convidar'])->middleware('throttle:20,1');
 
-        Route::get('/usos', [UsoVeiculoController::class, 'index']);
-        Route::post('/usos', [UsoVeiculoController::class, 'store']);
         // Planilha de utilização: rotas fixas antes das com {id}
         Route::get('/usos/planilha-modelo', [UsoVeiculoImportController::class, 'modelo']);
         Route::post('/usos/importar', [UsoVeiculoImportController::class, 'importar'])->middleware('throttle:10,1');
-        Route::get('/usos/{id}', [UsoVeiculoController::class, 'show']);
+        Route::get('/usos/{id}/eventos', [UsoVeiculoController::class, 'eventos']);
         Route::put('/usos/{id}', [UsoVeiculoController::class, 'update']);
         Route::delete('/usos/{id}', [UsoVeiculoController::class, 'destroy']);
-        Route::post('/usos/{id}/cancelar', [UsoVeiculoController::class, 'cancelar']);
-        Route::post('/usos/{id}/saida', [UsoVeiculoController::class, 'saida'])->middleware('throttle:60,1');
-        Route::post('/usos/{id}/chegada', [UsoVeiculoController::class, 'chegada'])->middleware('throttle:60,1');
-        Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
         Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
     });
 });

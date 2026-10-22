@@ -46,6 +46,7 @@ class RegisterController extends Controller
         $user = DB::transaction(function () use ($dados, $perfil) {
             $base = [
                 'perfil' => $perfil,
+                'papel_frota' => $perfil === Conta::TIPO_FROTA ? 'administrador' : null,
                 'name' => $dados['name'],
                 'email' => $dados['email'],
                 'password' => Hash::make($dados['password']),

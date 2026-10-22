@@ -188,6 +188,7 @@ class VeiculoConta extends Model
         $maior = max(
             (int) $this->abastecimentos()->max('km'),
             (int) $this->servicos()->max('km'),
+            (int) $this->km_atual,
         );
 
         return $maior > 0 ? $maior : null;
