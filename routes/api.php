@@ -205,6 +205,7 @@ Route::middleware('auth.token')->group(function () {
 
         Route::get('/veiculos/{id}/seguros', [SeguroController::class, 'index']);
         Route::post('/veiculos/{id}/seguros', [SeguroController::class, 'store']);
+        Route::put('/veiculos/{id}/possui-seguro', [SeguroController::class, 'possui']);
         Route::delete('/veiculos/{id}/seguros/{seguroId}', [SeguroController::class, 'destroy']);
 
         Route::get('/veiculos/{id}/abastecimentos', [AbastecimentoController::class, 'index']);

@@ -43,6 +43,7 @@ class VeiculoConta extends Model
         'fipe_consultado_em' => 'datetime',
         'revisao_prevista_em' => 'date:Y-m-d',
         'revisao_alertada_em' => 'date:Y-m-d',
+        'possui_seguro' => 'boolean',
     ];
 
     /** Controle interno dos lembretes: não precisa ir para o frontend. */
