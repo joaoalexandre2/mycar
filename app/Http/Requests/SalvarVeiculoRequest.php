@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TipoVeiculo;
 use App\Rules\AnoFabricacao;
 use App\Rules\PlacaBrasileira;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,6 +40,7 @@ class SalvarVeiculoRequest extends FormRequest
                     ->where('oficina_id', app('oficina.atual'))
                     ->ignore($this->route('id')),
             ],
+            'tipo_veiculo' => ['sometimes', Rule::in(TipoVeiculo::valores())],
             'marca' => ['required', 'string', 'max:100'],
             'modelo' => ['required', 'string', 'max:100'],
             'ano' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],

@@ -35,7 +35,8 @@ class CatalogoPecasController extends Controller
                 return response()->json(['message' => 'Veículo não encontrado.'], 404);
             }
 
-            $modelo = $catalogo->modeloDoVeiculo($veiculo->marca, $veiculo->modelo);
+            // O catálogo de modelos é de carros; moto e caminhão ficam com o catálogo geral.
+            $modelo = $veiculo->ehCarro() ? $catalogo->modeloDoVeiculo($veiculo->marca, $veiculo->modelo) : null;
             $escopo = $modelo ? 'modelo' : 'geral';
             $categoria = $modelo ? $modelo['categoria'] : 'universal';
         }

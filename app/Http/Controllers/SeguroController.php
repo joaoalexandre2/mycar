@@ -122,7 +122,8 @@ class SeguroController extends Controller
                 'valor_anual' => (float) $s->valor_anual,
                 'vigencia_fim' => $s->vigencia_fim?->toDateString(),
             ]),
-            $veiculo->fipe_valor !== null ? (float) $veiculo->fipe_valor : null
+            // A faixa de referência (3% a 8% do valor FIPE) é de carros de passeio.
+            $veiculo->ehCarro() && $veiculo->fipe_valor !== null ? (float) $veiculo->fipe_valor : null
         );
 
         $extras = collect($comparacao['itens'])->keyBy('id');

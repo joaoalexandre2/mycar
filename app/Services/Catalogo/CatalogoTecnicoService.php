@@ -16,6 +16,11 @@ class CatalogoTecnicoService
      */
     public function fichaPara(Veiculo $veiculo): ?array
     {
+        // As fontes de ficha técnica cobrem carros.
+        if (!$veiculo->ehCarro()) {
+            return null;
+        }
+
         foreach ($this->fontes as $fonte) {
             $dados = $fonte->fichaPara($veiculo);
 

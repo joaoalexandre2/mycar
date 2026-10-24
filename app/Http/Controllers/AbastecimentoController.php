@@ -116,7 +116,7 @@ class AbastecimentoController extends Controller
         return [
             // Capacidade do tanque na ficha do modelo: a tela usa quando a pessoa
             // marca "encheu o tanque". Nulo = a ficha não traz (digita os litros).
-            'tanque_litros' => $this->fichasCatalogo->tanqueLitros($veiculo->marca, $veiculo->modelo),
+            'tanque_litros' => $veiculo->ehCarro() ? $this->fichasCatalogo->tanqueLitros($veiculo->marca, $veiculo->modelo) : null,
             'abastecimentos' => $registros
                 ->sortByDesc(fn (Abastecimento $a) => $a->data->toDateString() . str_pad((string) $a->km, 8, '0', STR_PAD_LEFT) . str_pad((string) $a->id, 8, '0', STR_PAD_LEFT))
                 ->map(fn (Abastecimento $a) => $a->toArray() + [
