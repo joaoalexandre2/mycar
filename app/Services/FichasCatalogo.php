@@ -55,6 +55,30 @@ class FichasCatalogo
         return null;
     }
 
+    /**
+     * Capacidade do tanque de combustível, em litros, segundo a ficha do modelo
+     * ("Tanque de combustível: 53 litros"). Nulo quando o modelo não está no
+     * catálogo ou a ficha não traz o tanque.
+     */
+    public function tanqueLitros(?string $marca, ?string $modelo): ?float
+    {
+        $ficha = $this->paraVeiculo($marca, $modelo);
+
+        foreach ($ficha['grupos'] ?? [] as $grupo) {
+            foreach ($grupo['campos'] ?? [] as $campo) {
+                $rotulo = CatalogoPecas::normalizar($campo['rotulo'] ?? '');
+
+                if (str_starts_with($rotulo, 'tanque') && preg_match('/(\d+(?:[.,]\d+)?)\s*litros?/iu', (string) ($campo['valor'] ?? ''), $achado)) {
+                    $litros = (float) str_replace(',', '.', $achado[1]);
+
+                    return $litros > 0 ? $litros : null;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function total(): int
     {
         return array_sum(array_map(
