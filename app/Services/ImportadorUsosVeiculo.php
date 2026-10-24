@@ -207,12 +207,13 @@ class ImportadorUsosVeiculo
                     $erros[] = "linha {$atual['linha']}: o km de saída ({$atual['km_saida']}) é menor que o km de chegada da linha {$anterior['linha']} ({$anterior['km_chegada']}); o hodômetro não anda para trás";
                 }
 
-                $existente = UsoVeiculo::sobrepostos($atual['saida'], $atual['chegada'])
+                $existente = UsoVeiculo::with(['motorista', 'centroCusto'])
+                    ->sobrepostos($atual['saida'], $atual['chegada'])
                     ->where('veiculo_conta_id', $atual['veiculo']->id)
                     ->first();
 
                 if ($existente) {
-                    $erros[] = "linha {$atual['linha']}: já existe um uso desse veículo na agenda de " . $existente->inicio_previsto->format('d/m/Y H:i') . ' a ' . $existente->fim_previsto->format('d/m/Y H:i');
+                    $erros[] = "linha {$atual['linha']}: já existe um uso desse veículo na agenda: {$existente->quemUsa()}, {$existente->janelaEDetalhes('d/m/Y H:i')}";
                 }
             }
         }

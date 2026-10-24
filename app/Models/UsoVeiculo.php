@@ -59,6 +59,29 @@ class UsoVeiculo extends Model
         'chegada_em' => 'datetime',
     ];
 
+    /**
+     * "de 26/10 08:00 a 26/10 18:00 (finalidade: visita; centro de custo: Compras)":
+     * o horário do uso e o que se sabe sobre ele, para as mensagens de conflito
+     * dizerem com quem está o veículo (e não só quando).
+     */
+    public function janelaEDetalhes(string $formato = 'd/m H:i'): string
+    {
+        $janela = 'de ' . $this->inicio_previsto->format($formato) . ' a ' . $this->fim_previsto->format($formato);
+
+        $detalhes = array_filter([
+            $this->finalidade ? "finalidade: {$this->finalidade}" : null,
+            $this->centroCusto ? "centro de custo: {$this->centroCusto->nome}" : null,
+        ]);
+
+        return $detalhes ? "{$janela} (" . implode('; ', $detalhes) . ')' : $janela;
+    }
+
+    /** Nome de quem vai usar (ou usa) o veículo neste uso. */
+    public function quemUsa(): string
+    {
+        return $this->motorista?->nome ?? 'sem motorista definido';
+    }
+
     protected static function booted(): void
     {
         // Apagou o uso: apaga as fotos do hodômetro também, inclusive as versões substituídas.
