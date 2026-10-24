@@ -229,6 +229,24 @@ class FrotaPlanilhaTest extends TestCase
         $this->assertStringContainsString('já existe um uso desse veículo na agenda', $r->json('erros.0'));
     }
 
+    public function test_conflito_da_planilha_diz_quem_ja_usa_o_veiculo_nesse_horario(): void
+    {
+        $v = $this->veiculo();
+        $motorista = Motorista::create(['nome' => 'Salsicha']);
+        UsoVeiculo::create([
+            'veiculo_conta_id' => $v->id, 'motorista_id' => $motorista->id, 'finalidade' => 'Entrega',
+            'inicio_previsto' => '2026-10-15 09:00', 'fim_previsto' => '2026-10-15 11:00',
+            'status' => 'agendado', 'origem' => 'agenda',
+        ]);
+
+        $r = $this->importar($this->planilha(['AAA1B25;15/10/2026;08:00;15/10/2026;10:00;100;200;;;']), [], 422);
+
+        $this->assertSame(
+            'linha 2: já existe um uso desse veículo na agenda: Salsicha, de 15/10/2026 09:00 a 15/10/2026 11:00 (finalidade: Entrega)',
+            $r->json('erros.0'),
+        );
+    }
+
     public function test_so_enxerga_os_veiculos_da_propria_conta(): void
     {
         [, $outra] = $this->autenticarConta('frota');

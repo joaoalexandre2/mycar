@@ -167,8 +167,58 @@ class FrotaAgendaTest extends TestCase
 
         $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 11:00', 'fim_previsto' => '2026-11-10 15:00'], 422);
 
-        $this->assertStringContainsString('O veículo já está reservado nesse horário', $r->json('message'));
+        // Diz com quem o veículo está e quando, não só que está ocupado.
+        $this->assertSame(
+            'O veículo AAA1B25 (Fiat Strada) já está reservado nesse horário: Ana, de 10/11 08:00 a 10/11 12:00.',
+            $r->json('message'),
+        );
         $this->assertNotNull($r->json('conflito.uso_id'));
+        $this->assertSame('Ana', $r->json('conflito.motorista'));
+        $this->assertSame('AAA1B25', $r->json('conflito.veiculo'));
+        $this->assertSame('agendado', $r->json('conflito.status'));
+    }
+
+    public function test_conflito_do_veiculo_traz_finalidade_e_centro_de_custo_de_quem_reservou(): void
+    {
+        $centro = CentroCusto::create(['nome' => 'Compras']);
+        $v = $this->veiculo('UAT0D84', ['apelido' => 'Strada da loja']);
+        $this->reservar($v, [
+            'motorista_id' => $this->motorista('Salsicha')->id,
+            'centro_custo_id' => $centro->id,
+            'finalidade' => 'Buscar mercadoria',
+        ]);
+
+        $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 09:00', 'fim_previsto' => '2026-11-10 10:00'], 422);
+
+        $this->assertSame(
+            'O veículo UAT0D84 (Strada da loja) já está reservado nesse horário: Salsicha, de 10/11 08:00 a 10/11 12:00 (finalidade: Buscar mercadoria; centro de custo: Compras).',
+            $r->json('message'),
+        );
+        $this->assertSame('Buscar mercadoria', $r->json('conflito.finalidade'));
+        $this->assertSame('Compras', $r->json('conflito.centro_custo'));
+    }
+
+    public function test_conflito_com_reserva_sem_motorista_diz_que_nao_ha_motorista(): void
+    {
+        $v = $this->veiculo();
+        $this->reservar($v, ['motorista_id' => null]);
+
+        $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 09:00', 'motorista_id' => null], 422);
+
+        $this->assertStringContainsString('já está reservado nesse horário: sem motorista definido, de 10/11 08:00 a 10/11 12:00.', $r->json('message'));
+        $this->assertNull($r->json('conflito.motorista'));
+    }
+
+    public function test_conflito_com_veiculo_que_ja_saiu_diz_que_esta_em_uso(): void
+    {
+        $v = $this->veiculo();
+        $id = $this->reservar($v, ['motorista_id' => $this->motorista('Beto')->id])->json('id');
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk();
+
+        $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 09:00'], 422);
+
+        $this->assertStringContainsString('O veículo AAA1B25 (Fiat Strada) está em uso agora: Beto, de 10/11 08:00 a 10/11 12:00.', $r->json('message'));
+        $this->assertSame('em_uso', $r->json('conflito.status'));
     }
 
     public function test_horario_encostado_nao_e_conflito(): void
@@ -187,7 +237,12 @@ class FrotaAgendaTest extends TestCase
 
         $r = $this->reservar($this->veiculo('BBB2C36'), ['motorista_id' => $maria->id, 'inicio_previsto' => '2026-11-10 09:00'], 422);
 
-        $this->assertStringContainsString('O motorista já tem outro uso nesse horário', $r->json('message'));
+        // Diz em qual veículo o motorista já está.
+        $this->assertSame(
+            'O motorista Maria Silva já tem outro uso nesse horário: veículo AAA1B25 (Fiat Strada), de 10/11 08:00 a 10/11 12:00.',
+            $r->json('message'),
+        );
+        $this->assertSame('AAA1B25', $r->json('conflito.veiculo'));
     }
 
     public function test_uso_cancelado_libera_o_horario(): void

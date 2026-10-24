@@ -565,7 +565,7 @@ class UsoVeiculoController extends Controller
     /** O mesmo veículo ou o mesmo motorista não pode ter dois usos no mesmo horário. */
     private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null): ?JsonResponse
     {
-        $doVeiculo = UsoVeiculo::with('motorista')
+        $doVeiculo = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
             ->sobrepostos($inicio, $fim)
             ->where('veiculo_conta_id', $veiculoId)
             ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
@@ -573,11 +573,17 @@ class UsoVeiculoController extends Controller
             ->first();
 
         if ($doVeiculo) {
-            return $this->conflitoResposta('O veículo já está reservado nesse horário', $doVeiculo);
+            // Diz com quem o veículo está, para quem reserva saber a quem pedir ou que horário escolher.
+            $situacao = $doVeiculo->status === 'em_uso' ? 'está em uso agora' : 'já está reservado nesse horário';
+
+            return $this->conflitoResposta(
+                "O veículo {$this->nomeDoVeiculo($doVeiculo)} {$situacao}: {$doVeiculo->quemUsa()}, {$doVeiculo->janelaEDetalhes()}.",
+                $doVeiculo,
+            );
         }
 
         if ($motoristaId) {
-            $doMotorista = UsoVeiculo::with('veiculo')
+            $doMotorista = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
                 ->sobrepostos($inicio, $fim)
                 ->where('motorista_id', $motoristaId)
                 ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
@@ -585,20 +591,44 @@ class UsoVeiculoController extends Controller
                 ->first();
 
             if ($doMotorista) {
-                return $this->conflitoResposta('O motorista já tem outro uso nesse horário', $doMotorista);
+                return $this->conflitoResposta(
+                    "O motorista {$doMotorista->quemUsa()} já tem outro uso nesse horário: veículo {$this->nomeDoVeiculo($doMotorista)}, {$doMotorista->janelaEDetalhes()}.",
+                    $doMotorista,
+                );
             }
         }
 
         return null;
     }
 
-    private function conflitoResposta(string $motivo, UsoVeiculo $outro): JsonResponse
+    /** "UAT0D84 (Strada)": a placa e o nome do veículo, quando se sabe. */
+    private function nomeDoVeiculo(UsoVeiculo $uso): string
     {
-        $janela = $outro->inicio_previsto->format('d/m H:i') . ' a ' . $outro->fim_previsto->format('d/m H:i');
+        $veiculo = $uso->veiculo;
 
+        if (!$veiculo) {
+            return 'escolhido';
+        }
+
+        $nome = trim($veiculo->apelido ?: "{$veiculo->marca} {$veiculo->modelo}");
+
+        return $nome !== '' ? "{$veiculo->placa} ({$nome})" : $veiculo->placa;
+    }
+
+    private function conflitoResposta(string $mensagem, UsoVeiculo $outro): JsonResponse
+    {
         return response()->json([
-            'message' => "{$motivo} ({$janela}).",
-            'conflito' => ['uso_id' => $outro->id, 'inicio_previsto' => $outro->inicio_previsto->toIso8601String(), 'fim_previsto' => $outro->fim_previsto->toIso8601String()],
+            'message' => $mensagem,
+            'conflito' => [
+                'uso_id' => $outro->id,
+                'inicio_previsto' => $outro->inicio_previsto->toIso8601String(),
+                'fim_previsto' => $outro->fim_previsto->toIso8601String(),
+                'status' => $outro->status,
+                'veiculo' => $outro->veiculo?->placa,
+                'motorista' => $outro->motorista?->nome,
+                'finalidade' => $outro->finalidade,
+                'centro_custo' => $outro->centroCusto?->nome,
+            ],
         ], 422);
     }
 
