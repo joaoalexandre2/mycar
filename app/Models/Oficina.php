@@ -38,6 +38,26 @@ class Oficina extends Model
         return $this->hasMany(User::class);
     }
 
+    /**
+     * E-mails de quem recebe o resumo desta oficina: quem a tem como MyCar
+     * principal (e ainda usa o perfil oficina) e quem a tem como MyCar extra.
+     *
+     * @return list<string>
+     */
+    public function emailsParaAvisos(): array
+    {
+        $principais = $this->usuarios()
+            ->where('perfil', 'oficina')
+            ->whereNotNull('email_verified_at')
+            ->pluck('email');
+
+        $extras = User::whereNotNull('email_verified_at')
+            ->whereHas('acessos', fn ($q) => $q->where('oficina_id', $this->id))
+            ->pluck('email');
+
+        return $principais->merge($extras)->unique()->values()->all();
+    }
+
     public function clientes(): HasMany
     {
         return $this->hasMany(Cliente::class);

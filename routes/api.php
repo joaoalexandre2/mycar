@@ -22,6 +22,7 @@ use App\Http\Controllers\FotoServirController;
 use App\Http\Controllers\FotoVeiculoContaController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\MeusMycarsController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
@@ -106,6 +107,12 @@ Route::middleware('auth.token')->group(function () {
     Route::get('/sugestoes', [SugestaoController::class, 'index']);
     Route::post('/sugestoes', [SugestaoController::class, 'store'])->middleware('throttle:10,1');
     Route::put('/me/senha', [ConfiguracaoController::class, 'alterarSenha'])->middleware('throttle:10,1');
+
+    // Os vários MyCar do mesmo e-mail (oficina, pessoa, frota): listar, criar e trocar.
+    Route::get('/meus-mycars', [MeusMycarsController::class, 'index']);
+    Route::post('/meus-mycars', [MeusMycarsController::class, 'store'])->middleware('throttle:10,1');
+    Route::post('/meus-mycars/{id}/ativar', [MeusMycarsController::class, 'ativar'])
+        ->where('id', 'principal|[0-9]+');
 
     // Tabela FIPE (consulta pública, sem dados de nenhuma conta)
     Route::get('/fipe/marcas', [FipeController::class, 'marcas']);

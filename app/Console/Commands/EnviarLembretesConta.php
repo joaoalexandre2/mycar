@@ -31,11 +31,7 @@ class EnviarLembretesConta extends Command
 
             // Só quem usa o perfil de conta: um usuário que voltou a ser oficina
             // mantém o conta_id, mas não recebe estes lembretes.
-            $destinatarios = $conta->usuarios()
-                ->whereIn('perfil', Conta::TIPOS)
-                ->whereNotNull('email_verified_at')
-                ->pluck('email')
-                ->all();
+            $destinatarios = $conta->emailsParaAvisos();
 
             if ($destinatarios === []) {
                 continue;

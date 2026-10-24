@@ -38,11 +38,7 @@ class EnviarResumoSemanal extends Command
 
             // Só quem usa o perfil oficina: um dono que migrou de perfil não
             // recebe o resumo da oficina arquivada.
-            $destinatarios = $oficina->usuarios()
-                ->where('perfil', 'oficina')
-                ->whereNotNull('email_verified_at')
-                ->pluck('email')
-                ->all();
+            $destinatarios = $oficina->emailsParaAvisos();
 
             if ($destinatarios === []) {
                 continue;

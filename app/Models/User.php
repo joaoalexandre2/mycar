@@ -97,6 +97,57 @@ class User extends Authenticatable
             ->delete();
     }
 
+    /**
+     * MyCar principal da pessoa, como está gravado no usuário. Preenchido por
+     * aplicarAcesso() antes de trocar os campos em memória; nulo quando a
+     * sessão está no principal.
+     *
+     * @var array{perfil: ?string, oficina_id: ?int, conta_id: ?int, papel_frota: ?string}|null
+     */
+    public ?array $principalGravado = null;
+
+    /** Outros MyCar da mesma pessoa (o principal fica nas colunas do usuário). */
+    public function acessos(): HasMany
+    {
+        return $this->hasMany(Acesso::class);
+    }
+
+    /** @return array{perfil: ?string, oficina_id: ?int, conta_id: ?int, papel_frota: ?string} */
+    public function principal(): array
+    {
+        return $this->principalGravado ?? [
+            'perfil' => $this->perfil,
+            'oficina_id' => $this->oficina_id,
+            'conta_id' => $this->conta_id,
+            'papel_frota' => $this->papel_frota,
+        ];
+    }
+
+    /**
+     * Passa esta requisição a valer como o MyCar do acesso informado (ou, com
+     * null, o principal). Só muda o objeto em memória: o que está gravado no
+     * usuário não é tocado (os campos são sincronizados para não ficarem
+     * "sujos" e acabarem salvos por um update qualquer).
+     */
+    public function aplicarAcesso(?Acesso $acesso): void
+    {
+        $principal = $this->principal();
+        $this->principalGravado = $principal;
+
+        $campos = $acesso === null
+            ? $principal
+            : [
+                'perfil' => $acesso->perfil,
+                'oficina_id' => $acesso->oficina_id,
+                'conta_id' => $acesso->conta_id,
+                'papel_frota' => $acesso->papel_frota,
+            ];
+
+        $this->forceFill($campos)->syncOriginalAttributes(array_keys($campos));
+        $this->unsetRelation('oficina');
+        $this->unsetRelation('conta');
+    }
+
     public function oficina(): BelongsTo
     {
         return $this->belongsTo(Oficina::class);

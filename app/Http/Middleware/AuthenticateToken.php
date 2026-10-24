@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Acesso;
 use App\Models\TokenAcesso;
 use Closure;
 use Illuminate\Http\Request;
@@ -48,6 +49,19 @@ class AuthenticateToken
         if ($acesso && (!$acesso->ultimo_uso_em || $acesso->ultimo_uso_em->lt(now()->subMinutes(self::MINUTOS_ENTRE_REGISTROS_DE_USO)))) {
             $acesso->forceFill(['ultimo_uso_em' => now()])->saveQuietly();
         }
+
+        // Se esta sessão está aberta em outro MyCar da pessoa (oficina, pessoa ou
+        // frota), o usuário passa a valer como esse MyCar nesta requisição. O
+        // acesso precisa ser dela: um id de outra pessoa é ignorado.
+        $acessoAtivo = $acesso->acesso_id
+            ? Acesso::where('user_id', $user->id)->find($acesso->acesso_id)
+            : null;
+
+        if ($acessoAtivo) {
+            $user->aplicarAcesso($acessoAtivo);
+        }
+
+        $request->attributes->set('acesso_id', $acessoAtivo?->id);
 
         $request->setUserResolver(fn () => $user);
 
