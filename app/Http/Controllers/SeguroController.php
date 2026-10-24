@@ -7,6 +7,7 @@ use App\Models\VeiculoConta;
 use App\Services\ComparadorSeguro;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Seguro dos veículos da conta (pessoa e frota): apólice atual, propostas
@@ -53,7 +54,39 @@ class SeguroController extends Controller
 
         $veiculo->seguros()->create($dados);
 
+        // Cadastrar o seguro atual já responde "tem seguro".
+        if ($dados['tipo'] === Seguro::TIPO_APOLICE && $veiculo->possui_seguro !== true) {
+            $veiculo->forceFill(['possui_seguro' => true])->save();
+        }
+
         return response()->json($this->montar($veiculo, $comparador), 201);
+    }
+
+    /**
+     * "Este veículo já tem seguro?" Sim abre o cadastro do seguro atual (com o
+     * vencimento, que gera o lembrete de renovação). Não deixa só as propostas.
+     */
+    public function possui(Request $request, $id, ComparadorSeguro $comparador)
+    {
+        $veiculo = VeiculoConta::find($id);
+
+        if (!$veiculo) {
+            return $this->naoEncontrado('Veículo');
+        }
+
+        $dados = $request->validate([
+            'possui' => ['required', 'boolean'],
+        ], [], ['possui' => 'resposta']);
+
+        if (!$dados['possui'] && $veiculo->seguros()->where('tipo', Seguro::TIPO_APOLICE)->exists()) {
+            throw ValidationException::withMessages([
+                'possui' => ['Este veículo tem um seguro cadastrado. Remova-o antes de marcar que não tem seguro.'],
+            ]);
+        }
+
+        $veiculo->forceFill(['possui_seguro' => (bool) $dados['possui']])->save();
+
+        return response()->json($this->montar($veiculo, $comparador));
     }
 
     public function destroy($id, $seguroId, ComparadorSeguro $comparador)
@@ -94,7 +127,11 @@ class SeguroController extends Controller
 
         $extras = collect($comparacao['itens'])->keyBy('id');
 
+        $temApolice = $seguros->contains(fn (Seguro $s) => $s->tipo === Seguro::TIPO_APOLICE);
+
         return [
+            // true = tem seguro (resposta ou apólice cadastrada); false = não tem; null = não respondeu.
+            'possui_seguro' => $temApolice ? true : ($veiculo->possui_seguro === null ? null : (bool) $veiculo->possui_seguro),
             'seguros' => $seguros->map(fn (Seguro $s) => $s->toArray() + [
                 'valor_mensal' => $extras[$s->id]['valor_mensal'],
                 'vs_referencia_pct' => $extras[$s->id]['vs_referencia_pct'],

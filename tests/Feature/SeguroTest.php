@@ -235,4 +235,130 @@ class SeguroTest extends TestCase
         $this->assertSame(40, $vencimentos[0]['dias']);
         $this->assertSame(3000, $vencimentos[0]['valor_estimado']);
     }
+
+    // ------------------------------------------------ "este veículo já tem seguro?"
+
+    private function possui(array $headers, VeiculoConta $veiculo, mixed $resposta): TestResponse
+    {
+        return $this->putJson("/api/conta/veiculos/{$veiculo->id}/possui-seguro", ['possui' => $resposta], $headers);
+    }
+
+    public function test_veiculo_sem_resposta_e_sem_seguro_cadastrado_vem_como_nao_respondido(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->getJson("/api/conta/veiculos/{$veiculo->id}/seguros", $headers)
+            ->assertOk()
+            ->assertJsonPath('possui_seguro', null);
+    }
+
+    public function test_responder_que_tem_ou_nao_tem_seguro_fica_guardado(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->possui($headers, $veiculo, true)->assertOk()->assertJsonPath('possui_seguro', true);
+        $this->getJson("/api/conta/veiculos/{$veiculo->id}/seguros", $headers)->assertJsonPath('possui_seguro', true);
+
+        $this->possui($headers, $veiculo, false)->assertOk()->assertJsonPath('possui_seguro', false);
+        $this->getJson("/api/conta/veiculos/{$veiculo->id}/seguros", $headers)->assertJsonPath('possui_seguro', false);
+
+        $this->assertFalse(VeiculoConta::find($veiculo->id)->possui_seguro);
+    }
+
+    public function test_aceita_a_resposta_como_texto_do_formulario(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->possui($headers, $veiculo, '1')->assertOk()->assertJsonPath('possui_seguro', true);
+        $this->possui($headers, $veiculo, '0')->assertOk()->assertJsonPath('possui_seguro', false);
+    }
+
+    public function test_exige_uma_resposta_valida(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->putJson("/api/conta/veiculos/{$veiculo->id}/possui-seguro", [], $headers)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('possui');
+        $this->possui($headers, $veiculo, 'talvez')->assertStatus(422)->assertJsonValidationErrors('possui');
+    }
+
+    public function test_cadastrar_o_seguro_atual_ja_conta_como_tem_seguro(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+        $this->possui($headers, $veiculo, false)->assertOk();
+
+        $this->seguro($headers, $veiculo, ['tipo' => 'apolice', 'vigencia_fim' => '2026-09-30'])
+            ->assertStatus(201)
+            ->assertJsonPath('possui_seguro', true);
+
+        $this->assertTrue(VeiculoConta::find($veiculo->id)->possui_seguro);
+    }
+
+    public function test_proposta_sozinha_nao_muda_a_resposta(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->seguro($headers, $veiculo, ['tipo' => 'proposta'])
+            ->assertStatus(201)
+            ->assertJsonPath('possui_seguro', null);
+
+        $this->possui($headers, $veiculo, false)->assertOk();
+        $this->seguro($headers, $veiculo, ['tipo' => 'proposta', 'seguradora' => 'B'])->assertJsonPath('possui_seguro', false);
+    }
+
+    public function test_nao_marca_que_nao_tem_seguro_enquanto_ha_apolice_cadastrada(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+        $id = $this->seguro($headers, $veiculo, ['tipo' => 'apolice', 'vigencia_fim' => '2026-09-30'])->json('seguros.0.id');
+
+        $this->possui($headers, $veiculo, false)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.possui.0', 'Este veículo tem um seguro cadastrado. Remova-o antes de marcar que não tem seguro.');
+
+        $this->assertTrue(VeiculoConta::find($veiculo->id)->possui_seguro);
+
+        // Removida a apólice, aí sim pode dizer que não tem.
+        $this->deleteJson("/api/conta/veiculos/{$veiculo->id}/seguros/{$id}", [], $headers)->assertOk();
+        $this->possui($headers, $veiculo, false)->assertOk()->assertJsonPath('possui_seguro', false);
+    }
+
+    public function test_apolice_cadastrada_vale_como_tem_seguro_mesmo_se_a_coluna_estiver_vazia(): void
+    {
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+        $this->seguro($headers, $veiculo, ['tipo' => 'apolice', 'vigencia_fim' => '2026-09-30']);
+
+        // Dado antigo, de antes da pergunta existir.
+        $veiculo->forceFill(['possui_seguro' => null])->save();
+
+        $this->getJson("/api/conta/veiculos/{$veiculo->id}/seguros", $headers)->assertJsonPath('possui_seguro', true);
+    }
+
+    public function test_a_resposta_so_vale_para_veiculo_da_propria_conta(): void
+    {
+        [, $headersA] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+        [, $headersB] = $this->autenticarConta('pessoa');
+
+        $this->possui($headersB, $veiculo, true)->assertStatus(404);
+        $this->assertNull(VeiculoConta::withoutGlobalScopes()->find($veiculo->id)->possui_seguro);
+
+        $this->possui($headersA, $veiculo, true)->assertOk();
+    }
+
+    public function test_a_pergunta_exige_autenticacao_e_perfil_de_conta(): void
+    {
+        $this->putJson('/api/conta/veiculos/1/possui-seguro', ['possui' => true])->assertStatus(401);
+
+        [, $oficina] = $this->autenticar();
+        $this->putJson('/api/conta/veiculos/1/possui-seguro', ['possui' => true], $oficina)->assertStatus(403);
+    }
 }
