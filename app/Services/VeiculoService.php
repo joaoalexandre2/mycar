@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class VeiculoService
 {
-    private const TIPO_FIPE = 'carros';
-
     public function __construct(
         private VeiculoRepository $repository,
         private FipeService $fipe
@@ -72,7 +70,7 @@ class VeiculoService
             return null;
         }
 
-        $codigosMudaram = $veiculo->wasChanged(['fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
+        $codigosMudaram = $veiculo->wasChanged(['tipo_veiculo', 'fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
 
         if ($codigosMudaram || $veiculo->fipe_valor === null) {
             $this->preencherValorFipe($veiculo);
@@ -99,7 +97,7 @@ class VeiculoService
     public function consultarFipe(Veiculo $veiculo): Veiculo
     {
         $resultado = $this->fipe->valor(
-            self::TIPO_FIPE,
+            $veiculo->tipoFipe(),
             $veiculo->fipe_marca_id,
             $veiculo->fipe_modelo_id,
             $veiculo->fipe_ano

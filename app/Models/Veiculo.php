@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipoVeiculo;
 use App\Models\Concerns\CalculaTributosVeiculo;
 use App\Models\Concerns\PertenceAOficina;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,8 +14,14 @@ class Veiculo extends Model
 {
     use CalculaTributosVeiculo, HasFactory, PertenceAOficina;
 
+    /** Quem não informa o tipo é carro (igual ao padrão do banco). */
+    protected $attributes = [
+        'tipo_veiculo' => 'carro',
+    ];
+
     protected $fillable = [
         'cliente_id',
+        'tipo_veiculo',
         'placa',
         'marca',
         'modelo',
@@ -29,6 +36,7 @@ class Veiculo extends Model
     ];
 
     protected $casts = [
+        'tipo_veiculo' => TipoVeiculo::class,
         'fipe_valor' => 'decimal:2',
         'fipe_consultado_em' => 'datetime',
     ];

@@ -97,7 +97,8 @@ class FichaTecnicaContaController extends Controller
      */
     private function dadosDoCatalogo(VeiculoConta $veiculo): ?array
     {
-        return $this->fichasCatalogo->paraVeiculo($veiculo->marca, $veiculo->modelo);
+        // O catálogo de fichas é só de carros.
+        return $veiculo->ehCarro() ? $this->fichasCatalogo->paraVeiculo($veiculo->marca, $veiculo->modelo) : null;
     }
 
     /**
@@ -110,7 +111,7 @@ class FichaTecnicaContaController extends Controller
         }
 
         try {
-            $r = $fipe->valor('carros', $veiculo->fipe_marca_id, $veiculo->fipe_modelo_id, $veiculo->fipe_ano);
+            $r = $fipe->valor($veiculo->tipoFipe(), $veiculo->fipe_marca_id, $veiculo->fipe_modelo_id, $veiculo->fipe_ano);
         } catch (FipeIndisponivelException) {
             return [null, 'indisponivel'];
         }

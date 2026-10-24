@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoVeiculo;
 use App\Models\VeiculoConta;
 use App\Rules\AnoFabricacao;
 use App\Rules\PlacaBrasileira;
@@ -74,7 +75,7 @@ class ContaVeiculoController extends Controller
 
         $veiculo->update($this->validar($request, (int) $id));
 
-        $codigosMudaram = $veiculo->wasChanged(['fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
+        $codigosMudaram = $veiculo->wasChanged(['tipo_veiculo', 'fipe_marca_id', 'fipe_modelo_id', 'fipe_ano']);
 
         if ($codigosMudaram || $veiculo->fipe_valor === null) {
             $this->preencherValorFipe($veiculo, $fipe);
@@ -133,6 +134,7 @@ class ContaVeiculoController extends Controller
                     ->where('conta_id', app('conta.atual'))
                     ->ignore($ignorarId),
             ],
+            'tipo_veiculo' => ['sometimes', Rule::in(TipoVeiculo::valores())],
             'marca' => ['required', 'string', 'max:100'],
             'modelo' => ['required', 'string', 'max:100'],
             'ano' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
@@ -163,7 +165,7 @@ class ContaVeiculoController extends Controller
         }
 
         try {
-            $resultado = $fipe->valor('carros', $veiculo->fipe_marca_id, $veiculo->fipe_modelo_id, $veiculo->fipe_ano);
+            $resultado = $fipe->valor($veiculo->tipoFipe(), $veiculo->fipe_marca_id, $veiculo->fipe_modelo_id, $veiculo->fipe_ano);
         } catch (FipeIndisponivelException) {
             return false;
         }

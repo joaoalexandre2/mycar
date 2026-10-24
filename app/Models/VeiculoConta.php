@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipoVeiculo;
 use App\Models\Concerns\CalculaTributosVeiculo;
 use App\Models\Concerns\PertenceAConta;
 use App\Services\CatalogoPecas;
@@ -21,8 +22,14 @@ class VeiculoConta extends Model
 
     protected $table = 'veiculos_conta';
 
+    /** Quem não informa o tipo é carro (igual ao padrão do banco). */
+    protected $attributes = [
+        'tipo_veiculo' => 'carro',
+    ];
+
     protected $fillable = [
         'apelido',
+        'tipo_veiculo',
         'placa',
         'marca',
         'modelo',
@@ -39,6 +46,7 @@ class VeiculoConta extends Model
     ];
 
     protected $casts = [
+        'tipo_veiculo' => TipoVeiculo::class,
         'fipe_valor' => 'decimal:2',
         'fipe_consultado_em' => 'datetime',
         'revisao_prevista_em' => 'date:Y-m-d',

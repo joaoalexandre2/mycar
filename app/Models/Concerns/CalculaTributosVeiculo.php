@@ -2,6 +2,8 @@
 
 namespace App\Models\Concerns;
 
+use App\Enums\TipoVeiculo;
+
 /**
  * Estimativas de IPVA e licenciamento de um veículo, a partir de colunas que
  * os dois tipos de veículo têm (placa, uf, fipe_valor). Compartilhado entre
@@ -9,6 +11,23 @@ namespace App\Models\Concerns;
  */
 trait CalculaTributosVeiculo
 {
+    /**
+     * As estimativas de IPVA e licenciamento, a isenção por idade e o seguro de
+     * referência foram montados para carros de passeio. Motos e caminhões têm
+     * alíquotas e regras próprias que não estão cadastradas: para eles o app não
+     * estima nem afirma isenção, em vez de mostrar um número que pode estar errado.
+     */
+    public function ehCarro(): bool
+    {
+        return ($this->tipo_veiculo ?? TipoVeiculo::Carro) === TipoVeiculo::Carro;
+    }
+
+    /** Tipo na API da FIPE ("carros", "motos" ou "caminhoes"). */
+    public function tipoFipe(): string
+    {
+        return ($this->tipo_veiculo ?? TipoVeiculo::Carro)->fipe();
+    }
+
     /**
      * Idade, em anos, pelo ano de FABRICAÇÃO (é a que os estados contam); sem ele,
      * usa o ano do modelo.
@@ -39,7 +58,8 @@ trait CalculaTributosVeiculo
      */
     public function getIsentoIpvaAttribute(): bool
     {
-        return ($this->idade_anos ?? 0) > (int) config('tributos.idade_isencao_ipva_constitucional', 20);
+        return $this->ehCarro()
+            && ($this->idade_anos ?? 0) > (int) config('tributos.idade_isencao_ipva_constitucional', 20);
     }
 
     /**
@@ -50,7 +70,8 @@ trait CalculaTributosVeiculo
      */
     public function getPossivelIsencaoIpvaAttribute(): bool
     {
-        return !$this->isento_ipva
+        return $this->ehCarro()
+            && !$this->isento_ipva
             && ($this->idade_anos ?? 0) >= (int) config('tributos.idade_aviso_isencao_ipva', 15);
     }
 
@@ -76,7 +97,7 @@ trait CalculaTributosVeiculo
      */
     public function getIpvaEstimadoAttribute(): ?float
     {
-        if ($this->isento_ipva) {
+        if (!$this->ehCarro() || $this->isento_ipva) {
             return null;
         }
 
@@ -95,13 +116,14 @@ trait CalculaTributosVeiculo
      */
     public function getIpvaAliquotaMediaAttribute(): bool
     {
-        return $this->uf
+        return $this->ehCarro()
+            && $this->uf
             && config("tributos.estados.{$this->uf}.ipva") === null;
     }
 
     public function getLicenciamentoValorAttribute(): ?float
     {
-        return config("tributos.estados.{$this->uf}.licenciamento");
+        return $this->ehCarro() ? config("tributos.estados.{$this->uf}.licenciamento") : null;
     }
 
     /**
