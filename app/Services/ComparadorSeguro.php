@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\TipoVeiculo;
 use Illuminate\Support\Collection;
 
 /**
@@ -11,6 +12,25 @@ use Illuminate\Support\Collection;
 class ComparadorSeguro
 {
     /**
+     * Percentuais do valor FIPE (por ano) de cada tipo; null onde não há fonte confiável
+     * (caminhão). Ver config/seguro.php.
+     *
+     * @return array{percentual_baixo: float, percentual_medio: float, percentual_alto: float}|null
+     */
+    private function faixaDoTipo(TipoVeiculo $tipo): ?array
+    {
+        return match ($tipo) {
+            TipoVeiculo::Carro => [
+                'percentual_baixo' => (float) config('seguro.percentual_baixo'),
+                'percentual_medio' => (float) config('seguro.percentual_medio'),
+                'percentual_alto' => (float) config('seguro.percentual_alto'),
+            ],
+            TipoVeiculo::Moto => config('seguro.moto'),
+            TipoVeiculo::Caminhao => null,
+        };
+    }
+
+    /**
      * @param  Collection<int, array{id: int, tipo: string, valor_anual: float}>  $seguros
      * @return array{
      *   referencia: ?array{baixo: float, medio: float, alto: float},
@@ -18,15 +38,16 @@ class ComparadorSeguro
      *   itens: array<int, array<string, mixed>>
      * }
      */
-    public function comparar(Collection $seguros, ?float $valorFipe): array
+    public function comparar(Collection $seguros, ?float $valorFipe, TipoVeiculo $tipo = TipoVeiculo::Carro): array
     {
         $referencia = null;
+        $faixa = $this->faixaDoTipo($tipo);
 
-        if ($valorFipe !== null && $valorFipe > 0) {
+        if ($faixa !== null && $valorFipe !== null && $valorFipe > 0) {
             $referencia = [
-                'baixo' => round($valorFipe * config('seguro.percentual_baixo') / 100, 2),
-                'medio' => round($valorFipe * config('seguro.percentual_medio') / 100, 2),
-                'alto' => round($valorFipe * config('seguro.percentual_alto') / 100, 2),
+                'baixo' => round($valorFipe * $faixa['percentual_baixo'] / 100, 2),
+                'medio' => round($valorFipe * $faixa['percentual_medio'] / 100, 2),
+                'alto' => round($valorFipe * $faixa['percentual_alto'] / 100, 2),
             ];
         }
 
