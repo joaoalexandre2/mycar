@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Abastecimento;
 use App\Models\VeiculoConta;
 use App\Services\CalculoConsumo;
+use App\Services\FichasCatalogo;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -15,6 +16,8 @@ use Illuminate\Validation\ValidationException;
  */
 class AbastecimentoController extends Controller
 {
+    public function __construct(private readonly FichasCatalogo $fichasCatalogo) {}
+
     public function index($id, CalculoConsumo $calculo)
     {
         $veiculo = VeiculoConta::find($id);
@@ -111,6 +114,9 @@ class AbastecimentoController extends Controller
         $calculados = collect($resultado['registros'])->keyBy('id');
 
         return [
+            // Capacidade do tanque na ficha do modelo: a tela usa quando a pessoa
+            // marca "encheu o tanque". Nulo = a ficha não traz (digita os litros).
+            'tanque_litros' => $this->fichasCatalogo->tanqueLitros($veiculo->marca, $veiculo->modelo),
             'abastecimentos' => $registros
                 ->sortByDesc(fn (Abastecimento $a) => $a->data->toDateString() . str_pad((string) $a->km, 8, '0', STR_PAD_LEFT) . str_pad((string) $a->id, 8, '0', STR_PAD_LEFT))
                 ->map(fn (Abastecimento $a) => $a->toArray() + [

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Abastecimento;
 use App\Models\VeiculoConta;
 use App\Services\CalculoConsumo;
+use App\Services\FichasCatalogo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Testing\TestResponse;
@@ -188,5 +189,99 @@ class AbastecimentoTest extends TestCase
         $this->deleteJson("/api/conta/veiculos/{$veiculo->id}", [], $headers)->assertStatus(200);
 
         $this->assertSame(0, Abastecimento::withoutGlobalScopes()->count());
+    }
+
+    // ------------------------------------------- tanque da ficha técnica
+
+    /** Cria um catálogo temporário com um modelo e o devolve já ligado ao app. */
+    private function catalogoCom(array $campos): string
+    {
+        $pasta = sys_get_temp_dir() . '/tq_' . uniqid();
+        mkdir($pasta);
+        file_put_contents("{$pasta}/fiat.json", json_encode([
+            'uno' => ['fonte' => 'Ficha Completa', 'grupos' => [['grupo' => 'Dimensões', 'campos' => $campos]]],
+            'palio' => ['fonte' => 'Ficha Completa', 'grupos' => [['grupo' => 'Dimensões', 'campos' => [['rotulo' => 'Porta-malas', 'valor' => '280 litros']]]]],
+        ]));
+        $this->app->instance(FichasCatalogo::class, new FichasCatalogo($pasta));
+
+        return $pasta;
+    }
+
+    private function limparCatalogo(string $pasta): void
+    {
+        array_map('unlink', glob("{$pasta}/*.json"));
+        rmdir($pasta);
+    }
+
+    public function test_devolve_a_capacidade_do_tanque_da_ficha_do_modelo(): void
+    {
+        $pasta = $this->catalogoCom([
+            ['rotulo' => 'Porta-malas', 'valor' => '290 litros'],
+            ['rotulo' => 'Tanque de combustível', 'valor' => '48 litros'],
+        ]);
+        [, $headers] = $this->autenticarConta('pessoa');
+        $veiculo = $this->veiculo();
+
+        $this->getJson("/api/conta/veiculos/{$veiculo->id}/abastecimentos", $headers)
+            ->assertOk()
+            ->assertJsonPath('tanque_litros', 48);
+
+        // Também volta depois de registrar e de remover (a tela usa a última resposta).
+        $this->abastecer($headers, $veiculo, [])->assertStatus(201)->assertJsonPath('tanque_litros', 48);
+
+        $this->limparCatalogo($pasta);
+    }
+
+    public function test_tanque_com_virgula_decimal_e_lido_como_numero(): void
+    {
+        $pasta = $this->catalogoCom([['rotulo' => 'Tanque de combustível', 'valor' => '38,5 litros']]);
+
+        $this->assertSame(38.5, (new FichasCatalogo($pasta))->tanqueLitros('Fiat', 'Uno Mille'));
+
+        $this->limparCatalogo($pasta);
+    }
+
+    public function test_sem_tanque_na_ficha_ou_sem_modelo_no_catalogo_o_tanque_e_nulo(): void
+    {
+        $pasta = $this->catalogoCom([['rotulo' => 'Porta-malas', 'valor' => '290 litros']]);
+        [, $headers] = $this->autenticarConta('pessoa');
+        $semTanque = $this->veiculo('AAA1B11');
+        $foraDoCatalogo = VeiculoConta::create(['placa' => 'BBB2C22', 'marca' => 'Fiat', 'modelo' => 'Fiorino', 'ano' => 2015]);
+
+        // O modelo está no catálogo mas a ficha não tem tanque (o porta-malas em litros não conta).
+        $this->getJson("/api/conta/veiculos/{$semTanque->id}/abastecimentos", $headers)
+            ->assertOk()
+            ->assertJsonPath('tanque_litros', null);
+
+        $this->getJson("/api/conta/veiculos/{$foraDoCatalogo->id}/abastecimentos", $headers)
+            ->assertOk()
+            ->assertJsonPath('tanque_litros', null);
+
+        $catalogo = new FichasCatalogo($pasta);
+        $this->assertNull($catalogo->tanqueLitros(null, null));
+        $this->assertNull($catalogo->tanqueLitros('Fiat', 'Uno'));
+
+        $this->limparCatalogo($pasta);
+    }
+
+    public function test_tanque_com_valor_ilegivel_ou_zero_e_ignorado(): void
+    {
+        $pasta = $this->catalogoCom([['rotulo' => 'Tanque de combustível', 'valor' => 'não informado']]);
+        $this->assertNull((new FichasCatalogo($pasta))->tanqueLitros('Fiat', 'Uno'));
+        $this->limparCatalogo($pasta);
+
+        $pasta = $this->catalogoCom([['rotulo' => 'Tanque de combustível', 'valor' => '0 litros']]);
+        $this->assertNull((new FichasCatalogo($pasta))->tanqueLitros('Fiat', 'Uno'));
+        $this->limparCatalogo($pasta);
+    }
+
+    public function test_o_catalogo_real_traz_o_tanque_de_modelos_conhecidos(): void
+    {
+        // Usa os arquivos de verdade do repositório (database/data/fichas_catalogo).
+        $litros = (new FichasCatalogo)->tanqueLitros('Fiat', 'Strada');
+
+        $this->assertNotNull($litros);
+        $this->assertGreaterThan(30, $litros);
+        $this->assertLessThan(100, $litros);
     }
 }
