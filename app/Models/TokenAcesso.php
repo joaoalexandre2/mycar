@@ -20,7 +20,7 @@ class TokenAcesso extends Model
     /** Sessão sem uso por tantos dias é descartada no próximo login. */
     public const DIAS_SEM_USO = 90;
 
-    protected $fillable = ['user_id', 'token_hash', 'dispositivo', 'ultimo_uso_em'];
+    protected $fillable = ['user_id', 'token_hash', 'dispositivo', 'ultimo_uso_em', 'acesso_id'];
 
     protected $casts = ['ultimo_uso_em' => 'datetime'];
 
