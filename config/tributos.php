@@ -40,6 +40,33 @@ return [
     // estado não está cadastrada aqui. Acima da idade constitucional, a isenção é certa.
     'idade_aviso_isencao_ipva' => 15,
 
+    // Alíquota de IPVA (%) de MOTOCICLETA e de CAMINHÃO por estado, ano-base 2026.
+    //
+    // Só entra aqui o valor confirmado por fonte oficial (Sefaz de SC, RS, BA, ES, DF,
+    // RJ, MG, SP, PE, PA) ou que mais de uma tabela pública trazia igual (Serasa, ValorFinal,
+    // CNN Brasil, Numerando) sem que nenhuma outra o contrariasse. Onde as fontes divergem, o
+    // estado muda a alíquota por cilindrada ou não achamos fonte, o estado fica de fora e vale
+    // a média abaixo (o app avisa "alíquota média do país").
+    //
+    // Fora dos números: vários estados isentam motos de baixa cilindrada (SC até 200 cc,
+    // PR e PA até 170 cc) e a alíquota por cilindrada não está cadastrada; é só estimativa.
+    // Caminhonete e picape são "automóvel" (usam a alíquota de carro), não caminhão.
+    'ipva_moto' => [
+        'BA' => 1.0, 'DF' => 2.0, 'ES' => 1.0, 'GO' => 3.0, 'MG' => 2.0, 'PA' => 1.0, 'RJ' => 2.0,
+        'RO' => 2.0, 'RR' => 2.0, 'RS' => 2.0, 'SC' => 1.0, 'SE' => 2.0, 'SP' => 2.0,
+    ],
+
+    'ipva_caminhao' => [
+        'AC' => 1.0, 'AL' => 1.0, 'AM' => 1.0, 'BA' => 1.0, 'CE' => 1.0, 'DF' => 1.0, 'ES' => 1.0,
+        'GO' => 1.25, 'MG' => 1.0, 'MT' => 1.0, 'PA' => 1.0, 'PB' => 1.0, 'PE' => 1.0, 'RN' => 1.0,
+        'RO' => 1.0, 'RS' => 1.0, 'SC' => 1.0, 'SE' => 1.0, 'SP' => 1.5,
+    ],
+
+    // Média usada nos estados que ficaram de fora das tabelas acima: o valor mais comum
+    // entre as fontes (motos 2%, caminhões 1%). APROXIMADO.
+    'aliquota_media_ipva_moto' => 2.0,
+    'aliquota_media_ipva_caminhao' => 1.0,
+
     'estados' => [
         'AC' => ['ipva' => 2.0,  'licenciamento' => 200.25],
         'AL' => ['ipva' => null, 'licenciamento' => 36.03],

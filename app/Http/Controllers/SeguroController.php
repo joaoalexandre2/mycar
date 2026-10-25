@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoVeiculo;
 use App\Models\Seguro;
 use App\Models\VeiculoConta;
 use App\Services\ComparadorSeguro;
@@ -122,8 +123,9 @@ class SeguroController extends Controller
                 'valor_anual' => (float) $s->valor_anual,
                 'vigencia_fim' => $s->vigencia_fim?->toDateString(),
             ]),
-            // A faixa de referência (3% a 8% do valor FIPE) é de carros de passeio.
-            $veiculo->ehCarro() && $veiculo->fipe_valor !== null ? (float) $veiculo->fipe_valor : null
+            $veiculo->fipe_valor !== null ? (float) $veiculo->fipe_valor : null,
+            // Cada tipo tem a sua faixa (caminhão não tem: config/seguro.php).
+            $veiculo->tipo_veiculo ?? TipoVeiculo::Carro
         );
 
         $extras = collect($comparacao['itens'])->keyBy('id');
