@@ -41,8 +41,13 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           install -m 700 -d ~/.ssh
-          # tr -d '\r': a chave colada do Windows vem com CRLF e o OpenSSH recusa
-          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          # O secret pode ser a chave em texto ou em base64 (uma linha só, que não se corrompe ao colar).
+          # tr -d '\r': a chave colada do Windows vem com CRLF e o OpenSSH recusa.
+          if printf '%s' "$DEPLOY_SSH_KEY" | grep -q 'BEGIN'; then
+            printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          else
+            printf '%s' "$DEPLOY_SSH_KEY" | tr -d '[:space:]' | base64 -d > ~/.ssh/deploy_key
+          fi
           chmod 600 ~/.ssh/deploy_key
           if ! ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null; then
             echo "::error::DEPLOY_SSH_KEY inválida: cole a chave privada inteira, com as linhas BEGIN e END."
