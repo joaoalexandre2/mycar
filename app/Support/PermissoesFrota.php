@@ -18,7 +18,7 @@ class PermissoesFrota
 
     public const GRUPOS = 'grupos';
 
-    /** Menus da frota que um grupo pode esconder de quem pertence a ele. */
+    /** Menus da frota que um grupo libera a quem pertence a ele. */
     public const MENUS = [
         'veiculos' => 'Veículos da frota',
         'agenda' => 'Agenda',

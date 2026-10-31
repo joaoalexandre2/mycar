@@ -195,21 +195,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Menus da frota que algum grupo desta pessoa manda esconder. O administrador
-     * nunca tem menu escondido (assim ninguém tranca a própria conta).
+     * Menus da frota que algum grupo desta pessoa libera (união dos grupos). Fora
+     * de grupo, a pessoa não vê esses menus; o administrador vê todos.
      *
      * @return list<string>
      */
-    public function menusOcultos(): array
+    public function menusLiberados(): array
     {
-        if (($this->perfil ?? 'oficina') !== 'frota' || !$this->conta_id || $this->papelNaConta() === 'administrador') {
+        if (($this->perfil ?? 'oficina') !== 'frota' || !$this->conta_id) {
             return [];
         }
 
         return GrupoUsuario::withoutGlobalScope('conta')
             ->where('conta_id', $this->conta_id)
             ->whereHas('membros', fn ($q) => $q->where('users.id', $this->id))
-            ->pluck('menus_ocultos')
+            ->pluck('menus_liberados')
             ->flatten()
             ->filter()
             ->unique()
@@ -217,14 +217,22 @@ class User extends Authenticatable
             ->all();
     }
 
-    /** Se o menu da frota aparece para esta pessoa. Fora da frota, não se aplica. */
+    /**
+     * Se o menu da frota aparece para esta pessoa. Na frota, os menus de gestão só
+     * aparecem para o administrador ou para quem está em grupo que os libera.
+     * Fora da frota, não se aplica.
+     */
     public function podeVerMenu(string $menu): bool
     {
         if (($this->perfil ?? 'oficina') !== 'frota') {
             return true;
         }
 
-        return !in_array($menu, $this->menusOcultos(), true);
+        if ($this->papelNaConta() === 'administrador') {
+            return true;
+        }
+
+        return in_array($menu, $this->menusLiberados(), true);
     }
 
     /** Cadastro de motorista ligado a este login (só para o papel motorista). */

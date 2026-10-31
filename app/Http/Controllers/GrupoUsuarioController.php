@@ -41,7 +41,7 @@ class GrupoUsuarioController extends Controller
     {
         $dados = $this->validar($request);
 
-        $grupo = GrupoUsuario::create(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_ocultos'])->all());
+        $grupo = GrupoUsuario::create(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
         $grupo->membros()->sync($dados['membros'] ?? []);
 
         return response()->json($this->formatar($grupo->load('membros')), 201);
@@ -57,7 +57,7 @@ class GrupoUsuarioController extends Controller
 
         $dados = $this->validar($request, $grupo->id);
 
-        $grupo->update(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_ocultos'])->all());
+        $grupo->update(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
 
         if (array_key_exists('membros', $dados)) {
             $grupo->membros()->sync($dados['membros']);
@@ -94,8 +94,8 @@ class GrupoUsuarioController extends Controller
             'descricao' => ['nullable', 'string', 'max:255'],
             'permissoes' => ['present', 'array'],
             'permissoes.*' => ['string', Rule::in(PermissoesFrota::chaves())],
-            'menus_ocultos' => ['sometimes', 'array'],
-            'menus_ocultos.*' => ['string', Rule::in(PermissoesFrota::chavesDeMenu())],
+            'menus_liberados' => ['sometimes', 'array'],
+            'menus_liberados.*' => ['string', Rule::in(PermissoesFrota::chavesDeMenu())],
             'membros' => ['sometimes', 'array'],
             'membros.*' => ['integer', 'distinct'],
         ], [
@@ -105,9 +105,9 @@ class GrupoUsuarioController extends Controller
 
         $dados['permissoes'] = array_values(array_unique($dados['permissoes']));
 
-        // Sem o campo, o grupo não muda os menus que já esconde.
-        if (array_key_exists('menus_ocultos', $dados)) {
-            $dados['menus_ocultos'] = array_values(array_unique($dados['menus_ocultos']));
+        // Sem o campo, o grupo não muda os menus que já libera.
+        if (array_key_exists('menus_liberados', $dados)) {
+            $dados['menus_liberados'] = array_values(array_unique($dados['menus_liberados']));
         }
 
         // Só entram pessoas desta conta (login principal ou outro MyCar da mesma pessoa).
@@ -139,7 +139,7 @@ class GrupoUsuarioController extends Controller
             'nome' => $grupo->nome,
             'descricao' => $grupo->descricao,
             'permissoes' => $grupo->permissoes,
-            'menus_ocultos' => $grupo->menus_ocultos ?? [],
+            'menus_liberados' => $grupo->menus_liberados ?? [],
             'membros' => $grupo->membros->map(fn ($u) => [
                 'id' => $u->id,
                 'name' => $u->name,
