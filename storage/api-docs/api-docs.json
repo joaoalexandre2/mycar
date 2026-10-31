@@ -5967,6 +5967,399 @@
                     }
                 }
             }
+        },
+        "/conta/centros-custo/historico": {
+            "get": {
+                "tags": [
+                    "Frota - Cadastros"
+                ],
+                "summary": "Relatório das trocas de centro de custo",
+                "operationId": "9967d8de6cae859c075a04ba194d8caf",
+                "parameters": [
+                    {
+                        "name": "de",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "ate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "centro_custo_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso (até 500 trocas, da mais recente)"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão centros_custo"
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroValidacao"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/conta/grupos-usuarios": {
+            "get": {
+                "tags": [
+                    "Frota - Cadastros"
+                ],
+                "summary": "Lista grupos de usuários, permissões disponíveis e usuários que podem entrar em grupos",
+                "operationId": "5e4f2b8e95792ded5cd5d8171bc2a535",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso: { grupos, permissoes, usuarios }"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão grupos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Frota - Cadastros"
+                ],
+                "summary": "Cria grupo de usuários",
+                "operationId": "a30cca8bffa0811f8e0a76273a798e0b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "permissoes"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 80
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "permissoes": {
+                                        "description": "Chaves do catálogo de permissões (ver GET /conta/grupos-usuarios)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "membros": {
+                                        "description": "IDs de usuários da frota",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criado"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão grupos"
+                    },
+                    "422": {
+                        "description": "Erro de validação (inclui membros de outra frota)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroValidacao"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/conta/grupos-usuarios/{id}": {
+            "put": {
+                "tags": [
+                    "Frota - Cadastros"
+                ],
+                "summary": "Atualiza grupo de usuários",
+                "operationId": "7adbd3fefa4eb17748d67ecc1b43b298",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "permissoes"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 80
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "permissoes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "membros": {
+                                        "description": "Se enviado, substitui a lista de membros",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão grupos"
+                    },
+                    "404": {
+                        "description": "Grupo não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroValidacao"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Frota - Cadastros"
+                ],
+                "summary": "Remove grupo de usuários",
+                "operationId": "cca3c693256c7799220fb4dd54ec4427",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grupo removido"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão grupos"
+                    },
+                    "404": {
+                        "description": "Grupo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/conta/usos/{id}/centro-custo": {
+            "put": {
+                "tags": [
+                    "Frota - Usos"
+                ],
+                "summary": "Troca o centro de custo de um uso (inclusive concluído); a troca fica no histórico",
+                "operationId": "72770211fdc49f65138a5226d3769654",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "centro_custo_id",
+                                    "motivo"
+                                ],
+                                "properties": {
+                                    "centro_custo_id": {
+                                        "description": "Centro de custo ativo da frota",
+                                        "type": "integer"
+                                    },
+                                    "motivo": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "minLength": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sucesso (uso atualizado)"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão usos_corrigir"
+                    },
+                    "404": {
+                        "description": "Não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação, centro inválido ou já é o centro atual",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErroValidacao"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/conta/usos/{id}/centros-historico": {
+            "get": {
+                "tags": [
+                    "Frota - Usos"
+                ],
+                "summary": "Histórico de centros de custo de um uso (do mais antigo ao mais recente)",
+                "operationId": "40234b250c2c79ac2c7aa995b7acd8c4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido"
+                    },
+                    "403": {
+                        "description": "Sem permissão usos_corrigir"
+                    },
+                    "404": {
+                        "description": "Não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

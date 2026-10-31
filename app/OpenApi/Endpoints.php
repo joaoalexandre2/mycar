@@ -2178,4 +2178,136 @@ class Endpoints
         ],
     )]
     public function op122(): void {}
+
+    #[OA\Get(
+        path: '/conta/centros-custo/historico',
+        summary: 'Relatório das trocas de centro de custo',
+        tags: ['Frota - Cadastros'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'de', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date')),
+            new OA\Parameter(name: 'ate', in: 'query', required: false, schema: new OA\Schema(type: 'string', format: 'date')),
+            new OA\Parameter(name: 'centro_custo_id', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Sucesso (até 500 trocas, da mais recente)'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão centros_custo'),
+            new OA\Response(response: 422, description: 'Erro de validação', content: new OA\JsonContent(ref: '#/components/schemas/ErroValidacao')),
+        ],
+    )]
+    public function op123(): void {}
+
+    #[OA\Get(
+        path: '/conta/grupos-usuarios',
+        summary: 'Lista grupos de usuários, permissões disponíveis e usuários que podem entrar em grupos',
+        tags: ['Frota - Cadastros'],
+        security: [['bearerAuth' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Sucesso: { grupos, permissoes, usuarios }'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão grupos'),
+        ],
+    )]
+    public function op124(): void {}
+
+    #[OA\Post(
+        path: '/conta/grupos-usuarios',
+        summary: 'Cria grupo de usuários',
+        tags: ['Frota - Cadastros'],
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(mediaType: 'application/json', schema: new OA\Schema(required: ['nome', 'permissoes'], properties: [
+                    new OA\Property(property: 'nome', type: 'string', maxLength: 80),
+                    new OA\Property(property: 'descricao', type: 'string', maxLength: 255, nullable: true),
+                    new OA\Property(property: 'permissoes', type: 'array', items: new OA\Items(type: 'string'), description: 'Chaves do catálogo de permissões (ver GET /conta/grupos-usuarios)'),
+                    new OA\Property(property: 'membros', type: 'array', items: new OA\Items(type: 'integer'), description: 'IDs de usuários da frota'),
+                ]))),
+        responses: [
+            new OA\Response(response: 201, description: 'Criado'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão grupos'),
+            new OA\Response(response: 422, description: 'Erro de validação (inclui membros de outra frota)', content: new OA\JsonContent(ref: '#/components/schemas/ErroValidacao')),
+        ],
+    )]
+    public function op125(): void {}
+
+    #[OA\Put(
+        path: '/conta/grupos-usuarios/{id}',
+        summary: 'Atualiza grupo de usuários',
+        tags: ['Frota - Cadastros'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(mediaType: 'application/json', schema: new OA\Schema(required: ['nome', 'permissoes'], properties: [
+                    new OA\Property(property: 'nome', type: 'string', maxLength: 80),
+                    new OA\Property(property: 'descricao', type: 'string', maxLength: 255, nullable: true),
+                    new OA\Property(property: 'permissoes', type: 'array', items: new OA\Items(type: 'string')),
+                    new OA\Property(property: 'membros', type: 'array', items: new OA\Items(type: 'integer'), description: 'Se enviado, substitui a lista de membros'),
+                ]))),
+        responses: [
+            new OA\Response(response: 200, description: 'Sucesso'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão grupos'),
+            new OA\Response(response: 404, description: 'Grupo não encontrado'),
+            new OA\Response(response: 422, description: 'Erro de validação', content: new OA\JsonContent(ref: '#/components/schemas/ErroValidacao')),
+        ],
+    )]
+    public function op126(): void {}
+
+    #[OA\Delete(
+        path: '/conta/grupos-usuarios/{id}',
+        summary: 'Remove grupo de usuários',
+        tags: ['Frota - Cadastros'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Grupo removido'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão grupos'),
+            new OA\Response(response: 404, description: 'Grupo não encontrado'),
+        ],
+    )]
+    public function op127(): void {}
+
+    #[OA\Put(
+        path: '/conta/usos/{id}/centro-custo',
+        summary: 'Troca o centro de custo de um uso (inclusive concluído); a troca fica no histórico',
+        tags: ['Frota - Usos'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(mediaType: 'application/json', schema: new OA\Schema(required: ['centro_custo_id', 'motivo'], properties: [
+                    new OA\Property(property: 'centro_custo_id', type: 'integer', description: 'Centro de custo ativo da frota'),
+                    new OA\Property(property: 'motivo', type: 'string', minLength: 5, maxLength: 255),
+                ]))),
+        responses: [
+            new OA\Response(response: 200, description: 'Sucesso (uso atualizado)'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão usos_corrigir'),
+            new OA\Response(response: 404, description: 'Não encontrado'),
+            new OA\Response(response: 422, description: 'Erro de validação, centro inválido ou já é o centro atual', content: new OA\JsonContent(ref: '#/components/schemas/ErroValidacao')),
+        ],
+    )]
+    public function op128(): void {}
+
+    #[OA\Get(
+        path: '/conta/usos/{id}/centros-historico',
+        summary: 'Histórico de centros de custo de um uso (do mais antigo ao mais recente)',
+        tags: ['Frota - Usos'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Sucesso'),
+            new OA\Response(response: 401, description: 'Token ausente ou inválido'),
+            new OA\Response(response: 403, description: 'Sem permissão usos_corrigir'),
+            new OA\Response(response: 404, description: 'Não encontrado'),
+        ],
+    )]
+    public function op129(): void {}
 }

@@ -107,6 +107,33 @@ class UsoVeiculo extends Model
         return $this->hasMany(UsoVeiculoEvento::class, 'uso_veiculo_id');
     }
 
+    public function centrosHistorico(): HasMany
+    {
+        return $this->hasMany(UsoVeiculoCentro::class, 'uso_veiculo_id');
+    }
+
+    /** Grava no histórico (e na trilha de auditoria) a troca do centro de custo que acabou de ser feita. */
+    public function registrarTrocaDeCentro(?int $anteriorId, ?int $userId, ?string $motivo = null): UsoVeiculoCentro
+    {
+        $troca = UsoVeiculoCentro::create([
+            'uso_veiculo_id' => $this->id,
+            'veiculo_conta_id' => $this->veiculo_conta_id,
+            'centro_anterior_id' => $anteriorId,
+            'centro_anterior_nome' => $anteriorId ? CentroCusto::find($anteriorId)?->nome : null,
+            'centro_novo_id' => $this->centro_custo_id,
+            'centro_novo_nome' => $this->centro_custo_id ? CentroCusto::find($this->centro_custo_id)?->nome : null,
+            'user_id' => $userId,
+            'motivo' => $motivo,
+        ]);
+
+        UsoVeiculoEvento::registrar($this, 'trocou_centro', $userId, [
+            'antes' => $troca->centro_anterior_nome,
+            'depois' => $troca->centro_novo_nome,
+        ], $motivo);
+
+        return $troca;
+    }
+
     public function saidaPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'saida_por_user_id');

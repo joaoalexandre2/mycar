@@ -3,6 +3,7 @@
 use App\Http\Middleware\AuthenticateToken;
 use App\Http\Middleware\ExigePapel;
 use App\Http\Middleware\ExigePerfil;
+use App\Http\Middleware\ExigePermissao;
 use App\Http\Middleware\SomenteSuperAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'super.admin' => SomenteSuperAdmin::class,
             'perfil' => ExigePerfil::class,
             'papel' => ExigePapel::class,
+            'permissao' => ExigePermissao::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
