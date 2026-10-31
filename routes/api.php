@@ -27,6 +27,7 @@ use App\Http\Controllers\MeusMycarsController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PessoaFrotaController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
@@ -223,6 +224,13 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/usos/{id}/saida', [UsoVeiculoController::class, 'saida'])->middleware('throttle:60,1');
         Route::post('/usos/{id}/chegada', [UsoVeiculoController::class, 'chegada'])->middleware('throttle:60,1');
         Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
+    });
+
+    // Pessoas da frota e seus papéis: só o administrador
+    Route::middleware(['perfil:frota', 'papel:administrador'])->prefix('conta')->group(function () {
+        Route::get('/pessoas', [PessoaFrotaController::class, 'index']);
+        Route::post('/pessoas', [PessoaFrotaController::class, 'store'])->middleware('throttle:10,1');
+        Route::put('/pessoas/{id}/papel', [PessoaFrotaController::class, 'papel']);
     });
 
     // FROTA: cada bloco exige uma permissão, dada pelo papel (administrador e gestor) ou por um grupo de usuários
