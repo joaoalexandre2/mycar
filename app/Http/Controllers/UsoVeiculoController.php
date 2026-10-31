@@ -350,6 +350,19 @@ class UsoVeiculoController extends Controller
                 ], 422);
             }
 
+            // O motorista não sai com um segundo carro enquanto a viagem do primeiro não chegou.
+            $viagemAberta = UsoVeiculo::with('veiculo')
+                ->where('motorista_id', $uso->motorista_id)
+                ->where('status', 'em_uso')
+                ->where('id', '!=', $uso->id)
+                ->first();
+
+            if ($viagemAberta) {
+                return response()->json([
+                    'message' => "{$uso->motorista->nome} ainda está com o veículo {$viagemAberta->veiculo?->placa}: registre a chegada antes de sair com outro.",
+                ], 422);
+            }
+
             if ($erro = $this->kmMenorQueOUltimo($veiculo, $dados['km_saida'])) {
                 return $erro;
             }
