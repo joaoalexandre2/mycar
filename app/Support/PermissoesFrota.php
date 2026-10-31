@@ -18,6 +18,25 @@ class PermissoesFrota
 
     public const GRUPOS = 'grupos';
 
+    /** Menus da frota que um grupo pode esconder de quem pertence a ele. */
+    public const MENUS = [
+        'veiculos' => 'Veículos da frota',
+        'agenda' => 'Agenda',
+        'cadastros' => 'Motoristas e centros',
+    ];
+
+    /** @return array<string, string> chave => descrição */
+    public static function menus(): array
+    {
+        return self::MENUS;
+    }
+
+    /** @return list<string> */
+    public static function chavesDeMenu(): array
+    {
+        return array_keys(self::MENUS);
+    }
+
     /** @return array<string, string> chave => descrição */
     public static function catalogo(): array
     {

@@ -13,11 +13,11 @@ class GrupoUsuario extends Model
 
     protected $table = 'grupos_usuarios';
 
-    protected $fillable = ['nome', 'descricao', 'permissoes'];
+    protected $fillable = ['nome', 'descricao', 'permissoes', 'menus_ocultos'];
 
     protected function casts(): array
     {
-        return ['permissoes' => 'array'];
+        return ['permissoes' => 'array', 'menus_ocultos' => 'array'];
     }
 
     public function membros(): BelongsToMany

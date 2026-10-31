@@ -194,6 +194,39 @@ class User extends Authenticatable
             ->contains($permissao);
     }
 
+    /**
+     * Menus da frota que algum grupo desta pessoa manda esconder. O administrador
+     * nunca tem menu escondido (assim ninguém tranca a própria conta).
+     *
+     * @return list<string>
+     */
+    public function menusOcultos(): array
+    {
+        if (($this->perfil ?? 'oficina') !== 'frota' || !$this->conta_id || $this->papelNaConta() === 'administrador') {
+            return [];
+        }
+
+        return GrupoUsuario::withoutGlobalScope('conta')
+            ->where('conta_id', $this->conta_id)
+            ->whereHas('membros', fn ($q) => $q->where('users.id', $this->id))
+            ->pluck('menus_ocultos')
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /** Se o menu da frota aparece para esta pessoa. Fora da frota, não se aplica. */
+    public function podeVerMenu(string $menu): bool
+    {
+        if (($this->perfil ?? 'oficina') !== 'frota') {
+            return true;
+        }
+
+        return !in_array($menu, $this->menusOcultos(), true);
+    }
+
     /** Cadastro de motorista ligado a este login (só para o papel motorista). */
     public function motoristaVinculado(): ?Motorista
     {
@@ -223,6 +256,11 @@ class User extends Authenticatable
             'permissoes' => $perfil === 'frota'
                 ? array_values(array_filter(PermissoesFrota::chaves(), fn ($p) => $this->temPermissao($p)))
                 : [],
+            // Menus da frota que esta pessoa vê; a tela esconde os outros, e a API barra os que têm middleware `menu`.
+            // null fora da frota: os menus da frota não se aplicam a essa pessoa.
+            'menus' => $perfil === 'frota'
+                ? array_values(array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $this->podeVerMenu($m)))
+                : null,
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,
