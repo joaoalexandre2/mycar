@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MotivoTrocaCentro;
 use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
@@ -104,14 +105,19 @@ class UsoVeiculoController extends Controller
         $dados = $this->validar($request);
 
         if ($this->ehMotorista($request)) {
-            // O motorista só reserva para si mesmo.
-            $meu = $this->meuMotoristaId($request);
+            // O motorista só reserva para si mesmo, e sempre no centro de custo a que está amarrado.
+            $meu = $request->user()->motoristaVinculado();
 
             if (!$meu) {
                 return response()->json(['message' => 'Seu login ainda não está ligado a um motorista cadastrado. Peça ao gestor.'], 422);
             }
 
-            $dados['motorista_id'] = $meu;
+            if (!$meu->centroCusto?->ativo) {
+                return response()->json(['message' => 'Você ainda não está amarrado a um centro de custo. Peça ao gestor.'], 422);
+            }
+
+            $dados['motorista_id'] = $meu->id;
+            $dados['centro_custo_id'] = $meu->centro_custo_id;
         }
 
         $veiculo = VeiculoConta::find($dados['veiculo_conta_id']);
@@ -220,21 +226,23 @@ class UsoVeiculoController extends Controller
 
         $dados = $request->validate([
             'centro_custo_id' => ['required', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
-            'motivo' => ['required', 'string', 'min:5', 'max:255'],
+            'motivo_id' => ['required', 'integer', Rule::exists('motivos_troca_centro', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
         ], [
             'centro_custo_id.exists' => 'Centro de custo não encontrado ou desativado.',
-            'motivo.required' => 'Explique o motivo da troca do centro de custo.',
-            'motivo.min' => 'Explique o motivo da troca do centro de custo (mínimo 5 letras).',
+            'motivo_id.required' => 'Escolha o motivo da troca do centro de custo.',
+            'motivo_id.exists' => 'Motivo não encontrado ou desativado.',
         ]);
 
         if ((int) $uso->centro_custo_id === (int) $dados['centro_custo_id']) {
             return response()->json(['message' => 'Este uso já está nesse centro de custo.'], 422);
         }
 
-        DB::transaction(function () use ($request, $uso, $dados) {
+        $motivo = MotivoTrocaCentro::find($dados['motivo_id']);
+
+        DB::transaction(function () use ($request, $uso, $dados, $motivo) {
             $anterior = $uso->centro_custo_id;
             $uso->update(['centro_custo_id' => $dados['centro_custo_id']]);
-            $uso->registrarTrocaDeCentro($anterior, $request->user()->id, $dados['motivo']);
+            $uso->registrarTrocaDeCentro($anterior, $request->user()->id, $motivo->nome);
         });
 
         return response()->json($this->formatar($uso->fresh(self::RELACOES)));

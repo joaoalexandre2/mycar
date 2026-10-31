@@ -509,6 +509,8 @@ class FrotaAgendaTest extends TestCase
         [$userMaria, $headersMaria] = $this->autenticarConta('frota', Conta::find($contaId));
         $userMaria->forceFill(['papel_frota' => 'motorista'])->save();
         $maria->forceFill(['user_id' => $userMaria->id])->save();
+        $centroDaMaria = CentroCusto::create(['nome' => 'Centro da Maria']);
+        $maria->forceFill(['centro_custo_id' => $centroDaMaria->id])->save();
         app()->instance('conta.atual', $contaId);
 
         // Só enxerga a própria reserva.

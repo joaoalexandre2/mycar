@@ -24,6 +24,7 @@ use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
+use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
@@ -268,6 +269,10 @@ Route::middleware('auth.token')->group(function () {
 
     Route::middleware(['perfil:frota', 'permissao:usos_corrigir'])->prefix('conta')->group(function () {
         Route::get('/usos/{id}/eventos', [UsoVeiculoController::class, 'eventos']);
+        // Motivos de troca de centro de custo, cadastrados pela frota (o select da troca)
+        Route::get('/motivos-troca-centro', [MotivoTrocaCentroController::class, 'index']);
+        Route::post('/motivos-troca-centro', [MotivoTrocaCentroController::class, 'store']);
+        Route::put('/motivos-troca-centro/{id}', [MotivoTrocaCentroController::class, 'update']);
         // Troca o centro de custo (inclusive de uso concluído); o anterior fica no histórico
         Route::put('/usos/{id}/centro-custo', [UsoVeiculoController::class, 'trocarCentro']);
         Route::get('/usos/{id}/centros-historico', [UsoVeiculoController::class, 'historicoDeCentros']);

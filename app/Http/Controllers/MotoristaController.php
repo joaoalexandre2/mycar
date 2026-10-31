@@ -120,6 +120,7 @@ class MotoristaController extends Controller
             'cnh_numero' => ['nullable', 'string', 'max:20'],
             'cnh_validade' => ['nullable', 'date'],
             'ativo' => ['sometimes', 'boolean'],
+            'centro_custo_id' => ['nullable', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
         ], [
             'nome.unique' => 'Já existe um motorista com este nome.',
         ]);
