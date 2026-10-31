@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CentroCusto;
 use App\Models\UsoVeiculoCentro;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 
 /** Centros de custo da frota. Isolados pela conta, via PertenceAConta. */
