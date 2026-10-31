@@ -18,12 +18,17 @@ class PermissoesFrota
 
     public const GRUPOS = 'grupos';
 
-    /** Menus da frota que um grupo libera a quem pertence a ele. */
+    /**
+     * Menus da frota que um grupo libera a quem pertence a ele. A agenda não entra aqui:
+     * todo mundo da frota a vê (o motorista só vê as próprias reservas).
+     */
     public const MENUS = [
         'veiculos' => 'Veículos da frota',
-        'agenda' => 'Agenda',
         'cadastros' => 'Motoristas e centros',
     ];
+
+    /** Menus que ficam sempre visíveis para o perfil frota. */
+    public const MENUS_LIVRES = ['agenda'];
 
     /** @return array<string, string> chave => descrição */
     public static function menus(): array

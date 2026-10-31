@@ -62,7 +62,7 @@ class MenusFrotaTest extends TestCase
 
         $this->getJson('/api/me', $headers)
             ->assertOk()
-            ->assertJsonPath('menus', ['veiculos', 'agenda', 'cadastros']);
+            ->assertJsonPath('menus', ['agenda', 'veiculos', 'cadastros']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(201);
     }
@@ -71,7 +71,7 @@ class MenusFrotaTest extends TestCase
     {
         $this->getJson('/api/me', $this->headersAdmin)
             ->assertOk()
-            ->assertJsonPath('menus', ['veiculos', 'agenda', 'cadastros']);
+            ->assertJsonPath('menus', ['agenda', 'veiculos', 'cadastros']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Compras'], $this->headersAdmin)->assertStatus(201);
     }
@@ -82,7 +82,7 @@ class MenusFrotaTest extends TestCase
 
         $this->getJson('/api/me', $headers)
             ->assertOk()
-            ->assertJsonPath('menus', []);
+            ->assertJsonPath('menus', ['agenda']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(403);
     }
@@ -94,7 +94,7 @@ class MenusFrotaTest extends TestCase
 
         $this->getJson('/api/me', $headers)
             ->assertOk()
-            ->assertJsonPath('menus', ['cadastros']);
+            ->assertJsonPath('menus', ['agenda', 'cadastros']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(201);
         $this->getJson('/api/conta/centros-custo/historico', $headers)->assertOk();
@@ -104,22 +104,22 @@ class MenusFrotaTest extends TestCase
     {
         $headers = $this->headersDe('motorista');
         $id = $this->idDe($headers);
-        $this->grupoQueLibera(['agenda'], [$id]);
+        $this->grupoQueLibera(['veiculos'], [$id]);
         $this->grupoQueLibera(['cadastros'], [$id]);
 
         $this->getJson('/api/me', $headers)
             ->assertOk()
-            ->assertJsonPath('menus', ['agenda', 'cadastros']);
+            ->assertJsonPath('menus', ['agenda', 'veiculos', 'cadastros']);
     }
 
     public function test_grupo_so_libera_para_quem_pertence_a_ele(): void
     {
         $fora = $this->headersDe('motorista');
         $dentro = $this->headersDe('motorista');
-        $this->grupoQueLibera(['agenda'], [$this->idDe($dentro)]);
+        $this->grupoQueLibera(['veiculos'], [$this->idDe($dentro)]);
 
-        $this->getJson('/api/me', $fora)->assertJsonPath('menus', []);
-        $this->getJson('/api/me', $dentro)->assertJsonPath('menus', ['agenda']);
+        $this->getJson('/api/me', $fora)->assertJsonPath('menus', ['agenda']);
+        $this->getJson('/api/me', $dentro)->assertJsonPath('menus', ['agenda', 'veiculos']);
     }
 
     public function test_fora_da_frota_os_menus_nao_se_aplicam(): void
@@ -135,6 +135,13 @@ class MenusFrotaTest extends TestCase
     {
         $this->postJson('/api/conta/grupos-usuarios', [
             'nome' => 'X', 'permissoes' => [], 'menus_liberados' => ['financeiro'],
+        ], $this->headersAdmin)->assertStatus(422);
+    }
+
+    public function test_agenda_nao_e_um_menu_liberavel_por_grupo(): void
+    {
+        $this->postJson('/api/conta/grupos-usuarios', [
+            'nome' => 'Agenda', 'permissoes' => [], 'menus_liberados' => ['agenda'],
         ], $this->headersAdmin)->assertStatus(422);
     }
 }

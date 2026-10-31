@@ -268,7 +268,7 @@ class User extends Authenticatable
             // Menus da frota que esta pessoa vê; a tela esconde os outros, e a API barra os que têm middleware `menu`.
             // null fora da frota: os menus da frota não se aplicam a essa pessoa.
             'menus' => $perfil === 'frota'
-                ? array_values(array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $this->podeVerMenu($m)))
+                ? array_values(array_merge(PermissoesFrota::MENUS_LIVRES, array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $this->podeVerMenu($m))))
                 : null,
             // Centro de custo a que o motorista está amarrado (null para os demais): a reserva sai nele.
             'centro_do_motorista' => $perfil === 'frota' && $this->papelNaConta() === 'motorista'
