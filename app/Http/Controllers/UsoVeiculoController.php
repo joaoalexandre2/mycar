@@ -188,6 +188,10 @@ class UsoVeiculoController extends Controller
 
                 $mudou = array_keys(array_filter($depois, fn ($v, $k) => $v !== $antes[$k], ARRAY_FILTER_USE_BOTH));
 
+                if (in_array('centro_custo_id', $mudou, true)) {
+                    $uso->registrarTrocaDeCentro($antes['centro_custo_id'], $request->user()->id);
+                }
+
                 if ($mudou) {
                     UsoVeiculoEvento::registrar($uso, 'editou', $request->user()->id, [
                         'antes' => array_intersect_key($antes, array_flip($mudou)),
@@ -200,6 +204,54 @@ class UsoVeiculoController extends Controller
         } catch (QueryException $e) {
             return $this->tratarConflitoDoBanco($e);
         }
+    }
+
+    /**
+     * Troca o centro de custo de um uso em qualquer situação (inclusive já
+     * concluído), exigindo o motivo. O centro anterior fica no histórico.
+     */
+    public function trocarCentro(Request $request, $id)
+    {
+        $uso = UsoVeiculo::find($id);
+
+        if (!$uso) {
+            return $this->naoEncontrado();
+        }
+
+        $dados = $request->validate([
+            'centro_custo_id' => ['required', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
+            'motivo' => ['required', 'string', 'min:5', 'max:255'],
+        ], [
+            'centro_custo_id.exists' => 'Centro de custo não encontrado ou desativado.',
+            'motivo.required' => 'Explique o motivo da troca do centro de custo.',
+            'motivo.min' => 'Explique o motivo da troca do centro de custo (mínimo 5 letras).',
+        ]);
+
+        if ((int) $uso->centro_custo_id === (int) $dados['centro_custo_id']) {
+            return response()->json(['message' => 'Este uso já está nesse centro de custo.'], 422);
+        }
+
+        DB::transaction(function () use ($request, $uso, $dados) {
+            $anterior = $uso->centro_custo_id;
+            $uso->update(['centro_custo_id' => $dados['centro_custo_id']]);
+            $uso->registrarTrocaDeCentro($anterior, $request->user()->id, $dados['motivo']);
+        });
+
+        return response()->json($this->formatar($uso->fresh(self::RELACOES)));
+    }
+
+    /** Histórico de centros de custo de um uso, do mais antigo ao mais recente. */
+    public function historicoDeCentros($id)
+    {
+        $uso = UsoVeiculo::find($id);
+
+        if (!$uso) {
+            return $this->naoEncontrado();
+        }
+
+        return response()->json(
+            $uso->centrosHistorico()->with('usuario')->orderBy('id')->get()->map->formatar()->values()
+        );
     }
 
     public function cancelar(Request $request, $id)

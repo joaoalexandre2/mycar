@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Mail\RedefinirSenhaEmail;
+use App\Support\PermissoesFrota;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -172,6 +173,27 @@ class User extends Authenticatable
         };
     }
 
+    /** Permissões da frota: as do papel mais as de todos os grupos de usuários a que a pessoa pertence. */
+    public function temPermissao(string $permissao): bool
+    {
+        $papel = $this->papelNaConta();
+
+        if (in_array($permissao, PermissoesFrota::doPapel($papel), true)) {
+            return true;
+        }
+
+        if (($this->perfil ?? 'oficina') !== 'frota' || !$this->conta_id) {
+            return false;
+        }
+
+        return GrupoUsuario::withoutGlobalScope('conta')
+            ->where('conta_id', $this->conta_id)
+            ->whereHas('membros', fn ($q) => $q->where('users.id', $this->id))
+            ->pluck('permissoes')
+            ->flatten()
+            ->contains($permissao);
+    }
+
     /** Cadastro de motorista ligado a este login (só para o papel motorista). */
     public function motoristaVinculado(): ?Motorista
     {
@@ -197,6 +219,10 @@ class User extends Authenticatable
             'perfil' => $perfil,
             // Papel dentro da frota (administrador, gestor, motorista); null fora do perfil frota.
             'papel' => $perfil === 'frota' ? $this->papelNaConta() : null,
+            // O que a pessoa pode fazer na frota (papel + grupos); só mostra/esconde telas, o backend é quem barra.
+            'permissoes' => $perfil === 'frota'
+                ? array_values(array_filter(PermissoesFrota::chaves(), fn ($p) => $this->temPermissao($p)))
+                : [],
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,
