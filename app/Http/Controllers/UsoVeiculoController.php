@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MotivoTrocaCentro;
 use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
@@ -104,14 +105,19 @@ class UsoVeiculoController extends Controller
         $dados = $this->validar($request);
 
         if ($this->ehMotorista($request)) {
-            // O motorista só reserva para si mesmo.
-            $meu = $this->meuMotoristaId($request);
+            // O motorista só reserva para si mesmo, e sempre no centro de custo a que está amarrado.
+            $meu = $request->user()->motoristaVinculado();
 
             if (!$meu) {
                 return response()->json(['message' => 'Seu login ainda não está ligado a um motorista cadastrado. Peça ao gestor.'], 422);
             }
 
-            $dados['motorista_id'] = $meu;
+            if (!$meu->centroCusto?->ativo) {
+                return response()->json(['message' => 'Você ainda não está amarrado a um centro de custo. Peça ao gestor.'], 422);
+            }
+
+            $dados['motorista_id'] = $meu->id;
+            $dados['centro_custo_id'] = $meu->centro_custo_id;
         }
 
         $veiculo = VeiculoConta::find($dados['veiculo_conta_id']);
@@ -124,7 +130,7 @@ class UsoVeiculoController extends Controller
                     return $erro;
                 }
 
-                if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'])) {
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'], null, $this->ehMotorista($request))) {
                     return $erro;
                 }
 
@@ -178,7 +184,7 @@ class UsoVeiculoController extends Controller
                     return $erro;
                 }
 
-                if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id)) {
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id, $this->ehMotorista($request))) {
                     return $erro;
                 }
 
@@ -220,21 +226,23 @@ class UsoVeiculoController extends Controller
 
         $dados = $request->validate([
             'centro_custo_id' => ['required', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
-            'motivo' => ['required', 'string', 'min:5', 'max:255'],
+            'motivo_id' => ['required', 'integer', Rule::exists('motivos_troca_centro', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
         ], [
             'centro_custo_id.exists' => 'Centro de custo não encontrado ou desativado.',
-            'motivo.required' => 'Explique o motivo da troca do centro de custo.',
-            'motivo.min' => 'Explique o motivo da troca do centro de custo (mínimo 5 letras).',
+            'motivo_id.required' => 'Escolha o motivo da troca do centro de custo.',
+            'motivo_id.exists' => 'Motivo não encontrado ou desativado.',
         ]);
 
         if ((int) $uso->centro_custo_id === (int) $dados['centro_custo_id']) {
             return response()->json(['message' => 'Este uso já está nesse centro de custo.'], 422);
         }
 
-        DB::transaction(function () use ($request, $uso, $dados) {
+        $motivo = MotivoTrocaCentro::find($dados['motivo_id']);
+
+        DB::transaction(function () use ($request, $uso, $dados, $motivo) {
             $anterior = $uso->centro_custo_id;
             $uso->update(['centro_custo_id' => $dados['centro_custo_id']]);
-            $uso->registrarTrocaDeCentro($anterior, $request->user()->id, $dados['motivo']);
+            $uso->registrarTrocaDeCentro($anterior, $request->user()->id, $motivo->nome);
         });
 
         return response()->json($this->formatar($uso->fresh(self::RELACOES)));
@@ -339,6 +347,19 @@ class UsoVeiculoController extends Controller
 
                 return response()->json([
                     'message' => "Este veículo ainda está em uso ({$quem}): a chegada dele não foi registrada.",
+                ], 422);
+            }
+
+            // O motorista não sai com um segundo carro enquanto a viagem do primeiro não chegou.
+            $viagemAberta = UsoVeiculo::with('veiculo')
+                ->where('motorista_id', $uso->motorista_id)
+                ->where('status', 'em_uso')
+                ->where('id', '!=', $uso->id)
+                ->first();
+
+            if ($viagemAberta) {
+                return response()->json([
+                    'message' => "{$uso->motorista->nome} ainda está com o veículo {$viagemAberta->veiculo?->placa}: registre a chegada antes de sair com outro.",
                 ], 422);
             }
 
@@ -615,7 +636,11 @@ class UsoVeiculoController extends Controller
     }
 
     /** O mesmo veículo ou o mesmo motorista não pode ter dois usos no mesmo horário. */
-    private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null): ?JsonResponse
+    /**
+     * Conflito de veículo ou de motorista no horário. Para o motorista, a resposta não diz quem
+     * está com o veículo nem o que é a outra reserva: só que o horário está ocupado.
+     */
+    private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null, bool $ocultarDetalhes = false): ?JsonResponse
     {
         $doVeiculo = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
             ->sobrepostos($inicio, $fim)
@@ -623,6 +648,12 @@ class UsoVeiculoController extends Controller
             ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
             ->orderBy('inicio_previsto')
             ->first();
+
+        if ($doVeiculo && $ocultarDetalhes) {
+            return response()->json([
+                'message' => 'O veículo já está reservado nesse horário. Escolha outro horário ou outro veículo.',
+            ], 422);
+        }
 
         if ($doVeiculo) {
             // Diz com quem o veículo está, para quem reserva saber a quem pedir ou que horário escolher.
@@ -641,6 +672,12 @@ class UsoVeiculoController extends Controller
                 ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
                 ->orderBy('inicio_previsto')
                 ->first();
+
+            if ($doMotorista && $ocultarDetalhes) {
+                return response()->json([
+                    'message' => 'Você já tem outra reserva nesse horário. Escolha outro horário.',
+                ], 422);
+            }
 
             if ($doMotorista) {
                 return $this->conflitoResposta(

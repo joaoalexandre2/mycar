@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\CentroCusto;
 use App\Models\Conta;
+use App\Models\MotivoTrocaCentro;
 use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoCentro;
@@ -28,6 +29,8 @@ class CentroCustoHistoricoTest extends TestCase
 
     private CentroCusto $entregas;
 
+    private MotivoTrocaCentro $motivo;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -36,6 +39,7 @@ class CentroCustoHistoricoTest extends TestCase
 
         $this->vendas = CentroCusto::create(['nome' => 'Vendas']);
         $this->entregas = CentroCusto::create(['nome' => 'Entregas']);
+        $this->motivo = MotivoTrocaCentro::create(['nome' => 'Lançado errado pelo motorista']);
 
         $veiculo = VeiculoConta::create(['placa' => 'AAA1B25', 'marca' => 'Fiat', 'modelo' => 'Strada', 'ano' => 2022]);
         $motorista = Motorista::create(['nome' => 'Maria', 'cnh_numero' => '123456', 'cnh_validade' => '2035-01-01']);
@@ -53,7 +57,7 @@ class CentroCustoHistoricoTest extends TestCase
     {
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
             'centro_custo_id' => $this->entregas->id,
-            'motivo' => 'Lançado errado pelo motorista',
+            'motivo_id' => $this->motivo->id,
         ], $this->headers)->assertOk()->assertJsonPath('centro_custo_id', $this->entregas->id);
 
         $this->getJson("/api/conta/usos/{$this->usoId}/centros-historico", $this->headers)
@@ -71,7 +75,7 @@ class CentroCustoHistoricoTest extends TestCase
     public function test_o_historico_guarda_o_nome_mesmo_se_o_centro_for_renomeado(): void
     {
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
-            'centro_custo_id' => $this->entregas->id, 'motivo' => 'Ajuste de custo',
+            'centro_custo_id' => $this->entregas->id, 'motivo_id' => $this->motivo->id,
         ], $this->headers)->assertOk();
 
         $this->vendas->update(['nome' => 'Comercial']);
@@ -90,14 +94,14 @@ class CentroCustoHistoricoTest extends TestCase
         ], $this->headers)->assertStatus(422);
 
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
-            'centro_custo_id' => $this->entregas->id, 'motivo' => 'Reclassificação mensal',
+            'centro_custo_id' => $this->entregas->id, 'motivo_id' => $this->motivo->id,
         ], $this->headers)->assertOk();
     }
 
     public function test_nao_troca_para_o_mesmo_centro(): void
     {
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
-            'centro_custo_id' => $this->vendas->id, 'motivo' => 'Sem mudança real',
+            'centro_custo_id' => $this->vendas->id, 'motivo_id' => $this->motivo->id,
         ], $this->headers)->assertStatus(422);
 
         $this->assertSame(0, UsoVeiculoCentro::count());
@@ -121,7 +125,7 @@ class CentroCustoHistoricoTest extends TestCase
     public function test_relatorio_filtra_por_centro_e_sobrevive_ao_uso_apagado(): void
     {
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
-            'centro_custo_id' => $this->entregas->id, 'motivo' => 'Ajuste de custo',
+            'centro_custo_id' => $this->entregas->id, 'motivo_id' => $this->motivo->id,
         ], $this->headers)->assertOk();
 
         $outro = CentroCusto::create(['nome' => 'Compras']);
@@ -142,7 +146,7 @@ class CentroCustoHistoricoTest extends TestCase
         app()->instance('conta.atual', $this->contaId);
 
         $this->putJson("/api/conta/usos/{$this->usoId}/centro-custo", [
-            'centro_custo_id' => $this->entregas->id, 'motivo' => 'Tentativa indevida',
+            'centro_custo_id' => $this->entregas->id, 'motivo_id' => $this->motivo->id,
         ], $headersMotorista)->assertStatus(403);
         $this->getJson('/api/conta/centros-custo/historico', $headersMotorista)->assertStatus(403);
     }
