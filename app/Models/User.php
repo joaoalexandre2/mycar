@@ -270,6 +270,10 @@ class User extends Authenticatable
             'menus' => $perfil === 'frota'
                 ? array_values(array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $this->podeVerMenu($m)))
                 : null,
+            // Centro de custo a que o motorista está amarrado (null para os demais): a reserva sai nele.
+            'centro_do_motorista' => $perfil === 'frota' && $this->papelNaConta() === 'motorista'
+                ? $this->motoristaVinculado()?->centroCusto?->only(['id', 'nome'])
+                : null,
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,

@@ -117,4 +117,21 @@ class MotoristaCentroCustoTest extends TestCase
 
         $this->assertSame($this->entregas->id, UsoVeiculo::first()->centro_custo_id);
     }
+
+    public function test_me_informa_o_centro_do_motorista(): void
+    {
+        [, $headers] = $this->motoristaLogado($this->entregas);
+
+        $this->getJson('/api/me', $headers)
+            ->assertOk()
+            ->assertJsonPath('centro_do_motorista.id', $this->entregas->id)
+            ->assertJsonPath('centro_do_motorista.nome', 'Entregas');
+    }
+
+    public function test_me_nao_informa_centro_para_quem_nao_e_motorista(): void
+    {
+        $this->getJson('/api/me', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('centro_do_motorista', null);
+    }
 }
