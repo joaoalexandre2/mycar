@@ -35,12 +35,15 @@ class MenusFrotaTest extends TestCase
         return $headers;
     }
 
-    /** @param list<int> $membrosIds */
-    private function grupoQueLibera(array $menus, array $membrosIds = []): GrupoUsuario
+    /**
+     * @param  list<string>  $menus
+     * @param  list<int>  $membrosIds
+     */
+    private function grupoQueLibera(array $menus, array $membrosIds = [], array $permissoes = []): GrupoUsuario
     {
         $grupo = GrupoUsuario::create([
             'nome' => 'Grupo ' . uniqid(),
-            'permissoes' => [],
+            'permissoes' => $permissoes,
             'menus_liberados' => $menus,
         ]);
         $grupo->membros()->attach($membrosIds);
@@ -53,31 +56,15 @@ class MenusFrotaTest extends TestCase
         return $this->getJson('/api/me', $headers)->json('id');
     }
 
-    public function test_gestor_sem_grupo_nao_ve_os_menus_de_gestao_da_frota(): void
+    public function test_gestor_ve_todos_os_menus_sem_precisar_de_grupo(): void
     {
         $headers = $this->headersDe('gestor');
 
         $this->getJson('/api/me', $headers)
             ->assertOk()
-            ->assertJsonPath('menus', []);
-
-        $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(403);
-
-        // A lista de centros continua livre: os formulários de uso precisam dela.
-        $this->getJson('/api/conta/centros-custo', $headers)->assertOk();
-    }
-
-    public function test_grupo_que_libera_cadastros_habilita_a_tela_e_as_escritas(): void
-    {
-        $headers = $this->headersDe('gestor');
-        $this->grupoQueLibera(['cadastros'], [$this->idDe($headers)]);
-
-        $this->getJson('/api/me', $headers)
-            ->assertOk()
-            ->assertJsonPath('menus', ['cadastros']);
+            ->assertJsonPath('menus', ['veiculos', 'agenda', 'cadastros']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(201);
-        $this->getJson('/api/conta/centros-custo/historico', $headers)->assertOk();
     }
 
     public function test_administrador_ve_todos_os_menus_mesmo_sem_grupo(): void
@@ -87,6 +74,30 @@ class MenusFrotaTest extends TestCase
             ->assertJsonPath('menus', ['veiculos', 'agenda', 'cadastros']);
 
         $this->postJson('/api/conta/centros-custo', ['nome' => 'Compras'], $this->headersAdmin)->assertStatus(201);
+    }
+
+    public function test_motorista_sem_grupo_nao_ve_os_menus_de_gestao(): void
+    {
+        $headers = $this->headersDe('motorista');
+
+        $this->getJson('/api/me', $headers)
+            ->assertOk()
+            ->assertJsonPath('menus', []);
+
+        $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(403);
+    }
+
+    public function test_grupo_que_libera_cadastros_habilita_a_tela_e_as_escritas_do_motorista(): void
+    {
+        $headers = $this->headersDe('motorista');
+        $this->grupoQueLibera(['cadastros'], [$this->idDe($headers)], ['centros_custo']);
+
+        $this->getJson('/api/me', $headers)
+            ->assertOk()
+            ->assertJsonPath('menus', ['cadastros']);
+
+        $this->postJson('/api/conta/centros-custo', ['nome' => 'Vendas'], $headers)->assertStatus(201);
+        $this->getJson('/api/conta/centros-custo/historico', $headers)->assertOk();
     }
 
     public function test_menus_liberados_por_grupos_diferentes_se_somam(): void
@@ -103,12 +114,12 @@ class MenusFrotaTest extends TestCase
 
     public function test_grupo_so_libera_para_quem_pertence_a_ele(): void
     {
-        $fora = $this->headersDe('gestor');
-        $dentro = $this->headersDe('gestor');
-        $this->grupoQueLibera(['cadastros'], [$this->idDe($dentro)]);
+        $fora = $this->headersDe('motorista');
+        $dentro = $this->headersDe('motorista');
+        $this->grupoQueLibera(['agenda'], [$this->idDe($dentro)]);
 
-        $this->postJson('/api/conta/centros-custo', ['nome' => 'Fora'], $fora)->assertStatus(403);
-        $this->postJson('/api/conta/centros-custo', ['nome' => 'Dentro'], $dentro)->assertStatus(201);
+        $this->getJson('/api/me', $fora)->assertJsonPath('menus', []);
+        $this->getJson('/api/me', $dentro)->assertJsonPath('menus', ['agenda']);
     }
 
     public function test_fora_da_frota_os_menus_nao_se_aplicam(): void

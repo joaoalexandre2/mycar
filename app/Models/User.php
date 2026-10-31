@@ -219,7 +219,7 @@ class User extends Authenticatable
 
     /**
      * Se o menu da frota aparece para esta pessoa. Na frota, os menus de gestão só
-     * aparecem para o administrador ou para quem está em grupo que os libera.
+     * aparecem para administrador e gestor, ou para quem está em grupo que os libera.
      * Fora da frota, não se aplica.
      */
     public function podeVerMenu(string $menu): bool
@@ -228,7 +228,8 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($this->papelNaConta() === 'administrador') {
+        // Administrador e gestor veem todos os menus; o motorista (e quem não tem papel) depende de grupo.
+        if (in_array($this->papelNaConta(), ['administrador', 'gestor'], true)) {
             return true;
         }
 
