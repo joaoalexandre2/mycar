@@ -24,9 +24,11 @@ use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
+use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PessoaFrotaController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
@@ -225,8 +227,15 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
     });
 
+    // Pessoas da frota e seus papéis: só o administrador
+    Route::middleware(['perfil:frota', 'papel:administrador'])->prefix('conta')->group(function () {
+        Route::get('/pessoas', [PessoaFrotaController::class, 'index']);
+        Route::post('/pessoas', [PessoaFrotaController::class, 'store'])->middleware('throttle:10,1');
+        Route::put('/pessoas/{id}/papel', [PessoaFrotaController::class, 'papel']);
+    });
+
     // FROTA: cada bloco exige uma permissão, dada pelo papel (administrador e gestor) ou por um grupo de usuários
-    Route::middleware(['perfil:frota', 'permissao:grupos'])->prefix('conta')->group(function () {
+    Route::middleware(['perfil:frota', 'permissao:grupos', 'menu:cadastros'])->prefix('conta')->group(function () {
         Route::get('/grupos-usuarios', [GrupoUsuarioController::class, 'index']);
         Route::post('/grupos-usuarios', [GrupoUsuarioController::class, 'store']);
         Route::put('/grupos-usuarios/{id}', [GrupoUsuarioController::class, 'update']);
@@ -235,20 +244,21 @@ Route::middleware('auth.token')->group(function () {
 
     Route::middleware(['perfil:frota', 'permissao:centros_custo'])->prefix('conta')->group(function () {
         Route::get('/centros-custo', [CentroCustoController::class, 'index']);
+        // A lista (GET) continua livre: os formulários de uso precisam dela mesmo com o menu escondido.
         // Relatório das trocas de centro de custo
-        Route::get('/centros-custo/historico', [CentroCustoController::class, 'historico']);
-        Route::post('/centros-custo', [CentroCustoController::class, 'store']);
-        Route::put('/centros-custo/{id}', [CentroCustoController::class, 'update']);
-        Route::delete('/centros-custo/{id}', [CentroCustoController::class, 'destroy']);
+        Route::get('/centros-custo/historico', [CentroCustoController::class, 'historico'])->middleware('menu:cadastros');
+        Route::post('/centros-custo', [CentroCustoController::class, 'store'])->middleware('menu:cadastros');
+        Route::put('/centros-custo/{id}', [CentroCustoController::class, 'update'])->middleware('menu:cadastros');
+        Route::delete('/centros-custo/{id}', [CentroCustoController::class, 'destroy'])->middleware('menu:cadastros');
     });
 
     Route::middleware(['perfil:frota', 'permissao:motoristas'])->prefix('conta')->group(function () {
         Route::get('/motoristas', [MotoristaController::class, 'index']);
-        Route::post('/motoristas', [MotoristaController::class, 'store']);
-        Route::put('/motoristas/{id}', [MotoristaController::class, 'update']);
-        Route::delete('/motoristas/{id}', [MotoristaController::class, 'destroy']);
+        Route::post('/motoristas', [MotoristaController::class, 'store'])->middleware('menu:cadastros');
+        Route::put('/motoristas/{id}', [MotoristaController::class, 'update'])->middleware('menu:cadastros');
+        Route::delete('/motoristas/{id}', [MotoristaController::class, 'destroy'])->middleware('menu:cadastros');
         // Convida o motorista a entrar no sistema (cria o login e envia o link para definir a senha)
-        Route::post('/motoristas/{id}/acesso', [MotoristaController::class, 'convidar'])->middleware('throttle:20,1');
+        Route::post('/motoristas/{id}/acesso', [MotoristaController::class, 'convidar'])->middleware(['throttle:20,1', 'menu:cadastros']);
     });
 
     // Planilha de utilização: rotas fixas antes das com {id}
@@ -259,6 +269,10 @@ Route::middleware('auth.token')->group(function () {
 
     Route::middleware(['perfil:frota', 'permissao:usos_corrigir'])->prefix('conta')->group(function () {
         Route::get('/usos/{id}/eventos', [UsoVeiculoController::class, 'eventos']);
+        // Motivos de troca de centro de custo, cadastrados pela frota (o select da troca)
+        Route::get('/motivos-troca-centro', [MotivoTrocaCentroController::class, 'index']);
+        Route::post('/motivos-troca-centro', [MotivoTrocaCentroController::class, 'store']);
+        Route::put('/motivos-troca-centro/{id}', [MotivoTrocaCentroController::class, 'update']);
         // Troca o centro de custo (inclusive de uso concluído); o anterior fica no histórico
         Route::put('/usos/{id}/centro-custo', [UsoVeiculoController::class, 'trocarCentro']);
         Route::get('/usos/{id}/centros-historico', [UsoVeiculoController::class, 'historicoDeCentros']);

@@ -194,6 +194,48 @@ class User extends Authenticatable
             ->contains($permissao);
     }
 
+    /**
+     * Menus da frota que algum grupo desta pessoa libera (união dos grupos). Fora
+     * de grupo, a pessoa não vê esses menus; o administrador vê todos.
+     *
+     * @return list<string>
+     */
+    public function menusLiberados(): array
+    {
+        if (($this->perfil ?? 'oficina') !== 'frota' || !$this->conta_id) {
+            return [];
+        }
+
+        return GrupoUsuario::withoutGlobalScope('conta')
+            ->where('conta_id', $this->conta_id)
+            ->whereHas('membros', fn ($q) => $q->where('users.id', $this->id))
+            ->pluck('menus_liberados')
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Se o menu da frota aparece para esta pessoa. Na frota, os menus de gestão só
+     * aparecem para administrador e gestor, ou para quem está em grupo que os libera.
+     * Fora da frota, não se aplica.
+     */
+    public function podeVerMenu(string $menu): bool
+    {
+        if (($this->perfil ?? 'oficina') !== 'frota') {
+            return true;
+        }
+
+        // Administrador e gestor veem todos os menus; o motorista (e quem não tem papel) depende de grupo.
+        if (in_array($this->papelNaConta(), ['administrador', 'gestor'], true)) {
+            return true;
+        }
+
+        return in_array($menu, $this->menusLiberados(), true);
+    }
+
     /** Cadastro de motorista ligado a este login (só para o papel motorista). */
     public function motoristaVinculado(): ?Motorista
     {
@@ -223,6 +265,15 @@ class User extends Authenticatable
             'permissoes' => $perfil === 'frota'
                 ? array_values(array_filter(PermissoesFrota::chaves(), fn ($p) => $this->temPermissao($p)))
                 : [],
+            // Menus da frota que esta pessoa vê; a tela esconde os outros, e a API barra os que têm middleware `menu`.
+            // null fora da frota: os menus da frota não se aplicam a essa pessoa.
+            'menus' => $perfil === 'frota'
+                ? array_values(array_merge(PermissoesFrota::MENUS_LIVRES, array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $this->podeVerMenu($m))))
+                : null,
+            // Centro de custo a que o motorista está amarrado (null para os demais): a reserva sai nele.
+            'centro_do_motorista' => $perfil === 'frota' && $this->papelNaConta() === 'motorista'
+                ? $this->motoristaVinculado()?->centroCusto?->only(['id', 'nome'])
+                : null,
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
             'admin' => (bool) $this->is_super_admin,

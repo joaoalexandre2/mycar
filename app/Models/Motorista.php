@@ -17,7 +17,7 @@ class Motorista extends Model
 
     protected $table = 'motoristas';
 
-    protected $fillable = ['nome', 'telefone', 'cnh_numero', 'cnh_validade', 'ativo'];
+    protected $fillable = ['nome', 'telefone', 'cnh_numero', 'cnh_validade', 'ativo', 'centro_custo_id'];
 
     protected function casts(): array
     {
@@ -27,6 +27,11 @@ class Motorista extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function centroCusto(): BelongsTo
+    {
+        return $this->belongsTo(CentroCusto::class);
     }
 
     public function usos(): HasMany

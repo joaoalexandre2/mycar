@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AuthenticateToken;
+use App\Http\Middleware\ExigeMenu;
 use App\Http\Middleware\ExigePapel;
 use App\Http\Middleware\ExigePerfil;
 use App\Http\Middleware\ExigePermissao;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'perfil' => ExigePerfil::class,
             'papel' => ExigePapel::class,
             'permissao' => ExigePermissao::class,
+            'menu' => ExigeMenu::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
