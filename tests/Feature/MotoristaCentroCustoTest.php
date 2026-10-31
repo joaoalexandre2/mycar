@@ -134,4 +134,19 @@ class MotoristaCentroCustoTest extends TestCase
             ->assertOk()
             ->assertJsonPath('centro_do_motorista', null);
     }
+
+    public function test_motorista_nao_ve_quem_esta_com_o_veiculo_no_conflito(): void
+    {
+        $outro = Motorista::create(['nome' => 'Ana Secreta', 'cnh_numero' => '777', 'cnh_validade' => '2035-01-01']);
+        $this->postJson('/api/conta/usos', $this->reserva($outro->id, $this->entregas->id), $this->headersAdmin)
+            ->assertStatus(201);
+
+        [, $headers] = $this->motoristaLogado($this->entregas);
+
+        $resposta = $this->postJson('/api/conta/usos', $this->reserva(0, $this->entregas->id), $headers)
+            ->assertStatus(422);
+
+        $this->assertStringNotContainsString('Ana Secreta', $resposta->json('message'));
+        $this->assertArrayNotHasKey('conflito', $resposta->json());
+    }
 }

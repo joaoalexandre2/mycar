@@ -130,7 +130,7 @@ class UsoVeiculoController extends Controller
                     return $erro;
                 }
 
-                if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'])) {
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $dados['motorista_id'] ?? null, $dados['inicio_previsto'], $dados['fim_previsto'], null, $this->ehMotorista($request))) {
                     return $erro;
                 }
 
@@ -184,7 +184,7 @@ class UsoVeiculoController extends Controller
                     return $erro;
                 }
 
-                if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id)) {
+                if ($erro = $this->conflito($dados['veiculo_conta_id'], $motorista, $dados['inicio_previsto'], $dados['fim_previsto'], $uso->id, $this->ehMotorista($request))) {
                     return $erro;
                 }
 
@@ -623,7 +623,11 @@ class UsoVeiculoController extends Controller
     }
 
     /** O mesmo veículo ou o mesmo motorista não pode ter dois usos no mesmo horário. */
-    private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null): ?JsonResponse
+    /**
+     * Conflito de veículo ou de motorista no horário. Para o motorista, a resposta não diz quem
+     * está com o veículo nem o que é a outra reserva: só que o horário está ocupado.
+     */
+    private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null, bool $ocultarDetalhes = false): ?JsonResponse
     {
         $doVeiculo = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
             ->sobrepostos($inicio, $fim)
@@ -631,6 +635,12 @@ class UsoVeiculoController extends Controller
             ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
             ->orderBy('inicio_previsto')
             ->first();
+
+        if ($doVeiculo && $ocultarDetalhes) {
+            return response()->json([
+                'message' => 'O veículo já está reservado nesse horário. Escolha outro horário ou outro veículo.',
+            ], 422);
+        }
 
         if ($doVeiculo) {
             // Diz com quem o veículo está, para quem reserva saber a quem pedir ou que horário escolher.
@@ -649,6 +659,12 @@ class UsoVeiculoController extends Controller
                 ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
                 ->orderBy('inicio_previsto')
                 ->first();
+
+            if ($doMotorista && $ocultarDetalhes) {
+                return response()->json([
+                    'message' => 'Você já tem outra reserva nesse horário. Escolha outro horário.',
+                ], 422);
+            }
 
             if ($doMotorista) {
                 return $this->conflitoResposta(
