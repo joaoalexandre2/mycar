@@ -20,10 +20,10 @@ use App\Http\Controllers\FichaTecnicaController;
 use App\Http\Controllers\FipeController;
 use App\Http\Controllers\FotoServirController;
 use App\Http\Controllers\FotoVeiculoContaController;
+use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
-use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PasswordResetController;
@@ -262,7 +262,7 @@ Route::middleware('auth.token')->group(function () {
         // Troca o centro de custo (inclusive de uso concluído); o anterior fica no histórico
         Route::put('/usos/{id}/centro-custo', [UsoVeiculoController::class, 'trocarCentro']);
         Route::get('/usos/{id}/centros-historico', [UsoVeiculoController::class, 'historicoDeCentros']);
-        Route::put('/usos/{id}',[UsoVeiculoController::class, 'update']);
+        Route::put('/usos/{id}', [UsoVeiculoController::class, 'update']);
         Route::delete('/usos/{id}', [UsoVeiculoController::class, 'destroy']);
         Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
     });

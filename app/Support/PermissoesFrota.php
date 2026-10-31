@@ -9,9 +9,13 @@ namespace App\Support;
 class PermissoesFrota
 {
     public const CENTROS_CUSTO = 'centros_custo';
+
     public const MOTORISTAS = 'motoristas';
+
     public const USOS_CORRIGIR = 'usos_corrigir';
+
     public const USOS_IMPORTAR = 'usos_importar';
+
     public const GRUPOS = 'grupos';
 
     /** @return array<string, string> chave => descrição */
