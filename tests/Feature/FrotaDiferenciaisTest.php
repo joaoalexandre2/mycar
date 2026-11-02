@@ -139,6 +139,28 @@ class FrotaDiferenciaisTest extends TestCase
         $this->assertSame($uso->id, Multa::first()->uso_veiculo_id);
     }
 
+    public function test_lista_de_multas_e_paginada(): void
+    {
+        foreach ([1, 2, 3] as $dias) {
+            $this->postJson('/api/conta/multas', [
+                'veiculo_conta_id' => $this->veiculo->id,
+                'data_hora' => now()->subDays($dias)->toDateTimeString(),
+                'descricao' => "Multa {$dias}",
+                'valor' => 10,
+                'pontos' => 0,
+            ], $this->headersAdmin)->assertStatus(201);
+        }
+
+        $this->getJson('/api/conta/multas?per_page=2&page=2', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.descricao', 'Multa 3')
+            ->assertJsonPath('meta.current_page', 2)
+            ->assertJsonPath('meta.last_page', 2)
+            ->assertJsonPath('meta.per_page', 2)
+            ->assertJsonPath('meta.total', 3);
+    }
+
     public function test_motorista_nao_mexe_em_multas(): void
     {
         $this->getJson('/api/conta/multas', $this->headersMotorista)->assertStatus(403);

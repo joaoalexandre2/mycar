@@ -7,6 +7,7 @@ use App\Models\Motorista;
 use App\Models\Multa;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
+use App\Support\FusoDaFrota;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -100,11 +101,11 @@ class PainelFrotaController extends Controller
             'ate' => ['nullable', 'date', 'after_or_equal:de'],
         ]);
 
-        $inicio = isset($dados['de']) ? Carbon::parse($dados['de'])->startOfDay() : Carbon::today()->subDays(29);
-        $fim = isset($dados['ate']) ? Carbon::parse($dados['ate'])->endOfDay() : Carbon::today()->endOfDay();
+        $inicio = isset($dados['de']) ? FusoDaFrota::dia($dados['de']) : FusoDaFrota::dia(now(FusoDaFrota::NOME)->subDays(29)->toDateString());
+        $fim = isset($dados['ate']) ? FusoDaFrota::dia($dados['ate'], fim: true) : FusoDaFrota::dia(now(FusoDaFrota::NOME)->toDateString(), fim: true);
 
         // Capacidade em dias-calendário completos: cada dia do período vale 24 horas, inclusive o último.
-        $dias = $inicio->copy()->startOfDay()->diffInDays($fim->copy()->startOfDay()) + 1;
+        $dias = FusoDaFrota::local($inicio)->startOfDay()->diffInDays(FusoDaFrota::local($fim)->startOfDay()) + 1;
         $horasPeriodo = (float) ($dias * 24);
 
         // Um uso entra se o intervalo previsto OU o real (saída até chegada) encosta no período.

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Multa;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
-use Carbon\Carbon;
+use App\Support\FusoDaFrota;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,15 +18,26 @@ class MultaController extends Controller
 {
     public function index(Request $request)
     {
-        $multas = Multa::query()
+        $porPaginaSolicitada = (int) $request->query('per_page', 50);
+        $porPagina = $porPaginaSolicitada > 0 ? min($porPaginaSolicitada, 100) : 50;
+
+        $paginador = Multa::query()
             ->with(['veiculo:id,placa,marca,modelo,apelido', 'motorista:id,nome'])
             ->when($request->filled('veiculo_conta_id'), fn ($q) => $q->where('veiculo_conta_id', $request->integer('veiculo_conta_id')))
             ->when($request->filled('situacao'), fn ($q) => $q->where('situacao', $request->string('situacao')))
             ->orderByDesc('data_hora')
-            ->limit(300)
-            ->get();
+            ->orderByDesc('id')
+            ->paginate($porPagina);
 
-        return response()->json($multas->map(fn (Multa $m) => $this->formatar($m))->values());
+        return response()->json([
+            'data' => collect($paginador->items())->map(fn (Multa $m) => $this->formatar($m))->values(),
+            'meta' => [
+                'current_page' => $paginador->currentPage(),
+                'last_page' => $paginador->lastPage(),
+                'per_page' => $paginador->perPage(),
+                'total' => $paginador->total(),
+            ],
+        ]);
     }
 
     /** Quem estava com o veículo nessa data e hora: é o que a tela sugere como responsável. */
@@ -37,7 +48,7 @@ class MultaController extends Controller
             'data_hora' => ['required', 'date'],
         ]);
 
-        $uso = Multa::usoNaData((int) $dados['veiculo_conta_id'], Carbon::parse($dados['data_hora']));
+        $uso = Multa::usoNaData((int) $dados['veiculo_conta_id'], FusoDaFrota::entrada($dados['data_hora']));
 
         if (!$uso) {
             return response()->json(['uso' => null, 'motorista' => null]);
@@ -64,7 +75,7 @@ class MultaController extends Controller
         }
 
         // Sem responsável informado, a multa fica com quem estava com o veículo naquele momento.
-        $uso = Multa::usoNaData($veiculo->id, Carbon::parse($dados['data_hora']));
+        $uso = Multa::usoNaData($veiculo->id, FusoDaFrota::entrada($dados['data_hora']));
 
         $multa = Multa::create([
             ...$dados,
@@ -166,7 +177,7 @@ class MultaController extends Controller
     {
         return [
             'id' => $m->id,
-            'data_hora' => $m->data_hora?->toIso8601String(),
+            'data_hora' => FusoDaFrota::saida($m->data_hora),
             'descricao' => $m->descricao,
             'valor' => $m->valor,
             'pontos' => $m->pontos,
