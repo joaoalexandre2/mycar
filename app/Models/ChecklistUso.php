@@ -34,6 +34,14 @@ class ChecklistUso extends Model
 
     protected $fillable = ['uso_veiculo_id', 'momento', 'itens', 'observacoes', 'feito_por_user_id'];
 
+    protected static function booted(): void
+    {
+        // A contagem de problemas é gravada junto, para o alerta filtrar no banco.
+        static::saving(function (ChecklistUso $c) {
+            $c->problemas = collect($c->itens ?? [])->where('ok', false)->count();
+        });
+    }
+
     protected function casts(): array
     {
         return ['itens' => 'array'];
@@ -42,11 +50,5 @@ class ChecklistUso extends Model
     public function uso(): BelongsTo
     {
         return $this->belongsTo(UsoVeiculo::class, 'uso_veiculo_id');
-    }
-
-    /** Quantos itens o checklist marca com problema. */
-    public function problemas(): int
-    {
-        return collect($this->itens ?? [])->where('ok', false)->count();
     }
 }

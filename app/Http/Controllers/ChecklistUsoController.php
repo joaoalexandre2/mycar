@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ChecklistUso;
 use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -63,16 +64,22 @@ class ChecklistUsoController extends Controller
             ->values()
             ->all();
 
-        $checklist = ChecklistUso::create([
-            'uso_veiculo_id' => $uso->id,
-            'momento' => $dados['momento'],
-            'itens' => $itens,
-            'observacoes' => $dados['observacoes'] ?? null,
-            'feito_por_user_id' => $request->user()->id,
-        ]);
+        // A unicidade (reserva + momento) é garantida pelo banco. Se duas requisições chegarem juntas,
+        // a segunda perde aqui e recebe a mesma resposta de quem já foi registrado.
+        try {
+            $checklist = ChecklistUso::create([
+                'uso_veiculo_id' => $uso->id,
+                'momento' => $dados['momento'],
+                'itens' => $itens,
+                'observacoes' => $dados['observacoes'] ?? null,
+                'feito_por_user_id' => $request->user()->id,
+            ]);
+        } catch (UniqueConstraintViolationException) {
+            return response()->json(['message' => 'Este checklist já foi feito.'], 422);
+        }
 
         UsoVeiculoEvento::registrar($uso, 'checklist_' . $dados['momento'], $request->user()->id, [
-            'problemas' => $checklist->problemas(),
+            'problemas' => $checklist->problemas,
         ]);
 
         return response()->json($this->formatar($checklist), 201);
@@ -97,7 +104,7 @@ class ChecklistUsoController extends Controller
             'id' => $c->id,
             'momento' => $c->momento,
             'itens' => $c->itens,
-            'problemas' => $c->problemas(),
+            'problemas' => $c->problemas,
             'observacoes' => $c->observacoes,
             'quando' => $c->created_at?->toIso8601String(),
         ];
