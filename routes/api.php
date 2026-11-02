@@ -95,6 +95,12 @@ Route::get('/hodometros/{uso}/{momento}', [FotoServirController::class, 'hodomet
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('hodometros.mostrar');
 
+// Comprovante e foto do hodômetro de um abastecimento: também por link assinado e temporário.
+Route::get('/abastecimentos/{abastecimento}/{tipo}', [FotoServirController::class, 'abastecimento'])
+    ->where('tipo', 'comprovante|hodometro')
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('abastecimentos.fotos.mostrar');
+
 // Foto de uma ocorrência da frota: também por link assinado e temporário.
 Route::get('/ocorrencias/fotos/{foto}', [FotoServirController::class, 'ocorrencia'])
     ->middleware(['signed:relative', 'throttle:120,1'])

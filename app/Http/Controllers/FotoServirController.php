@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Abastecimento;
 use App\Models\FotoVeiculoConta;
 use App\Models\OcorrenciaFoto;
 use App\Models\SugestaoAnexo;
@@ -39,6 +40,23 @@ class FotoServirController extends Controller
         // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
         $registro = UsoVeiculo::withoutGlobalScopes()->find($uso);
         $caminho = $registro?->caminhoDaFoto($momento);
+
+        abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
+
+        return Storage::disk('local')->response($caminho, null, [
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /** Comprovante ou foto do hodômetro de um abastecimento (mesmo esquema: link assinado e temporário). */
+    public function abastecimento($abastecimento, $tipo)
+    {
+        abort_unless(in_array($tipo, ['comprovante', 'hodometro'], true), 404);
+
+        // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
+        $registro = Abastecimento::withoutGlobalScopes()->find($abastecimento);
+        $caminho = $registro ? ($tipo === 'comprovante' ? $registro->comprovante_caminho : $registro->hodometro_caminho) : null;
 
         abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
 
