@@ -281,4 +281,25 @@ class FrotaDiferenciaisTest extends TestCase
         $this->expectException(QueryException::class);
         DB::table('checklists_uso')->insert($linha);
     }
+
+    public function test_corrida_no_checklist_vira_422_e_nao_erro_500(): void
+    {
+        $uso = $this->uso();
+
+        // Simula a corrida: a checagem prévia não viu nada, mas o banco recusa a segunda gravação.
+        ChecklistUso::creating(function () {
+            $erro = new \PDOException('UNIQUE constraint failed: checklists_uso.uso_veiculo_id', 0);
+            $erro->errorInfo = ['23000', 19, 'UNIQUE constraint failed'];
+
+            throw new QueryException('sqlite', 'insert into checklists_uso', [], $erro);
+        });
+
+        try {
+            $this->postJson("/api/conta/usos/{$uso->id}/checklist", $this->checklistCompleto(), $this->headersMotorista)
+                ->assertStatus(422)
+                ->assertJsonFragment(['message' => 'Este checklist já foi feito.']);
+        } finally {
+            ChecklistUso::getEventDispatcher()->forget('eloquent.creating: ' . ChecklistUso::class);
+        }
+    }
 }

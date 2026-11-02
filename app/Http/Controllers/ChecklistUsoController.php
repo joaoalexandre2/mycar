@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ChecklistUso;
 use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -75,7 +76,8 @@ class ChecklistUsoController extends Controller
             ]);
         } catch (QueryException $e) {
             // 23000: violação de integridade (a unicidade reserva + momento). Qualquer outra falha segue como erro.
-            if ($e->getCode() !== '23000') {
+            // O SQLSTATE vem em errorInfo (preenchido pelo driver); o código da exceção é só uma reserva.
+            if ((string) ($e->errorInfo[0] ?? $e->getCode()) !== '23000') {
                 throw $e;
             }
 
