@@ -25,6 +25,7 @@ use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
+use App\Http\Controllers\ModeloGrupoController;
 use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
@@ -243,6 +244,11 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/grupos-usuarios', [GrupoUsuarioController::class, 'store']);
         Route::put('/grupos-usuarios/{id}', [GrupoUsuarioController::class, 'update']);
         Route::delete('/grupos-usuarios/{id}', [GrupoUsuarioController::class, 'destroy']);
+
+        // Modelos salvos pela frota para reusar na criação de grupos
+        Route::get('/modelos-grupo', [ModeloGrupoController::class, 'index']);
+        Route::post('/modelos-grupo', [ModeloGrupoController::class, 'store']);
+        Route::delete('/modelos-grupo/{id}', [ModeloGrupoController::class, 'destroy']);
     });
 
     Route::middleware(['perfil:frota', 'permissao:centros_custo'])->prefix('conta')->group(function () {

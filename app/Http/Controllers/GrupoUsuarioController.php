@@ -198,19 +198,7 @@ class GrupoUsuarioController extends Controller
     /** Quem gerencia grupos só concede o que ele mesmo tem: permissões e menus. */
     private function podeConceder(User $ator, array $permissoes, array $menus): bool
     {
-        foreach ($permissoes as $permissao) {
-            if (!$ator->temPermissao($permissao)) {
-                return false;
-            }
-        }
-
-        foreach ($menus as $menu) {
-            if (!$ator->podeVerMenu($menu)) {
-                return false;
-            }
-        }
-
-        return true;
+        return PermissoesFrota::podeConceder($ator, $permissoes, $menus);
     }
 
     private function semConcessao()
