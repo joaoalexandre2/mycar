@@ -102,14 +102,25 @@ class PainelFrotaController extends Controller
 
         $inicio = isset($dados['de']) ? Carbon::parse($dados['de'])->startOfDay() : Carbon::today()->subDays(29);
         $fim = isset($dados['ate']) ? Carbon::parse($dados['ate'])->endOfDay() : Carbon::today()->endOfDay();
-        $horasPeriodo = max(1, $inicio->diffInHours($fim));
 
-        // Só as colunas que o cálculo usa: menos memória quando a frota cresce.
+        // Capacidade em dias-calendário completos: cada dia do período vale 24 horas, inclusive o último.
+        $dias = $inicio->copy()->startOfDay()->diffInDays($fim->copy()->startOfDay()) + 1;
+        $horasPeriodo = (float) ($dias * 24);
+
+        // Um uso entra se o intervalo previsto OU o real (saída até chegada) encosta no período.
+        // Assim, um uso que saiu na reserva e chegou depois do horário previsto não some da conta.
         $usos = UsoVeiculo::query()
             ->select(['id', 'veiculo_conta_id', 'status', 'inicio_previsto', 'fim_previsto', 'saida_em', 'chegada_em', 'km_saida', 'km_chegada'])
             ->where('status', '!=', 'cancelado')
-            ->where('inicio_previsto', '<=', $fim)
-            ->where('fim_previsto', '>=', $inicio)
+            ->where(function ($q) use ($inicio, $fim) {
+                $q->where(function ($previsto) use ($inicio, $fim) {
+                    $previsto->where('inicio_previsto', '<=', $fim)->where('fim_previsto', '>=', $inicio);
+                })->orWhere(function ($real) use ($inicio, $fim) {
+                    $real->whereNotNull('saida_em')
+                        ->where('saida_em', '<=', $fim)
+                        ->where(fn ($chegada) => $chegada->whereNull('chegada_em')->orWhere('chegada_em', '>=', $inicio));
+                });
+            })
             ->get()
             ->groupBy('veiculo_conta_id');
 

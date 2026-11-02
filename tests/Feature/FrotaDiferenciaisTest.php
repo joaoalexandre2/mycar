@@ -8,7 +8,9 @@ use App\Models\Motorista;
 use App\Models\Multa;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
 
@@ -201,5 +203,82 @@ class FrotaDiferenciaisTest extends TestCase
             ->assertOk()
             ->assertJsonPath('checklists_com_problema_total', 52)
             ->assertJsonCount(50, 'checklists_com_problema');
+    }
+
+    public function test_uso_real_que_passa_do_horario_reservado_entra_no_periodo(): void
+    {
+        $dia = '2026-11-10';
+        UsoVeiculo::create([
+            'veiculo_conta_id' => $this->veiculo->id,
+            'motorista_id' => $this->motorista->id,
+            'inicio_previsto' => "{$dia} 08:00:00",
+            'fim_previsto' => "{$dia} 10:00:00",
+            'saida_em' => "{$dia} 08:00:00",
+            'chegada_em' => "{$dia} 13:00:00",
+            'status' => 'concluido',
+        ]);
+
+        // Consulta só das 11h às 13h: a reserva terminou às 10h, mas o carro ainda estava rodando.
+        $this->getJson("/api/conta/painel-frota?de={$dia}&ate={$dia}", $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('veiculos.0.reservas', 1);
+    }
+
+    public function test_periodo_de_um_dia_tem_24_horas(): void
+    {
+        $this->getJson('/api/conta/painel-frota?de=2026-11-10&ate=2026-11-10', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('horas_periodo', 24);
+    }
+
+    public function test_periodo_que_vira_o_ano_conta_as_horas_certas(): void
+    {
+        $this->getJson('/api/conta/painel-frota?de=2026-12-31&ate=2027-01-01', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('horas_periodo', 48);
+    }
+
+    public function test_periodo_de_um_mes_conta_todos_os_dias(): void
+    {
+        $this->getJson('/api/conta/painel-frota?de=2026-02-01&ate=2026-02-28', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('horas_periodo', 672);
+    }
+
+    public function test_painel_mostra_so_os_veiculos_da_propria_conta(): void
+    {
+        $outra = Conta::create(['tipo' => 'frota', 'nome' => 'Outra frota']);
+        app()->instance('conta.atual', $outra->id);
+        VeiculoConta::create(['placa' => 'ZZZ9Z99', 'marca' => 'VW', 'modelo' => 'Gol', 'ano' => 2020]);
+        app()->instance('conta.atual', $this->conta->id);
+
+        $this->getJson('/api/conta/painel-frota', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonCount(1, 'veiculos')
+            ->assertJsonPath('veiculos.0.placa', 'AAA1A11');
+    }
+
+    public function test_motorista_nao_consulta_painel_nem_multas(): void
+    {
+        $this->getJson('/api/conta/painel-frota', $this->headersMotorista)->assertStatus(403);
+        $this->getJson('/api/conta/multas', $this->headersMotorista)->assertStatus(403);
+        $this->getJson('/api/conta/alertas', $this->headersMotorista)->assertStatus(403);
+    }
+
+    public function test_o_banco_nao_aceita_dois_checklists_do_mesmo_momento_na_mesma_reserva(): void
+    {
+        $uso = $this->uso();
+        $linha = [
+            'conta_id' => $this->conta->id,
+            'uso_veiculo_id' => $uso->id,
+            'momento' => 'saida',
+            'itens' => json_encode([['item' => 'pneus', 'ok' => true]]),
+            'problemas' => 0,
+        ];
+
+        DB::table('checklists_uso')->insert($linha);
+
+        $this->expectException(QueryException::class);
+        DB::table('checklists_uso')->insert($linha);
     }
 }
