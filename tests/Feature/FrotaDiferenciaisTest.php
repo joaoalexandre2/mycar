@@ -166,8 +166,40 @@ class FrotaDiferenciaisTest extends TestCase
 
         $this->getJson("/api/conta/painel-frota?de={$dia}&ate={$dia}", $this->headersAdmin)
             ->assertOk()
-            ->assertJsonPath('veiculos.0.horas_usadas', 2)
+            ->assertJsonPath('veiculos.0.horas_em_uso', 2)
+            ->assertJsonPath('veiculos.0.horas_reservadas', 2)
             ->assertJsonPath('veiculos.0.km_rodados', 85)
             ->assertJsonPath('veiculos.0.reservas', 1);
+    }
+
+    public function test_reserva_sem_saida_nao_conta_como_uso_real(): void
+    {
+        $dia = now()->toDateString();
+        $this->uso([
+            'inicio_previsto' => "{$dia} 08:00:00",
+            'fim_previsto' => "{$dia} 10:00:00",
+        ]);
+
+        $this->getJson("/api/conta/painel-frota?de={$dia}&ate={$dia}", $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('veiculos.0.horas_em_uso', 0)
+            ->assertJsonPath('veiculos.0.horas_reservadas', 2);
+    }
+
+    public function test_alertas_informam_o_total_de_problemas_mesmo_passando_do_limite_da_lista(): void
+    {
+        for ($i = 0; $i < 52; $i++) {
+            ChecklistUso::create([
+                'uso_veiculo_id' => $this->uso()->id,
+                'momento' => 'saida',
+                'itens' => [['item' => 'pneus', 'ok' => false]],
+                'feito_por_user_id' => null,
+            ]);
+        }
+
+        $this->getJson('/api/conta/alertas', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonPath('checklists_com_problema_total', 52)
+            ->assertJsonCount(50, 'checklists_com_problema');
     }
 }

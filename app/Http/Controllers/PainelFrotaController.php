@@ -10,10 +10,16 @@ use App\Models\VeiculoConta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-/** Painel da frota: alertas do que vence, checklists com problema e quanto cada veículo foi usado. */
+/**
+ * Painel da frota: alertas do que vence, checklists com problema e quanto cada veículo foi usado.
+ * A utilização real (saída e chegada registradas) é separada das horas só reservadas.
+ */
 class PainelFrotaController extends Controller
 {
     private const DIAS_DE_AVISO = 30;
+
+    /** Quantos checklists com problema aparecem na lista. O total é informado à parte. */
+    private const LIMITE_DE_CHECKLISTS = 50;
 
     public function alertas()
     {
@@ -21,6 +27,7 @@ class PainelFrotaController extends Controller
         $limite = $hoje->copy()->addDays(self::DIAS_DE_AVISO);
 
         $cnh = Motorista::query()
+            ->select(['id', 'nome', 'cnh_validade'])
             ->where('ativo', true)
             ->whereNotNull('cnh_validade')
             ->where('cnh_validade', '<=', $limite->toDateString())
@@ -35,6 +42,7 @@ class PainelFrotaController extends Controller
             ->values();
 
         $revisoes = VeiculoConta::query()
+            ->select(['id', 'placa', 'marca', 'modelo', 'revisao_prevista_em'])
             ->whereNotNull('revisao_prevista_em')
             ->where('revisao_prevista_em', '<=', $limite->toDateString())
             ->orderBy('revisao_prevista_em')
@@ -47,18 +55,25 @@ class PainelFrotaController extends Controller
             ])
             ->values();
 
-        $multasAbertas = Multa::query()->where('situacao', Multa::ABERTA);
+        // Multas em aberto: a quantidade e o valor são somados no banco.
+        $multas = Multa::query()
+            ->where('situacao', Multa::ABERTA)
+            ->selectRaw('count(*) as quantidade, coalesce(sum(valor), 0) as valor')
+            ->first();
 
-        $checklists = ChecklistUso::query()
-            ->where('created_at', '>=', now()->subDays(self::DIAS_DE_AVISO))
+        // Problemas filtrados no banco, pela coluna gravada: nada de ler o JSON de todos os checklists.
+        $problemasBase = ChecklistUso::query()
+            ->where('problemas', '>', 0)
+            ->where('created_at', '>=', now()->subDays(self::DIAS_DE_AVISO));
+
+        $checklists = (clone $problemasBase)
             ->orderByDesc('id')
-            ->limit(300)
+            ->limit(self::LIMITE_DE_CHECKLISTS)
             ->get()
-            ->filter(fn (ChecklistUso $c) => $c->problemas() > 0)
             ->map(fn (ChecklistUso $c) => [
                 'uso_id' => $c->uso_veiculo_id,
                 'momento' => $c->momento,
-                'problemas' => $c->problemas(),
+                'problemas' => $c->problemas,
                 'itens' => collect($c->itens)->where('ok', false)->pluck('item')
                     ->map(fn (string $chave) => ChecklistUso::ITENS[$chave] ?? $chave)->values(),
                 'quando' => $c->created_at?->toIso8601String(),
@@ -68,12 +83,16 @@ class PainelFrotaController extends Controller
         return response()->json([
             'cnh' => $cnh,
             'revisoes' => $revisoes,
-            'multas_abertas' => ['quantidade' => (clone $multasAbertas)->count(), 'valor' => (float) (clone $multasAbertas)->sum('valor')],
+            'multas_abertas' => ['quantidade' => (int) $multas->quantidade, 'valor' => (float) $multas->valor],
             'checklists_com_problema' => $checklists,
+            'checklists_com_problema_total' => (clone $problemasBase)->count(),
         ]);
     }
 
-    /** Quanto cada veículo esteve reservado no período (padrão: últimos 30 dias). */
+    /**
+     * Quanto cada veículo foi usado no período (padrão: últimos 30 dias), em medidas separadas:
+     * utilização real (saída e chegada registradas), horas reservadas (previstas) e disponibilidade.
+     */
     public function disponibilidade(Request $request)
     {
         $dados = $request->validate([
@@ -85,54 +104,85 @@ class PainelFrotaController extends Controller
         $fim = isset($dados['ate']) ? Carbon::parse($dados['ate'])->endOfDay() : Carbon::today()->endOfDay();
         $horasPeriodo = max(1, $inicio->diffInHours($fim));
 
+        // Só as colunas que o cálculo usa: menos memória quando a frota cresce.
         $usos = UsoVeiculo::query()
+            ->select(['id', 'veiculo_conta_id', 'status', 'inicio_previsto', 'fim_previsto', 'saida_em', 'chegada_em', 'km_saida', 'km_chegada'])
             ->where('status', '!=', 'cancelado')
             ->where('inicio_previsto', '<=', $fim)
             ->where('fim_previsto', '>=', $inicio)
-            ->get();
+            ->get()
+            ->groupBy('veiculo_conta_id');
 
-        $multas = Multa::query()->whereBetween('data_hora', [$inicio, $fim])->get()->groupBy('veiculo_conta_id');
+        $multasPorVeiculo = Multa::query()
+            ->whereBetween('data_hora', [$inicio, $fim])
+            ->selectRaw('veiculo_conta_id, count(*) as total')
+            ->groupBy('veiculo_conta_id')
+            ->pluck('total', 'veiculo_conta_id');
 
-        $veiculos = VeiculoConta::query()->orderBy('placa')->get()->map(function (VeiculoConta $v) use ($usos, $multas, $inicio, $fim, $horasPeriodo) {
-            $dosVeiculo = $usos->where('veiculo_conta_id', $v->id);
+        $veiculos = VeiculoConta::query()
+            ->select(['id', 'placa', 'marca', 'modelo'])
+            ->orderBy('placa')
+            ->get()
+            ->map(function (VeiculoConta $v) use ($usos, $multasPorVeiculo, $inicio, $fim, $horasPeriodo) {
+                $deste = $usos->get($v->id, collect());
 
-            $horasUsadas = $dosVeiculo->sum(function (UsoVeiculo $u) use ($inicio, $fim) {
-                $de = $u->saida_em ?? $u->inicio_previsto;
-                $ate = $u->chegada_em ?? $u->fim_previsto;
-                $de = $de->greaterThan($inicio) ? $de : $inicio;
-                $ate = $ate->lessThan($fim) ? $ate : $fim;
+                $horasReservadas = $deste->sum(fn (UsoVeiculo $u) => $this->horasNoPeriodo(
+                    $u->inicio_previsto,
+                    $u->fim_previsto,
+                    $inicio,
+                    $fim,
+                ));
 
-                return $ate->greaterThan($de) ? $de->diffInMinutes($ate) / 60 : 0;
-            });
+                // Só conta uso real: quem tem saída registrada. Sem saída, a hora ainda é só reserva.
+                $horasEmUso = $deste
+                    ->filter(fn (UsoVeiculo $u) => $u->saida_em !== null)
+                    ->sum(fn (UsoVeiculo $u) => $this->horasNoPeriodo(
+                        $u->saida_em,
+                        $u->chegada_em ?? $fim,
+                        $inicio,
+                        $fim,
+                    ));
 
-            $kmRodados = $dosVeiculo
-                ->filter(fn (UsoVeiculo $u) => $u->km_saida !== null && $u->km_chegada !== null && $u->km_chegada >= $u->km_saida)
-                ->sum(fn (UsoVeiculo $u) => $u->km_chegada - $u->km_saida);
+                $kmRodados = $deste
+                    ->filter(fn (UsoVeiculo $u) => $u->km_saida !== null && $u->km_chegada !== null && $u->km_chegada >= $u->km_saida)
+                    ->sum(fn (UsoVeiculo $u) => $u->km_chegada - $u->km_saida);
 
-            $utilizacao = round(min(100, $horasUsadas / $horasPeriodo * 100), 1);
+                $reservaPct = round(min(100, $horasReservadas / $horasPeriodo * 100), 1);
 
-            return [
-                'veiculo_id' => $v->id,
-                'placa' => $v->placa,
-                'nome' => trim($v->marca . ' ' . $v->modelo),
-                'horas_usadas' => round($horasUsadas, 1),
-                'utilizacao_pct' => $utilizacao,
-                'ociosidade_pct' => round(100 - $utilizacao, 1),
-                'reservas' => $dosVeiculo->count(),
-                'km_rodados' => (int) $kmRodados,
-                'multas' => $multas->get($v->id, collect())->count(),
-            ];
-        })->values();
+                return [
+                    'veiculo_id' => $v->id,
+                    'placa' => $v->placa,
+                    'nome' => trim($v->marca . ' ' . $v->modelo),
+                    'horas_em_uso' => round($horasEmUso, 1),
+                    'utilizacao_real_pct' => round(min(100, $horasEmUso / $horasPeriodo * 100), 1),
+                    'horas_reservadas' => round($horasReservadas, 1),
+                    'reserva_pct' => $reservaPct,
+                    'disponibilidade_pct' => round(max(0, 100 - $reservaPct), 1),
+                    'reservas' => $deste->count(),
+                    'km_rodados' => (int) $kmRodados,
+                    'multas' => (int) ($multasPorVeiculo[$v->id] ?? 0),
+                ];
+            })
+            ->values();
 
-        $totalHoras = $veiculos->sum('horas_usadas');
         $capacidade = $veiculos->count() * $horasPeriodo;
 
         return response()->json([
             'de' => $inicio->toDateString(),
             'ate' => $fim->toDateString(),
             'horas_periodo' => $horasPeriodo,
-            'utilizacao_media_pct' => $capacidade > 0 ? round(min(100, $totalHoras / $capacidade * 100), 1) : 0,
+            'utilizacao_real_media_pct' => $capacidade > 0 ? round(min(100, $veiculos->sum('horas_em_uso') / $capacidade * 100), 1) : 0,
+            'reserva_media_pct' => $capacidade > 0 ? round(min(100, $veiculos->sum('horas_reservadas') / $capacidade * 100), 1) : 0,
             'veiculos' => $veiculos,
         ]);
+    }
+
+    /** Horas de um intervalo que caem dentro do período pedido. */
+    private function horasNoPeriodo($de, $ate, Carbon $inicio, Carbon $fim): float
+    {
+        $inicioEfetivo = $de->greaterThan($inicio) ? $de : $inicio;
+        $fimEfetivo = $ate->lessThan($fim) ? $ate : $fim;
+
+        return $fimEfetivo->greaterThan($inicioEfetivo) ? $inicioEfetivo->diffInMinutes($fimEfetivo) / 60 : 0.0;
     }
 }
