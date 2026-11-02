@@ -75,9 +75,9 @@ class ChecklistUsoController extends Controller
                 'feito_por_user_id' => $request->user()->id,
             ]);
         } catch (QueryException $e) {
-            // 23000: violação de integridade (a unicidade reserva + momento). Qualquer outra falha segue como erro.
-            // O SQLSTATE vem em errorInfo (preenchido pelo driver); o código da exceção é só uma reserva.
-            if ((string) ($e->errorInfo[0] ?? $e->getCode()) !== '23000') {
+            // Só a duplicidade deste checklist vira 422. Outras violações de integridade (chave estrangeira,
+            // por exemplo) continuam sendo erro, para não serem mascaradas como "já foi feito".
+            if (!$this->ehDuplicidadeDoChecklist($e)) {
                 throw $e;
             }
 
@@ -89,6 +89,22 @@ class ChecklistUsoController extends Controller
         ]);
 
         return response()->json($this->formatar($checklist), 201);
+    }
+
+    /**
+     * A violação é a da unicidade (reserva + momento) desta tabela? O SQLSTATE 23000 sozinho é genérico:
+     * SQLite cita o campo ("checklists_uso.uso_veiculo_id") e MySQL cita o índice ("checklists_uso_..._unique").
+     */
+    private function ehDuplicidadeDoChecklist(QueryException $e): bool
+    {
+        if ((string) ($e->errorInfo[0] ?? $e->getCode()) !== '23000') {
+            return false;
+        }
+
+        $mensagem = $e->getMessage();
+
+        return str_contains($mensagem, 'checklists_uso')
+            && (str_contains($mensagem, 'UNIQUE') || str_contains($mensagem, 'Duplicate entry'));
     }
 
     /** A reserva, se a pessoa pode vê-la: o motorista só as próprias. */
