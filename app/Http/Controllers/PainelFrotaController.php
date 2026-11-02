@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ChecklistUso;
 use App\Models\Motorista;
 use App\Models\Multa;
+use App\Models\Ocorrencia;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
 use App\Support\FusoDaFrota;
@@ -18,6 +19,10 @@ use Illuminate\Http\Request;
 class PainelFrotaController extends Controller
 {
     private const DIAS_DE_AVISO = 30;
+
+    private const DIAS_DE_OCORRENCIA_PENDENTE = 7;
+
+    private const LIMITE_DE_OCORRENCIAS = 20;
 
     /** Quantos checklists com problema aparecem na lista. O total é informado à parte. */
     private const LIMITE_DE_CHECKLISTS = 50;
@@ -89,7 +94,35 @@ class PainelFrotaController extends Controller
             'multas_abertas' => ['quantidade' => (int) $multas->quantidade, 'valor' => (float) $multas->valor],
             'checklists_com_problema' => $checklists,
             'checklists_com_problema_total' => (clone $problemasBase)->count(),
+            'ocorrencias_pendentes' => $this->ocorrenciasPendentes(),
         ]);
+    }
+
+    /** Ocorrências ainda em aberto há mais de uma semana: quem registrou pode ter esquecido de dar andamento. */
+    private function ocorrenciasPendentes(): array
+    {
+        $limite = now()->subDays(self::DIAS_DE_OCORRENCIA_PENDENTE)->format('Y-m-d H:i:s');
+
+        $consulta = Ocorrencia::query()
+            ->whereIn('status', Ocorrencia::ABERTAS)
+            ->where('data_hora', '<=', $limite);
+
+        return [
+            'quantidade' => (clone $consulta)->count(),
+            'itens' => (clone $consulta)
+                ->with('veiculo:id,placa')
+                ->orderBy('data_hora')
+                ->limit(self::LIMITE_DE_OCORRENCIAS)
+                ->get()
+                ->map(fn (Ocorrencia $o) => [
+                    'id' => $o->id,
+                    'tipo' => Ocorrencia::TIPOS[$o->tipo] ?? $o->tipo,
+                    'status' => Ocorrencia::STATUS[$o->status] ?? $o->status,
+                    'data_hora' => FusoDaFrota::saida($o->data_hora),
+                    'placa' => $o->veiculo?->placa,
+                ])
+                ->values(),
+        ];
     }
 
     /**

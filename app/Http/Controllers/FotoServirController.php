@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FotoVeiculoConta;
+use App\Models\OcorrenciaFoto;
 use App\Models\SugestaoAnexo;
 use App\Models\UsoVeiculo;
 use Illuminate\Support\Facades\Storage;
@@ -42,6 +43,20 @@ class FotoServirController extends Controller
         abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
 
         return Storage::disk('local')->response($caminho, null, [
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /** Foto de uma ocorrência da frota (mesmo esquema: link assinado e temporário). */
+    public function ocorrencia($foto)
+    {
+        // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
+        $registro = OcorrenciaFoto::withoutGlobalScopes()->find($foto);
+
+        abort_unless($registro && Storage::disk('local')->exists($registro->caminho), 404);
+
+        return Storage::disk('local')->response($registro->caminho, null, [
             'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
         ]);
