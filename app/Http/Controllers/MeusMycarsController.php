@@ -24,7 +24,7 @@ use Illuminate\Validation\ValidationException;
  */
 class MeusMycarsController extends Controller
 {
-    private const PERFIS = ['oficina', 'pessoa', 'frota'];
+    private const PERFIS = ['oficina', 'pessoa', 'frota', 'estetica'];
 
     private const PRINCIPAL = 'principal';
 
@@ -66,7 +66,7 @@ class MeusMycarsController extends Controller
 
         $dados = $request->validate([
             'perfil' => ['required', Rule::in(self::PERFIS)],
-            'nome' => ['required_if:perfil,oficina', 'required_if:perfil,frota', 'nullable', 'string', 'max:150'],
+            'nome' => ['required_if:perfil,oficina', 'required_if:perfil,frota', 'required_if:perfil,estetica', 'nullable', 'string', 'max:150'],
         ], [], ['nome' => 'nome']);
 
         if (in_array($dados['perfil'], $this->perfisDaPessoa($usuario), true)) {
@@ -89,7 +89,7 @@ class MeusMycarsController extends Controller
             $conta = Conta::create([
                 'tipo' => $dados['perfil'],
                 // "Cuidados com seu carro" é pessoal: leva o nome da própria pessoa.
-                'nome' => $dados['perfil'] === Conta::TIPO_FROTA ? $dados['nome'] : $usuario->name,
+                'nome' => in_array($dados['perfil'], [Conta::TIPO_FROTA, Conta::TIPO_ESTETICA], true) ? $dados['nome'] : $usuario->name,
             ]);
 
             return Acesso::create([

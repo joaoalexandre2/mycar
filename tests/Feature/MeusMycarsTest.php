@@ -62,7 +62,7 @@ class MeusMycarsTest extends TestCase
             ->assertJsonPath('mycars.0.atual', true)
             ->assertJsonCount(1, 'mycars');
 
-        $this->assertEqualsCanonicalizing(['pessoa', 'frota'], $r->json('pode_criar'));
+        $this->assertEqualsCanonicalizing(['pessoa', 'frota', 'estetica'], $r->json('pode_criar'));
     }
 
     public function test_cria_um_mycar_pessoa_e_ja_abre_nele(): void
@@ -74,7 +74,7 @@ class MeusMycarsTest extends TestCase
             ->assertJsonPath('user.oficina', null)
             ->assertJsonCount(2, 'mycars');
 
-        $this->assertSame(['frota'], $r->json('pode_criar'));
+        $this->assertEqualsCanonicalizing(['frota', 'estetica'], $r->json('pode_criar'));
 
         // Neste aparelho agora valem as rotas de pessoa e não as da oficina.
         $this->getJson('/api/me', $this->headers)->assertJsonPath('perfil', 'pessoa');
@@ -286,5 +286,14 @@ class MeusMycarsTest extends TestCase
         // Principal e extra na mesma conta (caso de dados antigos) não duplica o e-mail.
         $this->usuario->forceFill(['email_verified_at' => now(), 'perfil' => 'frota', 'conta_id' => $frota->id])->save();
         $this->assertSame([$this->usuario->email], $frota->emailsParaAvisos());
+    }
+
+    public function test_cria_um_mycar_estetica_com_o_nome_do_estabelecimento(): void
+    {
+        $this->postJson('/api/meus-mycars', ['perfil' => 'estetica', 'nome' => 'Lava Jato Brilho'], $this->headers)
+            ->assertStatus(201);
+
+        $this->getJson('/api/me', $this->headers)->assertJsonPath('perfil', 'estetica');
+        $this->assertDatabaseHas('contas', ['tipo' => 'estetica', 'nome' => 'Lava Jato Brilho']);
     }
 }
