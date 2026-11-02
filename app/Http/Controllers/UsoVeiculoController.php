@@ -439,12 +439,16 @@ class UsoVeiculoController extends Controller
             $afetados = $this->reservasAtingidasPelaDevolucao($uso);
 
             foreach ($afetados as $afetado) {
-                UsoVeiculoEvento::registrar($afetado, 'conflito_por_devolucao', $request->user()->id, ['uso_que_atrasou' => $uso->id]);
+                UsoVeiculoEvento::registrar($afetado, 'conflito_por_devolucao', $request->user()->id, [
+                    'uso_que_atrasou' => $uso->id,
+                    'motivo' => $this->motivoDoConflito($uso, $afetado),
+                ]);
             }
 
             return response()->json($this->formatar($uso->fresh(self::RELACOES)) + [
                 'alerta_conflito' => $afetados->map(fn (UsoVeiculo $a) => [
                     'uso_id' => $a->id,
+                    'motivo' => $this->motivoDoConflito($uso, $a),
                     'inicio_previsto' => FusoDaFrota::saida($a->inicio_previsto),
                     'motorista' => $a->motorista?->nome,
                     'veiculo' => $a->veiculo?->placa,
@@ -697,7 +701,8 @@ class UsoVeiculoController extends Controller
     }
 
     /**
-     * Reservas agendadas para este veículo que começam antes da hora em que ele voltou (e depois de quando saiu).
+     * Reservas agendadas que começam antes da hora em que o veículo voltou (e depois de quando saiu),
+     * do mesmo veículo ou do mesmo motorista (que ficou com o carro atrasado e não chega na outra reserva).
      * Não impede a devolução: só identifica quem precisa ser avisado.
      */
     private function reservasAtingidasPelaDevolucao(UsoVeiculo $uso)
@@ -707,13 +712,25 @@ class UsoVeiculoController extends Controller
         }
 
         return UsoVeiculo::with(['motorista', 'veiculo'])
-            ->where('veiculo_conta_id', $uso->veiculo_conta_id)
             ->where('status', 'agendado')
             ->where('id', '!=', $uso->id)
             ->where('inicio_previsto', '<', $uso->chegada_em)
             ->where('inicio_previsto', '>=', $uso->saida_em ?? $uso->inicio_previsto)
+            ->where(function ($consulta) use ($uso) {
+                $consulta->where('veiculo_conta_id', $uso->veiculo_conta_id);
+
+                if ($uso->motorista_id) {
+                    $consulta->orWhere('motorista_id', $uso->motorista_id);
+                }
+            })
             ->orderBy('inicio_previsto')
             ->get();
+    }
+
+    /** Quem ficou afetado: a mesma placa ("veiculo") ou o mesmo motorista em outro carro ("motorista"). */
+    private function motivoDoConflito(UsoVeiculo $uso, UsoVeiculo $afetado): string
+    {
+        return $afetado->veiculo_conta_id === $uso->veiculo_conta_id ? 'veiculo' : 'motorista';
     }
 
     /**
