@@ -24,7 +24,8 @@ class PainelFrotaController extends Controller
 
     public function alertas()
     {
-        $hoje = Carbon::today();
+        // O dia é o de Brasília: o servidor roda em UTC e, depois das 21h, já estaria no dia seguinte.
+        $hoje = Carbon::today(FusoDaFrota::NOME);
         $limite = $hoje->copy()->addDays(self::DIAS_DE_AVISO);
 
         $cnh = Motorista::query()
@@ -38,7 +39,8 @@ class PainelFrotaController extends Controller
                 'id' => $m->id,
                 'nome' => $m->nome,
                 'validade' => $m->cnh_validade?->toDateString(),
-                'situacao' => $m->cnh_validade->lt($hoje) ? 'vencida' : 'vence_em_breve',
+                // Compara só o dia: a validade é uma data, e o "hoje" tem fuso.
+                'situacao' => $m->cnh_validade->toDateString() < $hoje->toDateString() ? 'vencida' : 'vence_em_breve',
             ])
             ->values();
 
