@@ -302,4 +302,26 @@ class FrotaDiferenciaisTest extends TestCase
             ChecklistUso::getEventDispatcher()->forget('eloquent.creating: ' . ChecklistUso::class);
         }
     }
+
+    public function test_outra_violacao_de_integridade_nao_vira_checklist_ja_feito(): void
+    {
+        $uso = $this->uso();
+
+        // Uma chave estrangeira falhando também é SQLSTATE 23000, mas não é a duplicidade do checklist.
+        ChecklistUso::creating(function () {
+            $erro = new \PDOException('FOREIGN KEY constraint failed', 0);
+            $erro->errorInfo = ['23000', 787, 'FOREIGN KEY constraint failed'];
+
+            throw new QueryException('sqlite', 'insert into checklists_uso', [], $erro);
+        });
+
+        try {
+            $this->withoutExceptionHandling();
+            $this->expectException(QueryException::class);
+
+            $this->postJson("/api/conta/usos/{$uso->id}/checklist", $this->checklistCompleto(), $this->headersMotorista);
+        } finally {
+            ChecklistUso::getEventDispatcher()->forget('eloquent.creating: ' . ChecklistUso::class);
+        }
+    }
 }
