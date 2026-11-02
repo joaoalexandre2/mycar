@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
-    private const PERFIS = ['oficina', 'pessoa', 'frota'];
+    private const PERFIS = ['oficina', 'pessoa', 'frota', 'estetica'];
 
     /**
      * Cria a conta e o usuário dela, e envia o e-mail de confirmação. O login
@@ -30,6 +30,7 @@ class RegisterController extends Controller
             'perfil' => ['sometimes', Rule::in(self::PERFIS)],
             'nome_oficina' => ['required_if:perfil,oficina', 'required_without:perfil', 'nullable', 'string', 'max:150'],
             'nome_frota' => ['required_if:perfil,frota', 'nullable', 'string', 'max:150'],
+            'nome_estetica' => ['required_if:perfil,estetica', 'nullable', 'string', 'max:150'],
             'name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)],
@@ -60,7 +61,11 @@ class RegisterController extends Controller
 
             $conta = Conta::create([
                 'tipo' => $perfil,
-                'nome' => $perfil === Conta::TIPO_FROTA ? $dados['nome_frota'] : $dados['name'],
+                'nome' => match ($perfil) {
+                    Conta::TIPO_FROTA => $dados['nome_frota'],
+                    Conta::TIPO_ESTETICA => $dados['nome_estetica'],
+                    default => $dados['name'],
+                },
             ]);
 
             return User::create($base + ['conta_id' => $conta->id]);
