@@ -46,11 +46,11 @@ class PermissoesFrota
     public static function catalogo(): array
     {
         return [
-            self::CENTROS_CUSTO => 'Gerenciar centros de custo',
-            self::MOTORISTAS => 'Gerenciar motoristas e convites',
-            self::USOS_CORRIGIR => 'Corrigir ou apagar usos, ver auditoria e ajustar o km dos veículos',
-            self::USOS_IMPORTAR => 'Importar planilha de utilização',
-            self::GRUPOS => 'Gerenciar grupos de usuários',
+            self::CENTROS_CUSTO => 'Cadastrar e mudar os centros de custo',
+            self::MOTORISTAS => 'Cadastrar motoristas e convidar para usar o sistema',
+            self::USOS_CORRIGIR => 'Trocar o centro de custo de uma reserva e ver o histórico das mudanças',
+            self::USOS_IMPORTAR => 'Importar a planilha de utilização',
+            self::GRUPOS => 'Dar acesso a outras pessoas (criar grupos)',
         ];
     }
 

@@ -41,6 +41,10 @@ class GrupoUsuarioController extends Controller
     {
         $dados = $this->validar($request);
 
+        if (!$this->podeConceder($request->user(), $dados['permissoes'], $dados['menus_liberados'] ?? [])) {
+            return $this->semConcessao();
+        }
+
         $grupo = GrupoUsuario::create(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
         $grupo->membros()->sync($dados['membros'] ?? []);
 
@@ -55,7 +59,16 @@ class GrupoUsuarioController extends Controller
             return $this->naoEncontrado();
         }
 
+        // Só mexe em grupo que concede no máximo o que quem edita já tem.
+        if (!$this->podeConceder($request->user(), $grupo->permissoes, $grupo->menus_liberados ?? [])) {
+            return $this->semConcessao();
+        }
+
         $dados = $this->validar($request, $grupo->id);
+
+        if (!$this->podeConceder($request->user(), $dados['permissoes'], $dados['menus_liberados'] ?? $grupo->menus_liberados ?? [])) {
+            return $this->semConcessao();
+        }
 
         $grupo->update(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
 
@@ -66,12 +79,16 @@ class GrupoUsuarioController extends Controller
         return response()->json($this->formatar($grupo->load('membros')));
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $grupo = GrupoUsuario::find($id);
 
         if (!$grupo) {
             return $this->naoEncontrado();
+        }
+
+        if (!$this->podeConceder($request->user(), $grupo->permissoes, $grupo->menus_liberados ?? [])) {
+            return $this->semConcessao();
         }
 
         $grupo->delete();
@@ -146,6 +163,31 @@ class GrupoUsuarioController extends Controller
                 'email' => $u->email,
             ])->values(),
         ];
+    }
+
+    /** Quem gerencia grupos só concede o que ele mesmo tem: permissões e menus. */
+    private function podeConceder(User $ator, array $permissoes, array $menus): bool
+    {
+        foreach ($permissoes as $permissao) {
+            if (!$ator->temPermissao($permissao)) {
+                return false;
+            }
+        }
+
+        foreach ($menus as $menu) {
+            if (!$ator->podeVerMenu($menu)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function semConcessao()
+    {
+        return response()->json([
+            'message' => 'Você só pode criar ou editar grupos com permissões e menus que você mesmo tem.',
+        ], 403);
     }
 
     private function naoEncontrado()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\PermissoesFrota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -83,11 +84,14 @@ class PessoaFrotaController extends Controller
     /** @return array<string, mixed> */
     private function formatar(User $usuario): array
     {
+        // O que a pessoa pode fazer hoje, somando papel e grupos (para a tela mostrar sem conta).
         return [
             'id' => $usuario->id,
             'name' => $usuario->name,
             'email' => $usuario->email,
             'papel' => $usuario->papelNaConta(),
+            'permissoes' => array_values(array_filter(PermissoesFrota::chaves(), fn ($p) => $usuario->temPermissao($p))),
+            'menus' => array_values(array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $usuario->podeVerMenu($m))),
         ];
     }
 }
