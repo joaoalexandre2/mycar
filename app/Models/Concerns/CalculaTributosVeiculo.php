@@ -3,6 +3,7 @@
 namespace App\Models\Concerns;
 
 use App\Enums\TipoVeiculo;
+use App\Support\FusoDaFrota;
 
 /**
  * Estimativas de IPVA e licenciamento de um veículo, a partir de colunas que
@@ -170,7 +171,9 @@ trait CalculaTributosVeiculo
             return null;
         }
 
-        $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
+        // O ano e o "já passou" são os de Brasília, não os do servidor em UTC.
+        $hoje = now(FusoDaFrota::NOME);
+        $vencimento = $hoje->copy()->setDate($hoje->year, $mes, 1)->endOfMonth();
 
         if ($vencimento->isPast()) {
             $vencimento = $vencimento->addYear();
@@ -193,7 +196,9 @@ trait CalculaTributosVeiculo
 
         $mes = (int) config('ipva.mes_vencimento', 1);
 
-        $vencimento = now()->setDate(now()->year, $mes, 1)->endOfMonth();
+        // O ano e o "já passou" são os de Brasília, não os do servidor em UTC.
+        $hoje = now(FusoDaFrota::NOME);
+        $vencimento = $hoje->copy()->setDate($hoje->year, $mes, 1)->endOfMonth();
 
         if ($vencimento->isPast()) {
             $vencimento = $vencimento->addYear();

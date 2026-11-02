@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\AlertaManutencaoEmail;
 use App\Models\Manutencao;
 use App\Models\Oficina;
+use App\Support\FusoDaFrota;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -16,8 +17,9 @@ class EnviarAlertasManutencao extends Command
 
     public function handle(): int
     {
-        $hoje = now()->toDateString();
-        $limite = now()->addDays(30)->toDateString();
+        // Os dias são os de Brasília: o servidor roda em UTC e, depois das 21h, já estaria no dia seguinte.
+        $hoje = now(FusoDaFrota::NOME)->toDateString();
+        $limite = now(FusoDaFrota::NOME)->addDays(30)->toDateString();
         $total = 0;
 
         foreach (Oficina::ativas()->get() as $oficina) {
