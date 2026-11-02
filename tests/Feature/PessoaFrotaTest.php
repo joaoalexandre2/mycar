@@ -47,6 +47,19 @@ class PessoaFrotaTest extends TestCase
             ->assertJsonFragment(['papel' => 'administrador']);
     }
 
+    public function test_lista_mostra_o_que_cada_pessoa_pode_fazer_com_os_grupos(): void
+    {
+        [$motorista] = $this->pessoa('motorista');
+
+        $this->postJson('/api/conta/grupos-usuarios', [
+            'nome' => 'Apoio', 'permissoes' => ['usos_importar'], 'menus_liberados' => ['cadastros'], 'membros' => [$motorista->id],
+        ], $this->headersAdmin)->assertStatus(201);
+
+        $this->getJson('/api/conta/pessoas', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonFragment(['id' => $motorista->id, 'permissoes' => ['usos_importar'], 'menus' => ['cadastros']]);
+    }
+
     public function test_gestor_nao_mexe_em_pessoas(): void
     {
         [, $headersGestor] = $this->pessoa('gestor');

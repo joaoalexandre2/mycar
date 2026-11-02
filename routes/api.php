@@ -276,6 +276,10 @@ Route::middleware('auth.token')->group(function () {
         // Troca o centro de custo (inclusive de uso concluído); o anterior fica no histórico
         Route::put('/usos/{id}/centro-custo', [UsoVeiculoController::class, 'trocarCentro']);
         Route::get('/usos/{id}/centros-historico', [UsoVeiculoController::class, 'historicoDeCentros']);
+    });
+
+    // Editar, apagar uso e ajustar o km são só do administrador e do gestor (não passam por grupo)
+    Route::middleware(['perfil:frota', 'papel:administrador,gestor'])->prefix('conta')->group(function () {
         Route::put('/usos/{id}', [UsoVeiculoController::class, 'update']);
         Route::delete('/usos/{id}', [UsoVeiculoController::class, 'destroy']);
         Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
