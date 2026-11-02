@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\AlertaIpvaEmail;
 use App\Models\Oficina;
 use App\Models\Veiculo;
+use App\Support\FusoDaFrota;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +18,8 @@ class EnviarAlertasIpva extends Command
 
     public function handle(): int
     {
-        $limite = now()->addDays(30);
+        // Os dias são os de Brasília: o servidor roda em UTC e, depois das 21h, já estaria no dia seguinte.
+        $limite = now(FusoDaFrota::NOME)->addDays(30)->endOfDay();
         $total = 0;
 
         foreach (Oficina::ativas()->get() as $oficina) {
@@ -30,7 +32,7 @@ class EnviarAlertasIpva extends Command
                     continue;
                 }
 
-                $vencimentoCarbon = Carbon::parse($vencimento)->endOfDay();
+                $vencimentoCarbon = Carbon::parse($vencimento, FusoDaFrota::NOME)->endOfDay();
 
                 if ($vencimentoCarbon->gt($limite)) {
                     continue;
