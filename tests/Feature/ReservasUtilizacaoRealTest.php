@@ -6,6 +6,7 @@ use App\Models\Conta;
 use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
+use App\Support\FusoDaFrota;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\Concerns\AutenticaUsuario;
@@ -70,7 +71,7 @@ class ReservasUtilizacaoRealTest extends TestCase
             'saida_em' => now()->subHours(3),
         ]);
 
-        $this->reservar(now()->addHour()->toDateTimeString(), now()->addHours(3)->toDateTimeString())
+        $this->reservar(now(FusoDaFrota::NOME)->addHour()->toDateTimeString(), now(FusoDaFrota::NOME)->addHours(3)->toDateTimeString())
             ->assertStatus(422)
             ->assertJsonPath('conflito.status', 'em_uso');
     }
@@ -84,7 +85,7 @@ class ReservasUtilizacaoRealTest extends TestCase
             'saida_em' => now()->subHours(4),
         ]);
 
-        $this->reservar(now()->subMinutes(30)->toDateTimeString(), now()->addHour()->toDateTimeString())
+        $this->reservar(now(FusoDaFrota::NOME)->subMinutes(30)->toDateTimeString(), now(FusoDaFrota::NOME)->addHour()->toDateTimeString())
             ->assertStatus(422);
     }
 
@@ -97,7 +98,7 @@ class ReservasUtilizacaoRealTest extends TestCase
             'chegada_em' => now()->subHour(),
         ]);
 
-        $this->reservar(now()->subMinutes(30)->toDateTimeString(), now()->addHours(2)->toDateTimeString())
+        $this->reservar(now(FusoDaFrota::NOME)->subMinutes(30)->toDateTimeString(), now(FusoDaFrota::NOME)->addHours(2)->toDateTimeString())
             ->assertStatus(201);
     }
 
@@ -128,8 +129,8 @@ class ReservasUtilizacaoRealTest extends TestCase
         $this->postJson('/api/conta/usos', [
             'veiculo_conta_id' => $outroVeiculo->id,
             'motorista_id' => $this->motorista->id,
-            'inicio_previsto' => now()->addHour()->toDateTimeString(),
-            'fim_previsto' => now()->addHours(3)->toDateTimeString(),
+            'inicio_previsto' => now(FusoDaFrota::NOME)->addHour()->toDateTimeString(),
+            'fim_previsto' => now(FusoDaFrota::NOME)->addHours(3)->toDateTimeString(),
         ], $this->headers)->assertStatus(422);
     }
 }

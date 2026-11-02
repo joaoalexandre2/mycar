@@ -7,6 +7,7 @@ use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
 use App\Rules\PlacaBrasileira;
+use App\Support\FusoDaFrota;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -343,7 +344,7 @@ class ImportadorUsosVeiculo
 
         foreach (['d/m/Y', 'd/m/y', 'Y-m-d', 'd-m-Y'] as $formato) {
             try {
-                $tentativa = Carbon::createFromFormat('!' . $formato, $data);
+                $tentativa = Carbon::createFromFormat('!' . $formato, $data, FusoDaFrota::NOME);
             } catch (Throwable) {
                 continue;
             }
@@ -370,7 +371,8 @@ class ImportadorUsosVeiculo
             return null;
         }
 
-        return $dia->setTime((int) $m[1], (int) $m[2]);
+        // A planilha escreve a hora de Brasília: a data é montada nesse fuso e gravada em UTC.
+        return $dia->setTime((int) $m[1], (int) $m[2])->utc();
     }
 
     /** "45.200", "45200" ou "45200,4": inteiro de hodômetro. */

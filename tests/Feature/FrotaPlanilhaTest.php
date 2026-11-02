@@ -7,6 +7,7 @@ use App\Models\Motorista;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
 use App\Services\ImportadorUsosVeiculo;
+use App\Support\FusoDaFrota;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Tests\Concerns\AutenticaUsuario;
@@ -134,8 +135,8 @@ class FrotaPlanilhaTest extends TestCase
         $this->assertSame(45200, $uso->km_saida);
         $this->assertSame(45310, $uso->km_chegada);
         // Sem horas: o dia inteiro (00:00 a 23:59).
-        $this->assertSame('2026-10-15 00:00', $uso->inicio_previsto->format('Y-m-d H:i'));
-        $this->assertSame('2026-10-15 23:59', $uso->fim_previsto->format('Y-m-d H:i'));
+        $this->assertSame('2026-10-15 00:00', FusoDaFrota::local($uso->inicio_previsto)->format('Y-m-d H:i'));
+        $this->assertSame('2026-10-15 23:59', FusoDaFrota::local($uso->fim_previsto)->format('Y-m-d H:i'));
         $this->assertSame(45310, $v->fresh()->km_atual);
     }
 
@@ -220,7 +221,7 @@ class FrotaPlanilhaTest extends TestCase
     {
         $v = $this->veiculo();
         UsoVeiculo::create([
-            'veiculo_conta_id' => $v->id, 'inicio_previsto' => '2026-10-15 09:00', 'fim_previsto' => '2026-10-15 11:00',
+            'veiculo_conta_id' => $v->id, 'inicio_previsto' => FusoDaFrota::entrada('2026-10-15 09:00'), 'fim_previsto' => FusoDaFrota::entrada('2026-10-15 11:00'),
             'status' => 'agendado', 'origem' => 'agenda',
         ]);
 
@@ -235,7 +236,7 @@ class FrotaPlanilhaTest extends TestCase
         $motorista = Motorista::create(['nome' => 'Salsicha']);
         UsoVeiculo::create([
             'veiculo_conta_id' => $v->id, 'motorista_id' => $motorista->id, 'finalidade' => 'Entrega',
-            'inicio_previsto' => '2026-10-15 09:00', 'fim_previsto' => '2026-10-15 11:00',
+            'inicio_previsto' => FusoDaFrota::entrada('2026-10-15 09:00'), 'fim_previsto' => FusoDaFrota::entrada('2026-10-15 11:00'),
             'status' => 'agendado', 'origem' => 'agenda',
         ]);
 

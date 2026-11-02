@@ -8,6 +8,7 @@ use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
 use App\Models\UsoVeiculoFoto;
 use App\Models\VeiculoConta;
+use App\Support\FusoDaFrota;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,8 +55,8 @@ class UsoVeiculoController extends Controller
             'status' => ['nullable', Rule::in(UsoVeiculo::STATUS)],
         ]);
 
-        $de = isset($filtros['de']) ? Carbon::parse($filtros['de'])->startOfDay() : now()->startOfMonth();
-        $ate = isset($filtros['ate']) ? Carbon::parse($filtros['ate'])->endOfDay() : now()->endOfMonth();
+        $de = isset($filtros['de']) ? FusoDaFrota::dia($filtros['de']) : now()->startOfMonth();
+        $ate = isset($filtros['ate']) ? FusoDaFrota::dia($filtros['ate'], fim: true) : now()->endOfMonth();
 
         $usos = UsoVeiculo::with(self::RELACOES)
             ->where('inicio_previsto', '<=', $ate)
@@ -96,7 +97,7 @@ class UsoVeiculoController extends Controller
             'usuario' => $e->usuario?->name,
             'dados' => $e->dados,
             'motivo' => $e->motivo,
-            'em' => $e->created_at?->toIso8601String(),
+            'em' => FusoDaFrota::saida($e->created_at),
         ])->values());
     }
 
@@ -142,8 +143,8 @@ class UsoVeiculoController extends Controller
                 ]);
 
                 UsoVeiculoEvento::registrar($uso, 'reservou', $request->user()->id, [
-                    'inicio_previsto' => $uso->inicio_previsto->toIso8601String(),
-                    'fim_previsto' => $uso->fim_previsto->toIso8601String(),
+                    'inicio_previsto' => FusoDaFrota::saida($uso->inicio_previsto),
+                    'fim_previsto' => FusoDaFrota::saida($uso->fim_previsto),
                     'motorista_id' => $uso->motorista_id,
                 ]);
 
@@ -434,7 +435,21 @@ class UsoVeiculoController extends Controller
 
             UsoVeiculoEvento::registrar($uso, 'chegou', $request->user()->id, ['km' => $dados['km_chegada'], 'origem' => $origem]);
 
-            return response()->json($this->formatar($uso->fresh(self::RELACOES)));
+            // A devolução é registrada sempre. Se o carro voltou depois da hora de uma reserva futura, avisa quem ficou afetado.
+            $afetados = $this->reservasAtingidasPelaDevolucao($uso);
+
+            foreach ($afetados as $afetado) {
+                UsoVeiculoEvento::registrar($afetado, 'conflito_por_devolucao', $request->user()->id, ['uso_que_atrasou' => $uso->id]);
+            }
+
+            return response()->json($this->formatar($uso->fresh(self::RELACOES)) + [
+                'alerta_conflito' => $afetados->map(fn (UsoVeiculo $a) => [
+                    'uso_id' => $a->id,
+                    'inicio_previsto' => FusoDaFrota::saida($a->inicio_previsto),
+                    'motorista' => $a->motorista?->nome,
+                    'veiculo' => $a->veiculo?->placa,
+                ])->values(),
+            ]);
         });
     }
 
@@ -556,8 +571,8 @@ class UsoVeiculoController extends Controller
             'veiculo_conta_id' => $uso->veiculo_conta_id,
             'motorista_id' => $uso->motorista_id,
             'centro_custo_id' => $uso->centro_custo_id,
-            'inicio_previsto' => $uso->inicio_previsto->toIso8601String(),
-            'fim_previsto' => $uso->fim_previsto->toIso8601String(),
+            'inicio_previsto' => FusoDaFrota::saida($uso->inicio_previsto),
+            'fim_previsto' => FusoDaFrota::saida($uso->fim_previsto),
             'finalidade' => $uso->finalidade,
             'observacoes' => $uso->observacoes,
             'status' => $uso->status,
@@ -594,8 +609,8 @@ class UsoVeiculoController extends Controller
             'centro_custo_id.exists' => 'Centro de custo não encontrado ou desativado.',
         ]);
 
-        $inicio = Carbon::parse($dados['inicio_previsto']);
-        $fim = Carbon::parse($dados['fim_previsto']);
+        $inicio = FusoDaFrota::entrada($dados['inicio_previsto']);
+        $fim = FusoDaFrota::entrada($dados['fim_previsto']);
 
         if ($inicio->diffInDays($fim) > self::MAX_DIAS_DE_RESERVA) {
             abort(response()->json([
@@ -682,13 +697,33 @@ class UsoVeiculoController extends Controller
     }
 
     /**
+     * Reservas agendadas para este veículo que começam antes da hora em que ele voltou (e depois de quando saiu).
+     * Não impede a devolução: só identifica quem precisa ser avisado.
+     */
+    private function reservasAtingidasPelaDevolucao(UsoVeiculo $uso)
+    {
+        if (!$uso->chegada_em) {
+            return collect();
+        }
+
+        return UsoVeiculo::with(['motorista', 'veiculo'])
+            ->where('veiculo_conta_id', $uso->veiculo_conta_id)
+            ->where('status', 'agendado')
+            ->where('id', '!=', $uso->id)
+            ->where('inicio_previsto', '<', $uso->chegada_em)
+            ->where('inicio_previsto', '>=', $uso->saida_em ?? $uso->inicio_previsto)
+            ->orderBy('inicio_previsto')
+            ->get();
+    }
+
+    /**
      * O primeiro uso (do veículo ou do motorista, conforme a coluna) que ocupa o intervalo pedido.
      * Pega também os usos em andamento que passaram do horário previsto: o carro continua ocupado até voltar.
      */
     private function usosQueOcupam(string $coluna, int $valor, $inicio, $fim, ?int $ignorarId): ?UsoVeiculo
     {
-        $inicio = Carbon::parse($inicio);
-        $fim = Carbon::parse($fim);
+        $inicio = FusoDaFrota::entrada($inicio);
+        $fim = FusoDaFrota::entrada($fim);
 
         return UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
             ->whereIn('status', UsoVeiculo::OCUPAM_HORARIO)
@@ -723,8 +758,8 @@ class UsoVeiculoController extends Controller
             'message' => $mensagem,
             'conflito' => [
                 'uso_id' => $outro->id,
-                'inicio_previsto' => $outro->inicio_previsto->toIso8601String(),
-                'fim_previsto' => $outro->fim_previsto->toIso8601String(),
+                'inicio_previsto' => FusoDaFrota::saida($outro->inicio_previsto),
+                'fim_previsto' => FusoDaFrota::saida($outro->fim_previsto),
                 'status' => $outro->status,
                 'veiculo' => $outro->veiculo?->placa,
                 'motorista' => $outro->motorista?->nome,
@@ -795,8 +830,8 @@ class UsoVeiculoController extends Controller
             'motorista' => $uso->motorista?->nome,
             'centro_custo_id' => $uso->centro_custo_id,
             'centro_custo' => $uso->centroCusto?->nome,
-            'inicio_previsto' => $uso->inicio_previsto->toIso8601String(),
-            'fim_previsto' => $uso->fim_previsto->toIso8601String(),
+            'inicio_previsto' => FusoDaFrota::saida($uso->inicio_previsto),
+            'fim_previsto' => FusoDaFrota::saida($uso->fim_previsto),
             'finalidade' => $uso->finalidade,
             'status' => $uso->status,
             'km_saida' => $uso->km_saida,
@@ -804,8 +839,8 @@ class UsoVeiculoController extends Controller
             'km_saida_origem' => $uso->km_saida_origem,
             'km_chegada_origem' => $uso->km_chegada_origem,
             'km_rodados' => $uso->kmRodados(),
-            'saida_em' => $uso->saida_em?->toIso8601String(),
-            'chegada_em' => $uso->chegada_em?->toIso8601String(),
+            'saida_em' => FusoDaFrota::saida($uso->saida_em),
+            'chegada_em' => FusoDaFrota::saida($uso->chegada_em),
             'saida_por' => $uso->saidaPor?->name,
             'chegada_por' => $uso->chegadaPor?->name,
             'url_foto_saida' => $uso->urlDaFoto('saida'),

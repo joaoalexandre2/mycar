@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\PertenceAConta;
+use App\Support\FusoDaFrota;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,7 +68,7 @@ class UsoVeiculo extends Model
      */
     public function janelaEDetalhes(string $formato = 'd/m H:i'): string
     {
-        $janela = 'de ' . $this->inicio_previsto->format($formato) . ' a ' . $this->fim_previsto->format($formato);
+        $janela = 'de ' . FusoDaFrota::local($this->inicio_previsto)->format($formato) . ' a ' . FusoDaFrota::local($this->fim_previsto)->format($formato);
 
         $detalhes = array_filter([
             $this->finalidade ? "finalidade: {$this->finalidade}" : null,
@@ -183,11 +184,11 @@ class UsoVeiculo extends Model
     }
 
     /** Se o uso ocupa algum momento de [inicio, fim). */
-    public function ocupaIntervalo(Carbon $inicio, Carbon $fim): bool
+    public function ocupaIntervalo(\DateTimeInterface $inicio, \DateTimeInterface $fim): bool
     {
         [$ocupadoDe, $ocupadoAte] = $this->ocupacao();
 
-        return $ocupadoDe->lessThan($fim) && $ocupadoAte->greaterThan($inicio);
+        return $ocupadoDe < $fim && $ocupadoAte > $inicio;
     }
 
     /** Km rodado no uso, só quando saída e chegada foram informadas. */
