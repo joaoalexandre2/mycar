@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogoPecasController;
 use App\Http\Controllers\CentroCustoController;
+use App\Http\Controllers\ChecklistUsoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CodigoPecaController;
 use App\Http\Controllers\ComparadorController;
@@ -28,9 +29,12 @@ use App\Http\Controllers\MeusMycarsController;
 use App\Http\Controllers\ModeloGrupoController;
 use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
+use App\Http\Controllers\MultaController;
 use App\Http\Controllers\OrdemServicoController;
+use App\Http\Controllers\PainelFrotaController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PessoaFrotaController;
+use App\Http\Controllers\QrVeiculoController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
@@ -292,5 +296,25 @@ Route::middleware('auth.token')->group(function () {
         Route::put('/usos/{id}', [UsoVeiculoController::class, 'update']);
         Route::delete('/usos/{id}', [UsoVeiculoController::class, 'destroy']);
         Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
+    });
+
+    // Checklist de saída e de devolução: o motorista faz o da própria reserva
+    Route::middleware('perfil:frota')->prefix('conta')->group(function () {
+        Route::get('/usos/{id}/checklist', [ChecklistUsoController::class, 'index']);
+        Route::post('/usos/{id}/checklist', [ChecklistUsoController::class, 'store']);
+        // QR Code do veículo: quem escaneia vê as reservas de hoje
+        Route::get('/qr/{token}', [QrVeiculoController::class, 'resolver']);
+    });
+
+    // QR, multas, alertas e painel: só administrador e gestor
+    Route::middleware(['perfil:frota', 'papel:administrador,gestor'])->prefix('conta')->group(function () {
+        Route::post('/veiculos/{id}/qr', [QrVeiculoController::class, 'gerar']);
+        Route::get('/multas', [MultaController::class, 'index']);
+        Route::get('/multas/sugerir-responsavel', [MultaController::class, 'sugerir']);
+        Route::post('/multas', [MultaController::class, 'store']);
+        Route::put('/multas/{id}', [MultaController::class, 'update']);
+        Route::delete('/multas/{id}', [MultaController::class, 'destroy']);
+        Route::get('/alertas', [PainelFrotaController::class, 'alertas']);
+        Route::get('/painel-frota', [PainelFrotaController::class, 'disponibilidade']);
     });
 });
