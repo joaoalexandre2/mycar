@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbastecimentoController;
+use App\Http\Controllers\AcessosFrotaController;
 use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
@@ -232,6 +233,8 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/pessoas', [PessoaFrotaController::class, 'index']);
         Route::post('/pessoas', [PessoaFrotaController::class, 'store'])->middleware('throttle:10,1');
         Route::put('/pessoas/{id}/papel', [PessoaFrotaController::class, 'papel']);
+        // Trilha de quem mudou grupos, membros e papéis
+        Route::get('/acessos-frota', [AcessosFrotaController::class, 'index']);
     });
 
     // FROTA: cada bloco exige uma permissão, dada pelo papel (administrador e gestor) ou por um grupo de usuários

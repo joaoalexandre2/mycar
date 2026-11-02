@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcessoFrotaEvento;
+use App\Models\GrupoUsuario;
 use App\Models\User;
 use App\Support\PermissoesFrota;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -24,7 +27,14 @@ class PessoaFrotaController extends Controller
             ->orderBy('name')
             ->get();
 
-        return response()->json($pessoas->map(fn (User $u) => $this->formatar($u))->values());
+        // Os grupos são lidos uma vez: cada pessoa calcula o que pode a partir deles, sem consulta por pessoa.
+        $grupos = GrupoUsuario::with('membros:users.id')->get();
+
+        return response()->json([
+            'pessoas' => $pessoas->map(fn (User $u) => $this->formatar($u, $grupos))->values(),
+            'catalogo' => PermissoesFrota::catalogo(),
+            'menus' => PermissoesFrota::menus(),
+        ]);
     }
 
     /** Convida uma pessoa nova para a frota: cria o login e manda o link para definir a senha. */
@@ -53,7 +63,12 @@ class PessoaFrotaController extends Controller
         $usuario->forceFill(['email_verified_at' => now()])->save();
         Password::sendResetLink(['email' => $usuario->email]);
 
-        return response()->json($this->formatar($usuario), 201);
+        AcessoFrotaEvento::registrar($request->user()->id, 'pessoa', $usuario->id, 'convidou', [
+            'nome' => $usuario->name,
+            'papel' => $dados['papel'],
+        ]);
+
+        return response()->json($this->formatar($usuario, GrupoUsuario::with('membros:users.id')->get()), 201);
     }
 
     public function papel(Request $request, $id)
@@ -76,22 +91,50 @@ class PessoaFrotaController extends Controller
         ]);
 
         // Quem troca o papel é administrador e não pode trocar o próprio, então sempre sobra um administrador.
+        $papelAnterior = $usuario->papelNaConta();
         $usuario->forceFill(['papel_frota' => $dados['papel']])->save();
 
-        return response()->json($this->formatar($usuario));
+        AcessoFrotaEvento::registrar($request->user()->id, 'pessoa', $usuario->id, 'mudou_papel', [
+            'nome' => $usuario->name,
+            'de' => $papelAnterior,
+            'para' => $dados['papel'],
+        ]);
+
+        return response()->json($this->formatar($usuario, GrupoUsuario::with('membros:users.id')->get()));
     }
 
     /** @return array<string, mixed> */
-    private function formatar(User $usuario): array
+    /**
+     * Uma pessoa com o que ela pode fazer hoje (papel + grupos). Espelha User::temPermissao e User::podeVerMenu,
+     * mas com os grupos já carregados, para não consultar o banco a cada permissão.
+     *
+     * @param  Collection<int, GrupoUsuario>  $grupos
+     * @return array<string, mixed>
+     */
+    private function formatar(User $usuario, $grupos): array
     {
-        // O que a pessoa pode fazer hoje, somando papel e grupos (para a tela mostrar sem conta).
+        $papel = $usuario->papelNaConta();
+        $dosGrupos = $grupos->filter(fn (GrupoUsuario $g) => $g->membros->contains('id', $usuario->id));
+
+        $permissoesDoPapel = PermissoesFrota::doPapel($papel);
+        $permissoesDosGrupos = $dosGrupos->flatMap(fn (GrupoUsuario $g) => $g->permissoes ?? [])->all();
+
+        $menusDosGrupos = $dosGrupos->flatMap(fn (GrupoUsuario $g) => $g->menus_liberados ?? [])->all();
+        $veTodosOsMenus = in_array($papel, ['administrador', 'gestor'], true);
+
         return [
             'id' => $usuario->id,
             'name' => $usuario->name,
             'email' => $usuario->email,
-            'papel' => $usuario->papelNaConta(),
-            'permissoes' => array_values(array_filter(PermissoesFrota::chaves(), fn ($p) => $usuario->temPermissao($p))),
-            'menus' => array_values(array_filter(PermissoesFrota::chavesDeMenu(), fn ($m) => $usuario->podeVerMenu($m))),
+            'papel' => $papel,
+            'permissoes' => array_values(array_filter(
+                PermissoesFrota::chaves(),
+                fn (string $p) => in_array($p, $permissoesDoPapel, true) || in_array($p, $permissoesDosGrupos, true),
+            )),
+            'menus' => array_values(array_filter(
+                PermissoesFrota::chavesDeMenu(),
+                fn (string $m) => $veTodosOsMenus || in_array($m, $menusDosGrupos, true),
+            )),
         ];
     }
 }

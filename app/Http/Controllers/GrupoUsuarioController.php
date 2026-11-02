@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcessoFrotaEvento;
 use App\Models\GrupoUsuario;
 use App\Models\User;
 use App\Support\PermissoesFrota;
@@ -48,6 +49,13 @@ class GrupoUsuarioController extends Controller
         $grupo = GrupoUsuario::create(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
         $grupo->membros()->sync($dados['membros'] ?? []);
 
+        AcessoFrotaEvento::registrar($request->user()->id, 'grupo', $grupo->id, 'criou', [
+            'nome' => $grupo->nome,
+            'permissoes' => $grupo->permissoes,
+            'menus_liberados' => $grupo->menus_liberados ?? [],
+            'membros' => $grupo->membros()->pluck('users.id')->all(),
+        ]);
+
         return response()->json($this->formatar($grupo->load('membros')), 201);
     }
 
@@ -70,11 +78,18 @@ class GrupoUsuarioController extends Controller
             return $this->semConcessao();
         }
 
+        $antes = $this->resumo($grupo);
+
         $grupo->update(collect($dados)->only(['nome', 'descricao', 'permissoes', 'menus_liberados'])->all());
 
         if (array_key_exists('membros', $dados)) {
             $grupo->membros()->sync($dados['membros']);
         }
+
+        AcessoFrotaEvento::registrar($request->user()->id, 'grupo', $grupo->id, 'editou', [
+            'antes' => $antes,
+            'depois' => $this->resumo($grupo->fresh()),
+        ]);
 
         return response()->json($this->formatar($grupo->load('membros')));
     }
@@ -90,6 +105,10 @@ class GrupoUsuarioController extends Controller
         if (!$this->podeConceder($request->user(), $grupo->permissoes, $grupo->menus_liberados ?? [])) {
             return $this->semConcessao();
         }
+
+        AcessoFrotaEvento::registrar($request->user()->id, 'grupo', $grupo->id, 'removeu', [
+            'antes' => $this->resumo($grupo),
+        ]);
 
         $grupo->delete();
 
@@ -162,6 +181,17 @@ class GrupoUsuarioController extends Controller
                 'name' => $u->name,
                 'email' => $u->email,
             ])->values(),
+        ];
+    }
+
+    /** @return array<string, mixed> o que o grupo concede e quem está nele, para a trilha de auditoria */
+    private function resumo(GrupoUsuario $grupo): array
+    {
+        return [
+            'nome' => $grupo->nome,
+            'permissoes' => $grupo->permissoes ?? [],
+            'menus_liberados' => $grupo->menus_liberados ?? [],
+            'membros' => $grupo->membros()->pluck('users.id')->sort()->values()->all(),
         ];
     }
 

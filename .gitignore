@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# backups locais do banco de desenvolvimento
+/database/*.bak*
