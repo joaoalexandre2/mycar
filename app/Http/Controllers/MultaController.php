@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Multa;
+use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -51,6 +53,10 @@ class MultaController extends Controller
     {
         $dados = $this->validar($request);
 
+        if ($recusa = $this->recusaSeInconsistente($dados, null)) {
+            return $recusa;
+        }
+
         $veiculo = VeiculoConta::find($dados['veiculo_conta_id']);
 
         if (!$veiculo) {
@@ -79,6 +85,11 @@ class MultaController extends Controller
         }
 
         $dados = $this->validar($request, parcial: true);
+
+        if ($recusa = $this->recusaSeInconsistente($dados, $multa)) {
+            return $recusa;
+        }
+
         $multa->update($dados);
 
         return response()->json($this->formatar($multa->fresh()->load(['veiculo', 'motorista'])));
@@ -103,16 +114,51 @@ class MultaController extends Controller
         $obrigatorio = $parcial ? 'sometimes' : 'required';
 
         return $request->validate([
-            'veiculo_conta_id' => [$obrigatorio, 'integer'],
+            // Cada referência precisa ser de ESTA conta: IDs de outra empresa são recusados com 422.
+            'veiculo_conta_id' => [$obrigatorio, 'integer', Rule::exists('veiculos_conta', 'id')->where('conta_id', app('conta.atual'))],
             'data_hora' => [$obrigatorio, 'date'],
             'descricao' => [$obrigatorio, 'string', 'max:160'],
             'valor' => ['nullable', 'numeric', 'min:0', 'max:99999999'],
             'pontos' => ['nullable', 'integer', 'min:0', 'max:40'],
             'situacao' => ['sometimes', Rule::in(Multa::SITUACOES)],
-            'motorista_id' => ['nullable', 'integer'],
-            'uso_veiculo_id' => ['nullable', 'integer'],
+            'motorista_id' => ['nullable', 'integer', Rule::exists('motoristas', 'id')->where('conta_id', app('conta.atual'))],
+            'uso_veiculo_id' => ['nullable', 'integer', Rule::exists('usos_veiculo', 'id')->where('conta_id', app('conta.atual'))],
             'observacoes' => ['nullable', 'string', 'max:1000'],
         ]);
+    }
+
+    /**
+     * A reserva precisa ser deste veículo, e o motorista precisa ser o da reserva. Se a multa já existe,
+     * completa com o que ela já tem para conferir o conjunto final.
+     *
+     * @param  array<string, mixed>  $dados
+     */
+    private function recusaSeInconsistente(array $dados, ?Multa $atual): ?JsonResponse
+    {
+        $veiculoId = $dados['veiculo_conta_id'] ?? $atual?->veiculo_conta_id;
+        $usoId = array_key_exists('uso_veiculo_id', $dados) ? $dados['uso_veiculo_id'] : $atual?->uso_veiculo_id;
+        $motoristaId = array_key_exists('motorista_id', $dados) ? $dados['motorista_id'] : $atual?->motorista_id;
+
+        if (!$usoId) {
+            return null;
+        }
+
+        // O escopo da conta já barra reservas alheias: aqui só se confere que a reserva bate com o veículo e o motorista.
+        $uso = UsoVeiculo::find($usoId);
+
+        if (!$uso) {
+            return response()->json(['message' => 'Reserva não encontrada nesta frota.'], 422);
+        }
+
+        if ($veiculoId && (int) $uso->veiculo_conta_id !== (int) $veiculoId) {
+            return response()->json(['message' => 'A reserva informada não é deste veículo.'], 422);
+        }
+
+        if ($motoristaId && $uso->motorista_id && (int) $uso->motorista_id !== (int) $motoristaId) {
+            return response()->json(['message' => 'O motorista informado não é o da reserva.'], 422);
+        }
+
+        return null;
     }
 
     /** @return array<string, mixed> */
