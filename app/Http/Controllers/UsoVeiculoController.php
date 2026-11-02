@@ -642,12 +642,8 @@ class UsoVeiculoController extends Controller
      */
     private function conflito(int $veiculoId, ?int $motoristaId, $inicio, $fim, ?int $ignorarId = null, bool $ocultarDetalhes = false): ?JsonResponse
     {
-        $doVeiculo = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
-            ->sobrepostos($inicio, $fim)
-            ->where('veiculo_conta_id', $veiculoId)
-            ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
-            ->orderBy('inicio_previsto')
-            ->first();
+        // Conflito pela ocupação real: um uso em andamento ocupa o carro até a chegada (ou até agora, se ainda não voltou).
+        $doVeiculo = $this->usosQueOcupam('veiculo_conta_id', $veiculoId, $inicio, $fim, $ignorarId);
 
         if ($doVeiculo && $ocultarDetalhes) {
             return response()->json([
@@ -666,12 +662,7 @@ class UsoVeiculoController extends Controller
         }
 
         if ($motoristaId) {
-            $doMotorista = UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
-                ->sobrepostos($inicio, $fim)
-                ->where('motorista_id', $motoristaId)
-                ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
-                ->orderBy('inicio_previsto')
-                ->first();
+            $doMotorista = $this->usosQueOcupam('motorista_id', $motoristaId, $inicio, $fim, $ignorarId);
 
             if ($doMotorista && $ocultarDetalhes) {
                 return response()->json([
@@ -688,6 +679,28 @@ class UsoVeiculoController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * O primeiro uso (do veículo ou do motorista, conforme a coluna) que ocupa o intervalo pedido.
+     * Pega também os usos em andamento que passaram do horário previsto: o carro continua ocupado até voltar.
+     */
+    private function usosQueOcupam(string $coluna, int $valor, $inicio, $fim, ?int $ignorarId): ?UsoVeiculo
+    {
+        $inicio = Carbon::parse($inicio);
+        $fim = Carbon::parse($fim);
+
+        return UsoVeiculo::with(['motorista', 'veiculo', 'centroCusto'])
+            ->whereIn('status', UsoVeiculo::OCUPAM_HORARIO)
+            ->where($coluna, $valor)
+            ->where(function ($q) use ($inicio, $fim) {
+                $q->where(fn ($previsto) => $previsto->where('inicio_previsto', '<', $fim)->where('fim_previsto', '>', $inicio))
+                    ->orWhere('status', 'em_uso');
+            })
+            ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
+            ->orderBy('inicio_previsto')
+            ->get()
+            ->first(fn (UsoVeiculo $u) => $u->ocupaIntervalo($inicio, $fim));
     }
 
     /** "UAT0D84 (Strada)": a placa e o nome do veículo, quando se sabe. */

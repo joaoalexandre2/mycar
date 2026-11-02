@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -160,6 +161,33 @@ class UsoVeiculo extends Model
         return $query->whereIn('status', self::OCUPAM_HORARIO)
             ->where('inicio_previsto', '<', $fim)
             ->where('fim_previsto', '>', $inicio);
+    }
+
+    /**
+     * O intervalo que o uso ocupa o veículo e o motorista. Agendado: a reserva prevista.
+     * Em andamento: da saída real até a chegada real; sem chegada, até o horário previsto ou até agora,
+     * o que for mais tarde (o carro não volta sozinho).
+     *
+     * @return array{0: Carbon, 1: Carbon}
+     */
+    public function ocupacao(): array
+    {
+        if ($this->status === 'em_uso') {
+            $inicio = $this->saida_em ?? $this->inicio_previsto;
+            $fim = $this->chegada_em ?? ($this->fim_previsto->greaterThan(now()) ? $this->fim_previsto : now());
+
+            return [$inicio, $fim];
+        }
+
+        return [$this->inicio_previsto, $this->fim_previsto];
+    }
+
+    /** Se o uso ocupa algum momento de [inicio, fim). */
+    public function ocupaIntervalo(Carbon $inicio, Carbon $fim): bool
+    {
+        [$ocupadoDe, $ocupadoAte] = $this->ocupacao();
+
+        return $ocupadoDe->lessThan($fim) && $ocupadoAte->greaterThan($inicio);
     }
 
     /** Km rodado no uso, só quando saída e chegada foram informadas. */
