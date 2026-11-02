@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use App\Models\User;
+
 /**
  * Permissões da frota que um grupo de usuários pode conceder. O papel dá o
  * ponto de partida; o grupo só acrescenta.
@@ -73,5 +75,28 @@ class PermissoesFrota
             'gestor' => array_values(array_diff(self::chaves(), [self::GRUPOS])),
             default => [],
         };
+    }
+
+    /**
+     * Quem gerencia grupos ou modelos só concede o que ele mesmo tem: permissões e menus.
+     *
+     * @param  list<string>  $permissoes
+     * @param  list<string>  $menus
+     */
+    public static function podeConceder(User $ator, array $permissoes, array $menus): bool
+    {
+        foreach ($permissoes as $permissao) {
+            if (!$ator->temPermissao($permissao)) {
+                return false;
+            }
+        }
+
+        foreach ($menus as $menu) {
+            if (!$ator->podeVerMenu($menu)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

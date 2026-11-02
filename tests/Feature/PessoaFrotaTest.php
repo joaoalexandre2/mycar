@@ -106,6 +106,37 @@ class PessoaFrotaTest extends TestCase
         $this->assertSame('gestor', $pessoa->fresh()->papelNaConta());
     }
 
+    public function test_mudar_papel_fica_na_trilha_de_acessos(): void
+    {
+        [$pessoa] = $this->pessoa('motorista');
+
+        $this->putJson("/api/conta/pessoas/{$pessoa->id}/papel", ['papel' => 'gestor'], $this->headersAdmin)->assertOk();
+
+        $this->getJson('/api/conta/acessos-frota', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonFragment(['acao' => 'mudou_papel', 'ator' => $this->admin->name])
+            ->assertJsonFragment(['de' => 'motorista', 'para' => 'gestor']);
+    }
+
+    public function test_so_o_administrador_le_a_trilha_de_acessos(): void
+    {
+        [, $headersGestor] = $this->pessoa('gestor');
+
+        $this->getJson('/api/conta/acessos-frota', $headersGestor)->assertStatus(403);
+        $this->getJson('/api/conta/acessos-frota', $this->headersAdmin)->assertOk();
+    }
+
+    public function test_lista_devolve_pessoas_com_os_catalogos_de_uma_vez(): void
+    {
+        [$motorista] = $this->pessoa('motorista');
+
+        $this->getJson('/api/conta/pessoas', $this->headersAdmin)
+            ->assertOk()
+            ->assertJsonStructure(['pessoas' => [['id', 'name', 'papel', 'permissoes', 'menus']], 'catalogo', 'menus'])
+            ->assertJsonPath('catalogo.grupos', 'Dar acesso a outras pessoas (criar grupos)')
+            ->assertJsonFragment(['id' => $motorista->id, 'permissoes' => [], 'menus' => []]);
+    }
+
     public function test_nao_troca_o_proprio_papel(): void
     {
         $this->putJson("/api/conta/pessoas/{$this->admin->id}/papel", ['papel' => 'gestor'], $this->headersAdmin)

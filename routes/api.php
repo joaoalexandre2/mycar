@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbastecimentoController;
+use App\Http\Controllers\AcessosFrotaController;
 use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
+use App\Http\Controllers\ModeloGrupoController;
 use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\OrdemServicoController;
@@ -232,6 +234,8 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/pessoas', [PessoaFrotaController::class, 'index']);
         Route::post('/pessoas', [PessoaFrotaController::class, 'store'])->middleware('throttle:10,1');
         Route::put('/pessoas/{id}/papel', [PessoaFrotaController::class, 'papel']);
+        // Trilha de quem mudou grupos, membros e papéis
+        Route::get('/acessos-frota', [AcessosFrotaController::class, 'index']);
     });
 
     // FROTA: cada bloco exige uma permissão, dada pelo papel (administrador e gestor) ou por um grupo de usuários
@@ -240,6 +244,11 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/grupos-usuarios', [GrupoUsuarioController::class, 'store']);
         Route::put('/grupos-usuarios/{id}', [GrupoUsuarioController::class, 'update']);
         Route::delete('/grupos-usuarios/{id}', [GrupoUsuarioController::class, 'destroy']);
+
+        // Modelos salvos pela frota para reusar na criação de grupos
+        Route::get('/modelos-grupo', [ModeloGrupoController::class, 'index']);
+        Route::post('/modelos-grupo', [ModeloGrupoController::class, 'store']);
+        Route::delete('/modelos-grupo/{id}', [ModeloGrupoController::class, 'destroy']);
     });
 
     Route::middleware(['perfil:frota', 'permissao:centros_custo'])->prefix('conta')->group(function () {

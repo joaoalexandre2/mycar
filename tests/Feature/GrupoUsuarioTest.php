@@ -46,6 +46,21 @@ class GrupoUsuarioTest extends TestCase
         $this->assertSame(0, GrupoUsuario::count());
     }
 
+    public function test_criar_editar_e_remover_grupo_ficam_na_trilha(): void
+    {
+        $id = $this->postJson('/api/conta/grupos-usuarios', ['nome' => 'Vendas', 'permissoes' => ['centros_custo']], $this->headers)
+            ->assertStatus(201)->json('id');
+
+        $this->putJson("/api/conta/grupos-usuarios/{$id}", ['nome' => 'Vendas', 'permissoes' => ['motoristas']], $this->headers)->assertOk();
+        $this->deleteJson("/api/conta/grupos-usuarios/{$id}", [], $this->headers)->assertOk();
+
+        $this->getJson('/api/conta/acessos-frota', $this->headers)
+            ->assertOk()
+            ->assertJsonFragment(['acao' => 'criou', 'alvo_tipo' => 'grupo'])
+            ->assertJsonFragment(['acao' => 'editou'])
+            ->assertJsonFragment(['acao' => 'removeu']);
+    }
+
     public function test_valida_nome_unico_e_permissao_desconhecida(): void
     {
         $this->postJson('/api/conta/grupos-usuarios', ['nome' => 'A', 'permissoes' => []], $this->headers)->assertStatus(201);
