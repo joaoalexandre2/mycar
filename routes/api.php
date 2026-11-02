@@ -96,6 +96,11 @@ Route::get('/hodometros/{uso}/{momento}', [FotoServirController::class, 'hodomet
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('hodometros.mostrar');
 
+// Nota fiscal ou recibo de um serviço: também por link assinado e temporário.
+Route::get('/servicos/anexos/{anexo}', [FotoServirController::class, 'servicoAnexo'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('servicos.anexos.mostrar');
+
 // Comprovante e foto do hodômetro de um abastecimento: também por link assinado e temporário.
 Route::get('/abastecimentos/{abastecimento}/{tipo}', [FotoServirController::class, 'abastecimento'])
     ->where('tipo', 'comprovante|hodometro')
@@ -234,7 +239,10 @@ Route::middleware('auth.token')->group(function () {
 
         Route::get('/servicos', [ServicoController::class, 'index']);
         Route::post('/servicos', [ServicoController::class, 'store']);
+        Route::put('/servicos/{id}', [ServicoController::class, 'update']);
         Route::delete('/servicos/{id}', [ServicoController::class, 'destroy']);
+        Route::post('/servicos/{id}/anexos', [ServicoController::class, 'anexar']);
+        Route::delete('/servicos/anexos/{anexo}', [ServicoController::class, 'removerAnexo']);
 
         Route::get('/veiculos/{id}/documentos', [DocumentoController::class, 'index']);
         Route::post('/veiculos/{id}/documentos', [DocumentoController::class, 'store']);

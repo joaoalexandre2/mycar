@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\PertenceAConta;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -17,6 +18,8 @@ class Servico extends Model
 
     protected $table = 'servicos_conta';
 
+    public const NATUREZAS = ['preventiva', 'corretiva'];
+
     protected $fillable = [
         'veiculo_conta_id',
         'tipo',
@@ -27,12 +30,18 @@ class Servico extends Model
         'observacoes',
         'intervalo_meses',
         'intervalo_km',
+        'natureza',
+        'oficina',
+        'valor_pecas',
+        'valor_mao_obra',
     ];
 
     protected $casts = [
         'realizado_em' => 'date:Y-m-d',
         'proximo_em' => 'date:Y-m-d',
         'valor' => 'decimal:2',
+        'valor_pecas' => 'decimal:2',
+        'valor_mao_obra' => 'decimal:2',
         'alerta_data_em' => 'date:Y-m-d',
         'alerta_km_em' => 'date:Y-m-d',
     ];
@@ -115,5 +124,15 @@ class Servico extends Model
     public function veiculo(): BelongsTo
     {
         return $this->belongsTo(VeiculoConta::class, 'veiculo_conta_id');
+    }
+
+    public function pecas(): HasMany
+    {
+        return $this->hasMany(ServicoPeca::class, 'servico_id')->orderBy('id');
+    }
+
+    public function anexos(): HasMany
+    {
+        return $this->hasMany(ServicoAnexo::class, 'servico_id')->orderBy('id');
     }
 }
