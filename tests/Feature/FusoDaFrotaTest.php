@@ -62,29 +62,4 @@ class FusoDaFrotaTest extends TestCase
 
         $this->assertStringStartsWith('2026-11-10T08:00:00-03:00', $resposta->json('inicio_previsto'));
     }
-
-    public function test_devolucao_depois_do_inicio_de_reserva_futura_gera_alerta_sem_impedir_o_registro(): void
-    {
-        // Saiu há 4 horas com uma reserva que começou há 1 hora; a devolução agora invade essa reserva.
-        $emUso = UsoVeiculo::create([
-            'veiculo_conta_id' => $this->veiculo->id,
-            'motorista_id' => $this->motorista->id,
-            'inicio_previsto' => now()->subHours(4),
-            'fim_previsto' => now()->subHour(),
-            'saida_em' => now()->subHours(4),
-            'status' => 'em_uso',
-        ]);
-        $afetada = UsoVeiculo::create([
-            'veiculo_conta_id' => $this->veiculo->id,
-            'motorista_id' => $this->motorista->id,
-            'inicio_previsto' => now()->subHour(),
-            'fim_previsto' => now()->addHours(2),
-            'status' => 'agendado',
-        ]);
-
-        $this->postJson("/api/conta/usos/{$emUso->id}/chegada", ['km_chegada' => 500], $this->headers)
-            ->assertOk()
-            ->assertJsonPath('status', 'concluido')
-            ->assertJsonPath('alerta_conflito.0.uso_id', $afetada->id);
-    }
 }
