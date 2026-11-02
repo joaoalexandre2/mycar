@@ -4,7 +4,9 @@ use App\Http\Controllers\AbastecimentoController;
 use App\Http\Controllers\AcessosFrotaController;
 use App\Http\Controllers\AdminConteudoController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AtendimentoEsteticaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogoEsteticaController;
 use App\Http\Controllers\CatalogoPecasController;
 use App\Http\Controllers\CentroCustoController;
 use App\Http\Controllers\ChecklistUsoController;
@@ -19,10 +21,13 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FichaTecnicaContaController;
 use App\Http\Controllers\FichaTecnicaController;
+use App\Http\Controllers\FinanceiroEsteticaController;
 use App\Http\Controllers\FipeController;
+use App\Http\Controllers\FotoEsteticaController;
 use App\Http\Controllers\FotoServirController;
 use App\Http\Controllers\FotoVeiculoContaController;
 use App\Http\Controllers\GrupoUsuarioController;
+use App\Http\Controllers\HistoricoEsteticaController;
 use App\Http\Controllers\ImagemModeloController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
@@ -317,4 +322,30 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/alertas', [PainelFrotaController::class, 'alertas']);
         Route::get('/painel-frota', [PainelFrotaController::class, 'disponibilidade']);
     });
+
+    // Estética: pátio em etapas, serviços, pacotes, histórico por placa e financeiro
+    Route::middleware('perfil:estetica')->prefix('estetica')->group(function () {
+        Route::get('/servicos', [CatalogoEsteticaController::class, 'servicos']);
+        Route::post('/servicos', [CatalogoEsteticaController::class, 'criarServico']);
+        Route::put('/servicos/{id}', [CatalogoEsteticaController::class, 'atualizarServico']);
+        Route::get('/pacotes', [CatalogoEsteticaController::class, 'pacotes']);
+        Route::post('/pacotes', [CatalogoEsteticaController::class, 'criarPacote']);
+        Route::delete('/pacotes/{id}', [CatalogoEsteticaController::class, 'removerPacote']);
+
+        Route::get('/atendimentos', [AtendimentoEsteticaController::class, 'index']);
+        Route::post('/atendimentos', [AtendimentoEsteticaController::class, 'store']);
+        Route::get('/atendimentos/{id}', [AtendimentoEsteticaController::class, 'show']);
+        Route::put('/atendimentos/{id}', [AtendimentoEsteticaController::class, 'atualizar']);
+        Route::post('/atendimentos/{id}/avancar', [AtendimentoEsteticaController::class, 'avancar']);
+        Route::delete('/atendimentos/{id}', [AtendimentoEsteticaController::class, 'destroy']);
+        Route::post('/atendimentos/{id}/fotos', [FotoEsteticaController::class, 'store'])->middleware('throttle:60,1');
+
+        Route::get('/placas/{placa}', [HistoricoEsteticaController::class, 'show']);
+        Route::get('/financeiro', [FinanceiroEsteticaController::class, 'index']);
+    });
 });
+
+// Foto do carro na estética: também por link assinado e temporário.
+Route::get('/estetica/fotos/{foto}', [FotoEsteticaController::class, 'mostrar'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('estetica.fotos.mostrar');

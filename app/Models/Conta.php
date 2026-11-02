@@ -15,7 +15,9 @@ class Conta extends Model
 
     public const TIPO_FROTA = 'frota';
 
-    public const TIPOS = [self::TIPO_PESSOA, self::TIPO_FROTA];
+    public const TIPO_ESTETICA = 'estetica';
+
+    public const TIPOS = [self::TIPO_PESSOA, self::TIPO_FROTA, self::TIPO_ESTETICA];
 
     /**
      * Planos comerciais da frota e o limite de veículos de cada um. Todos têm
