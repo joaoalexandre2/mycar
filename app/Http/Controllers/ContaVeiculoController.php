@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TipoVeiculo;
+use App\Models\Conta;
 use App\Models\VeiculoConta;
 use App\Rules\AnoFabricacao;
 use App\Rules\PlacaBrasileira;
@@ -47,6 +48,14 @@ class ContaVeiculoController extends Controller
 
     public function store(Request $request, FipeService $fipe)
     {
+        $conta = Conta::find(app('conta.atual'));
+
+        if ($conta?->atingiuLimiteDeVeiculos()) {
+            return response()->json([
+                'message' => "Seu plano {$this->nomeDoPlano($conta)} permite até {$conta->limite_veiculos} veículos. Troque de plano para cadastrar mais.",
+            ], 422);
+        }
+
         $veiculo = VeiculoConta::create($this->validar($request));
 
         $this->preencherValorFipe($veiculo, $fipe);
@@ -119,6 +128,11 @@ class ContaVeiculoController extends Controller
     /**
      * @return array<string, mixed>
      */
+    private function nomeDoPlano(Conta $conta): string
+    {
+        return ucfirst((string) $conta->plano);
+    }
+
     private function validar(Request $request, ?int $ignorarId = null): array
     {
         $request->merge(['placa' => PlacaBrasileira::normalizar($request->input('placa'))]);

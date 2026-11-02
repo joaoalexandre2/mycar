@@ -276,6 +276,9 @@ class User extends Authenticatable
                 : null,
             'oficina' => $perfil === 'oficina' ? $this->oficina?->nome : null,
             'conta' => $perfil === 'oficina' ? null : $this->conta?->nome,
+            // Plano comercial da conta da frota; null = sem limite de veículos.
+            'plano' => $perfil === 'frota' ? $this->conta?->plano : null,
+            'limite_veiculos' => $perfil === 'frota' ? $this->conta?->limite_veiculos : null,
             'admin' => (bool) $this->is_super_admin,
             // Aparência escolhida em Configurações; null = nunca escolheu.
             'tema' => $this->tema,
