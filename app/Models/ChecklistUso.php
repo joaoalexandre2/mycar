@@ -32,7 +32,7 @@ class ChecklistUso extends Model
 
     protected $table = 'checklists_uso';
 
-    protected $fillable = ['uso_veiculo_id', 'momento', 'itens', 'observacoes', 'feito_por_user_id'];
+    protected $fillable = ['uso_veiculo_id', 'momento', 'itens', 'observacoes', 'feito_por_user_id', 'checklist_modelo_id'];
 
     protected static function booted(): void
     {
@@ -50,5 +50,10 @@ class ChecklistUso extends Model
     public function uso(): BelongsTo
     {
         return $this->belongsTo(UsoVeiculo::class, 'uso_veiculo_id');
+    }
+
+    public function modelo(): BelongsTo
+    {
+        return $this->belongsTo(ChecklistModelo::class, 'checklist_modelo_id');
     }
 }
