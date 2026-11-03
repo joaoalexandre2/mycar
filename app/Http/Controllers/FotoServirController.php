@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Abastecimento;
 use App\Models\FotoVeiculoConta;
 use App\Models\OcorrenciaFoto;
+use App\Models\ServicoAnexo;
 use App\Models\SugestaoAnexo;
 use App\Models\UsoVeiculo;
 use Illuminate\Support\Facades\Storage;
@@ -44,6 +45,20 @@ class FotoServirController extends Controller
         abort_unless($caminho && Storage::disk('local')->exists($caminho), 404);
 
         return Storage::disk('local')->response($caminho, null, [
+            'Cache-Control' => 'private, max-age=3600',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /** Nota fiscal ou recibo de um serviço (mesmo esquema: link assinado e temporário). */
+    public function servicoAnexo($anexo)
+    {
+        // Sem escopo de conta: quem chega aqui já provou ter o link assinado.
+        $registro = ServicoAnexo::withoutGlobalScopes()->find($anexo);
+
+        abort_unless($registro && Storage::disk('local')->exists($registro->caminho), 404);
+
+        return Storage::disk('local')->response($registro->caminho, $registro->nome, [
             'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
         ]);
