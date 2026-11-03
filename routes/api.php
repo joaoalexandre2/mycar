@@ -16,6 +16,7 @@ use App\Http\Controllers\ComparadorController;
 use App\Http\Controllers\ConfiguracaoController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\ContaVeiculoController;
+use App\Http\Controllers\DespesaAvulsaController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EmailVerificationController;
@@ -197,6 +198,13 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/veiculos/{id}/fipe', [ContaVeiculoController::class, 'consultarFipe']);
 
         Route::get('/despesas', [DespesaController::class, 'index']);
+        Route::get('/despesas/avulsas', [DespesaAvulsaController::class, 'index']);
+        Route::post('/despesas/avulsas', [DespesaAvulsaController::class, 'store']);
+        Route::put('/despesas/avulsas/{id}', [DespesaAvulsaController::class, 'update']);
+        Route::delete('/despesas/avulsas/{id}', [DespesaAvulsaController::class, 'destroy']);
+        Route::get('/despesas/categorias', [DespesaAvulsaController::class, 'categorias']);
+        Route::post('/despesas/categorias', [DespesaAvulsaController::class, 'criarCategoria']);
+        Route::put('/despesas/categorias/{id}', [DespesaAvulsaController::class, 'atualizarCategoria']);
         Route::get('/comparador', [ComparadorController::class, 'index'])->middleware('throttle:20,1');
         Route::get('/pecas-catalogo', [CatalogoPecasController::class, 'index']);
         Route::get('/veiculos/{id}/fotos', [FotoVeiculoContaController::class, 'index']);
