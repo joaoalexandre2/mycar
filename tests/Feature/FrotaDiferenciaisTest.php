@@ -8,6 +8,7 @@ use App\Models\Motorista;
 use App\Models\Multa;
 use App\Models\UsoVeiculo;
 use App\Models\VeiculoConta;
+use App\Support\FusoDaFrota;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -168,7 +169,8 @@ class FrotaDiferenciaisTest extends TestCase
 
     public function test_alertas_mostram_cnh_vencida(): void
     {
-        Motorista::create(['nome' => 'Vencido', 'cnh_numero' => '5', 'cnh_validade' => now()->subDay()->toDateString()]);
+        // O dia é o de Brasília, como no painel: depois das 21h em Brasília, o UTC já está no dia seguinte.
+        Motorista::create(['nome' => 'Vencido', 'cnh_numero' => '5', 'cnh_validade' => now(FusoDaFrota::NOME)->subDay()->toDateString()]);
 
         $this->getJson('/api/conta/alertas', $this->headersAdmin)
             ->assertOk()
