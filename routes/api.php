@@ -44,6 +44,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PessoaFrotaController;
 use App\Http\Controllers\QrVeiculoController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\SeguroController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\SocialAuthController;
@@ -343,6 +344,9 @@ Route::middleware('auth.token')->group(function () {
         Route::delete('/multas/{id}', [MultaController::class, 'destroy']);
         Route::get('/alertas', [PainelFrotaController::class, 'alertas']);
         Route::get('/painel-frota', [PainelFrotaController::class, 'disponibilidade']);
+        Route::get('/relatorios', [RelatorioController::class, 'index']);
+        Route::get('/relatorios/{tipo}', [RelatorioController::class, 'mostrar']);
+        Route::get('/relatorios/{tipo}/csv', [RelatorioController::class, 'exportar']);
         Route::put('/ocorrencias/{id}', [OcorrenciaController::class, 'update']);
         Route::delete('/ocorrencias/{id}', [OcorrenciaController::class, 'destroy']);
         Route::delete('/ocorrencias/fotos/{foto}', [OcorrenciaFotoController::class, 'destroy']);
