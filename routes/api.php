@@ -36,6 +36,8 @@ use App\Http\Controllers\ModeloGrupoController;
 use App\Http\Controllers\MotivoTrocaCentroController;
 use App\Http\Controllers\MotoristaController;
 use App\Http\Controllers\MultaController;
+use App\Http\Controllers\OcorrenciaController;
+use App\Http\Controllers\OcorrenciaFotoController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\PainelFrotaController;
 use App\Http\Controllers\PasswordResetController;
@@ -91,6 +93,11 @@ Route::get('/hodometros/{uso}/{momento}', [FotoServirController::class, 'hodomet
     ->where('momento', 'saida|chegada')
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('hodometros.mostrar');
+
+// Foto de uma ocorrência da frota: também por link assinado e temporário.
+Route::get('/ocorrencias/fotos/{foto}', [FotoServirController::class, 'ocorrencia'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('ocorrencias.fotos.mostrar');
 
 // Imagem anexada a uma sugestão: também por link assinado e temporário.
 Route::get('/sugestoes/anexos/{anexo}', [FotoServirController::class, 'anexoDeSugestao'])
@@ -311,6 +318,13 @@ Route::middleware('auth.token')->group(function () {
         Route::put('/veiculos/{id}/km', [UsoVeiculoController::class, 'definirKm']);
     });
 
+    // Ocorrências da frota: qualquer usuário da frota registra e acompanha (o motorista só as dele).
+    Route::middleware('perfil:frota')->prefix('conta')->group(function () {
+        Route::get('/ocorrencias', [OcorrenciaController::class, 'index']);
+        Route::post('/ocorrencias', [OcorrenciaController::class, 'store']);
+        Route::post('/ocorrencias/{id}/fotos', [OcorrenciaFotoController::class, 'store']);
+    });
+
     // Checklist de saída e de devolução: o motorista faz o da própria reserva
     Route::middleware('perfil:frota')->prefix('conta')->group(function () {
         Route::get('/usos/{id}/checklist', [ChecklistUsoController::class, 'index']);
@@ -329,6 +343,9 @@ Route::middleware('auth.token')->group(function () {
         Route::delete('/multas/{id}', [MultaController::class, 'destroy']);
         Route::get('/alertas', [PainelFrotaController::class, 'alertas']);
         Route::get('/painel-frota', [PainelFrotaController::class, 'disponibilidade']);
+        Route::put('/ocorrencias/{id}', [OcorrenciaController::class, 'update']);
+        Route::delete('/ocorrencias/{id}', [OcorrenciaController::class, 'destroy']);
+        Route::delete('/ocorrencias/fotos/{foto}', [OcorrenciaFotoController::class, 'destroy']);
     });
 
     // Estética: pátio em etapas, serviços, pacotes, histórico por placa e financeiro
