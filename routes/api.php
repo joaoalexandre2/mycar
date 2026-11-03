@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogoEsteticaController;
 use App\Http\Controllers\CatalogoPecasController;
 use App\Http\Controllers\CentroCustoController;
+use App\Http\Controllers\ChecklistModeloController;
 use App\Http\Controllers\ChecklistUsoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CodigoPecaController;
@@ -94,6 +95,12 @@ Route::get('/hodometros/{uso}/{momento}', [FotoServirController::class, 'hodomet
     ->where('momento', 'saida|chegada')
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('hodometros.mostrar');
+
+// Comprovante e foto do hodômetro de um abastecimento: também por link assinado e temporário.
+Route::get('/abastecimentos/{abastecimento}/{tipo}', [FotoServirController::class, 'abastecimento'])
+    ->where('tipo', 'comprovante|hodometro')
+    ->middleware(['signed:relative', 'throttle:120,1'])
+    ->name('abastecimentos.fotos.mostrar');
 
 // Foto de uma ocorrência da frota: também por link assinado e temporário.
 Route::get('/ocorrencias/fotos/{foto}', [FotoServirController::class, 'ocorrencia'])
@@ -344,6 +351,10 @@ Route::middleware('auth.token')->group(function () {
         Route::delete('/multas/{id}', [MultaController::class, 'destroy']);
         Route::get('/alertas', [PainelFrotaController::class, 'alertas']);
         Route::get('/painel-frota', [PainelFrotaController::class, 'disponibilidade']);
+        Route::get('/checklists/modelos', [ChecklistModeloController::class, 'index']);
+        Route::post('/checklists/modelos', [ChecklistModeloController::class, 'store']);
+        Route::put('/checklists/modelos/{id}', [ChecklistModeloController::class, 'update']);
+        Route::delete('/checklists/modelos/{id}', [ChecklistModeloController::class, 'destroy']);
         Route::get('/relatorios', [RelatorioController::class, 'index']);
         Route::get('/relatorios/{tipo}', [RelatorioController::class, 'mostrar']);
         Route::get('/relatorios/{tipo}/csv', [RelatorioController::class, 'exportar']);
