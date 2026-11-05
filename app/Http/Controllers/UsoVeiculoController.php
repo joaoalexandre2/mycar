@@ -371,6 +371,7 @@ class UsoVeiculoController extends Controller
             $origem = $request->hasFile('foto') ? 'foto' : 'manual';
 
             // O motivo pode ser ajustado na hora da saída; sem o campo, a finalidade da reserva fica como está.
+            $motivoAntes = $uso->finalidade;
             $motivo = array_key_exists('finalidade', $dados) ? ['finalidade' => $dados['finalidade'] ?: null] : [];
 
             $uso->update($motivo + [
@@ -388,6 +389,10 @@ class UsoVeiculoController extends Controller
             $this->subirKm($veiculo, $dados['km_saida']);
 
             UsoVeiculoEvento::registrar($uso, 'saiu', $request->user()->id, ['km' => $dados['km_saida'], 'origem' => $origem]);
+
+            if ($uso->finalidade !== $motivoAntes) {
+                UsoVeiculoEvento::registrar($uso, 'mudou_motivo', $request->user()->id, ['antes' => $motivoAntes, 'depois' => $uso->finalidade]);
+            }
 
             return response()->json($this->formatar($uso->fresh(self::RELACOES)));
         });
