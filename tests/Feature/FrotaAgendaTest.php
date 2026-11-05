@@ -355,6 +355,13 @@ class FrotaAgendaTest extends TestCase
         $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 45200, 'finalidade' => 'Entrega em Campinas'], $this->headers)
             ->assertOk()->assertJsonPath('finalidade', 'Entrega em Campinas');
 
+        $this->assertDatabaseHas('usos_veiculo_eventos', [
+            'uso_veiculo_id' => $id,
+            'acao' => 'mudou_motivo',
+        ]);
+        $evento = UsoVeiculoEvento::where('uso_veiculo_id', $id)->where('acao', 'mudou_motivo')->firstOrFail();
+        $this->assertSame(['antes' => 'Visita', 'depois' => 'Entrega em Campinas'], $evento->dados);
+
         $outra = $this->reservar($this->veiculo('BBB2C35'), ['finalidade' => 'Visita', 'motorista_id' => $this->motorista('Outro')->id])->json('id');
 
         $this->postJson("/api/conta/usos/{$outra}/saida", ['km_saida' => 1000], $this->headers)
