@@ -348,6 +348,19 @@ class FrotaAgendaTest extends TestCase
         $this->assertNotNull($v->fresh()->km_atualizado_em);
     }
 
+    public function test_saida_ajusta_o_motivo_quando_informado_e_mantem_quando_nao(): void
+    {
+        $id = $this->reservar($this->veiculo(), ['finalidade' => 'Visita'])->json('id');
+
+        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 45200, 'finalidade' => 'Entrega em Campinas'], $this->headers)
+            ->assertOk()->assertJsonPath('finalidade', 'Entrega em Campinas');
+
+        $outra = $this->reservar($this->veiculo('BBB2C35'), ['finalidade' => 'Visita', 'motorista_id' => $this->motorista('Outro')->id])->json('id');
+
+        $this->postJson("/api/conta/usos/{$outra}/saida", ['km_saida' => 1000], $this->headers)
+            ->assertOk()->assertJsonPath('finalidade', 'Visita');
+    }
+
     public function test_chegada_menor_que_a_saida_e_recusada(): void
     {
         $id = $this->reservar($this->veiculo())->json('id');

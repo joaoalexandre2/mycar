@@ -310,7 +310,7 @@ class UsoVeiculoController extends Controller
 
     public function saida(Request $request, $id)
     {
-        $dados = $this->validarKm($request, 'km_saida');
+        $dados = $this->validarKm($request, 'km_saida', ['finalidade' => ['nullable', 'string', 'max:160']]);
 
         return DB::transaction(function () use ($request, $id, $dados) {
             $uso = $this->usoVisivel($request, $id, travar: true);
@@ -370,7 +370,10 @@ class UsoVeiculoController extends Controller
 
             $origem = $request->hasFile('foto') ? 'foto' : 'manual';
 
-            $uso->update([
+            // O motivo pode ser ajustado na hora da saída; sem o campo, a finalidade da reserva fica como está.
+            $motivo = array_key_exists('finalidade', $dados) ? ['finalidade' => $dados['finalidade'] ?: null] : [];
+
+            $uso->update($motivo + [
                 'status' => 'em_uso',
                 'km_saida' => $dados['km_saida'],
                 'km_saida_origem' => $origem,
@@ -630,12 +633,12 @@ class UsoVeiculoController extends Controller
     }
 
     /** @return array<string, mixed> */
-    private function validarKm(Request $request, string $campo): array
+    private function validarKm(Request $request, string $campo, array $extras = []): array
     {
         return $request->validate([
             $campo => ['required', 'integer', 'min:0', 'max:' . self::KM_MAXIMO],
             'foto' => $this->regraDaFoto(false),
-        ], $this->mensagensDaFoto());
+        ] + $extras, $this->mensagensDaFoto());
     }
 
     /** @return array<int, string> */
