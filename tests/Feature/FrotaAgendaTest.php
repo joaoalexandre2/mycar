@@ -10,6 +10,7 @@ use App\Models\UsoVeiculo;
 use App\Models\UsoVeiculoEvento;
 use App\Models\UsoVeiculoFoto;
 use App\Models\VeiculoConta;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
@@ -211,14 +212,21 @@ class FrotaAgendaTest extends TestCase
 
     public function test_conflito_com_veiculo_que_ja_saiu_diz_que_esta_em_uso(): void
     {
-        $v = $this->veiculo();
-        $id = $this->reservar($v, ['motorista_id' => $this->motorista('Beto')->id])->json('id');
-        $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk();
+        // A saída é registrada "agora": o relógio fica dentro da reserva de 10/11, não no dia real da execução.
+        Carbon::setTestNow('2026-11-10 09:30:00');
 
-        $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 09:00'], 422);
+        try {
+            $v = $this->veiculo();
+            $id = $this->reservar($v, ['motorista_id' => $this->motorista('Beto')->id])->json('id');
+            $this->postJson("/api/conta/usos/{$id}/saida", ['km_saida' => 100], $this->headers)->assertOk();
 
-        $this->assertStringContainsString('O veículo AAA1B25 (Fiat Strada) está em uso agora: Beto, de 10/11 08:00 a 10/11 12:00.', $r->json('message'));
-        $this->assertSame('em_uso', $r->json('conflito.status'));
+            $r = $this->reservar($v, ['inicio_previsto' => '2026-11-10 09:00'], 422);
+
+            $this->assertStringContainsString('O veículo AAA1B25 (Fiat Strada) está em uso agora: Beto, de 10/11 08:00 a 10/11 12:00.', $r->json('message'));
+            $this->assertSame('em_uso', $r->json('conflito.status'));
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 
     public function test_horario_encostado_nao_e_conflito(): void
