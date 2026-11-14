@@ -2,60 +2,59 @@
 
 # 🚗 MyCar API
 
-### API REST para gestão de oficina mecânica
+### API REST para gestão de frotas, com oficinas e cuidados com o carro
 
-Clientes, veículos, ordens de serviço e manutenções.
+Um único backend Laravel que atende quatro perfis, cada um com seus dados e suas telas. O foco principal é a **MyCar Frota**.
 
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![PHPUnit](https://img.shields.io/badge/PHPUnit-tests-366488?style=for-the-badge&logo=php&logoColor=white)
 
-**Backend** · [Ver frontend (React)](https://github.com/joaoalexandre2/mycar_frontend)
+**Backend** · [Frontend (React)](https://github.com/joaoalexandre2/mycar_frontend)
 
 </div>
 
 ---
 
-## 🧩 Modelo de dados
+## 🧩 Os produtos
 
-```mermaid
-erDiagram
-    CLIENTE ||--o{ VEICULO : possui
-    VEICULO ||--o{ ORDEM_SERVICO : recebe
-    VEICULO ||--o{ MANUTENCAO : tem
+Cada conta escolhe um perfil no cadastro (`POST /api/register` com `perfil`). Os dados de um perfil não se misturam com os de outro.
 
-    CLIENTE {
-        string nome
-        string cpf UK
-        string telefone UK
-        boolean ativo
-    }
-    VEICULO {
-        string placa UK
-        string marca
-        string modelo
-        year ano
-    }
-    ORDEM_SERVICO {
-        text descricao
-        string status
-        decimal valor
-        date data_abertura
-        datetime data_fechamento
-    }
-    MANUTENCAO {
-        string tipo
-        text descricao
-        decimal valor
-        date data_manutencao
-        int quilometragem
-        date proxima_data
-        int proxima_quilometragem
-    }
-```
+### 🚚 MyCar Frota (`frota`)
 
-> 🗑️ Ao excluir um cliente, seus veículos são removidos; ao excluir um veículo, suas ordens de serviço e manutenções também (cascade).
+Produto principal. Para empresas com veículos, do controle de reservas à prestação de contas:
+
+- **Agenda de reservas:** quem usa cada veículo, quando e para quê, com aviso de conflito de horário.
+- **Saída e chegada:** registro do uso com km e foto do hodômetro, checklist de saída e de devolução.
+- **Motoristas:** cadastro com CNH e validade, centro de custo padrão e convite para acessar o sistema.
+- **Centros de custo:** cada uso sai em um centro, com histórico das trocas e motivo obrigatório.
+- **Pessoas e grupos:** papéis de administrador, gestor e motorista, e grupos que liberam menus e permissões extras.
+- **Importação de planilha:** histórico de viagens em CSV, conferido antes de gravar.
+- **Ocorrências, multas, financeiro e relatórios:** acompanhamento do que acontece com cada veículo.
+- **Trilha de mudanças:** correções e acessos ficam registrados com quem fez e o motivo.
+
+### 🛠️ MyCar Oficina (`oficina`)
+
+Oficinas: clientes, veículos, ordens de serviço, manutenções e peças.
+
+### 🚗 MyCar Cuidados com seu carro (`pessoa`)
+
+Dono de carro: valor, IPVA, licenciamento, seguro, abastecimento, documentos e fotos.
+
+### ✨ MyCar Estética Automotiva (`estetica`)
+
+Estética automotiva: pátio em etapas, serviços e pacotes, histórico por placa e financeiro.
+
+Uma mesma conta pode ter mais de um MyCar (por exemplo, oficina e frota). O MyCar principal fica nas colunas do usuário; os extras ficam na tabela `acessos`.
+
+## 🧱 Como o isolamento funciona
+
+- **Oficina:** os dados ficam ligados a `oficina_id` (trait `PertenceAOficina`).
+- **Pessoa e frota:** os dados ficam ligados a `conta_id` (trait `PertenceAConta`).
+- Os models falham fechado: sem a conta ou a oficina atual, nada é retornado.
+- O middleware `perfil:...` responde `403` com mensagem clara quando a rota não é do perfil do usuário.
+- Na frota, o middleware `papel` (administrador, gestor) e `permissao` (grupos de usuários) restringem cada bloco de rotas.
 
 ## 🔐 Autenticação
 
@@ -65,29 +64,29 @@ sequenceDiagram
     participant A as API
     C->>A: POST /api/login
     A-->>C: token
-    C->>A: GET /api/clientes (com token)
-    A-->>C: 200 OK
+    C->>A: GET /api/me (com token)
+    A-->>C: 200 OK, com perfil e permissões
     C->>A: POST /api/logout
     A-->>C: token invalidado
 ```
 
-Todas as rotas, exceto o login, exigem token.
+- O cadastro envia um e-mail de confirmação; o login só funciona depois de confirmado.
+- Login e cadastro têm limite de tentativas (`throttle`).
+- Todas as rotas, exceto as de autenticação e cadastro, exigem o token no cabeçalho `Authorization: Bearer <token>`.
 
-## 🛣️ Endpoints
+## 🛣️ Endpoints (visão geral)
 
-| Recurso | Método | Rota |
+A lista completa, com parâmetros e respostas, está na documentação Swagger em `/api/docs` (gerada a partir de `storage/api-docs/api-docs.json`).
+
+| Grupo | Prefixo | Perfil |
 |---|---|---|
-| 🔐 Auth | `POST` | `/api/login` |
-| 🔐 Auth | `POST` | `/api/logout` |
-| 🔐 Auth | `GET` | `/api/me` |
-| 👥 Clientes | `GET` `POST` | `/api/clientes` |
-| 👥 Clientes | `GET` `PUT` `DELETE` | `/api/clientes/{id}` |
-| 🚙 Veículos | `GET` `POST` | `/api/veiculos` |
-| 🚙 Veículos | `GET` `PUT` `DELETE` | `/api/veiculos/{id}` |
-| 🧾 Ordens de serviço | `GET` `POST` | `/api/ordens-servico` |
-| 🧾 Ordens de serviço | `GET` `PUT` `DELETE` | `/api/ordens-servico/{id}` |
-| 🔧 Manutenções | `GET` `POST` | `/api/manutencoes` |
-| 🔧 Manutenções | `GET` `PUT` `DELETE` | `/api/manutencoes/{id}` |
+| Autenticação e cadastro | `/api/login`, `/api/logout`, `/api/register`, `/api/me` | todos |
+| Vários MyCar por e-mail | `/api/meus-mycars` | todos |
+| Oficina | `/api/clientes`, `/api/veiculos`, `/api/ordens-servico`, `/api/manutencoes`, `/api/oficina` | `oficina` |
+| Conta (veículos, despesas, documentos, fotos, abastecimento, seguros) | `/api/conta/...` | `pessoa`, `frota` |
+| Frota (usos, motoristas, centros de custo, pessoas, grupos) | `/api/conta/usos`, `/api/conta/motoristas`, `/api/conta/centros-custo`, `/api/conta/pessoas`, `/api/conta/grupos-usuarios` | `frota` |
+| FIPE | `/api/fipe/...` | todos |
+| Operador (contas e acessos) | `/api/admin/...` | operador do sistema |
 
 ## 🚀 Começando
 
@@ -121,6 +120,19 @@ npm install
 
 </details>
 
+### Variáveis de ambiente
+
+As principais estão em `.env.example`:
+
+| Variável | Para que serve |
+|---|---|
+| `APP_URL` | Endereço público da API |
+| `FRONTEND_URL` | Endereço do frontend, usado nos links de e-mail |
+| `DB_CONNECTION` | Banco de dados (padrão: `sqlite` em desenvolvimento) |
+| `MAIL_MAILER` | Envio de e-mails (confirmação de cadastro, lembretes e resumos) |
+
+> ⚠️ Em ambiente de desenvolvimento, `php artisan migrate:fresh` apaga o banco. Não use em um banco com dados reais.
+
 ### Executando
 
 ```bash
@@ -139,9 +151,15 @@ composer dev
 composer test
 ```
 
+Os testes são de feature, rodam contra o banco de testes e cobrem os três perfis, o isolamento entre contas e as permissões da frota.
+
+## 📚 Documentação
+
+- Swagger (OpenAPI): `/api/docs` em um ambiente rodando.
+
 ## 🔗 Frontend
 
-O front-end React está em [joaoalexandre2/mycar_frontend](https://github.com/joaoalexandre2/mycar_frontend).
+O front-end React está em [joaoalexandre2/mycar_frontend](https://github.com/joaoalexandre2/mycar_frontend). Ele tem as telas dos três perfis e lê o perfil em `/api/me` ao abrir.
 
 ## 📄 Licença
 
