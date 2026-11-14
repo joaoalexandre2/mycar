@@ -24,7 +24,8 @@ class AuthTest extends TestCase
         ]);
 
         $resposta->assertStatus(200)
-            ->assertJsonStructure(['user' => ['id', 'name', 'email'], 'token'])
+            ->assertJsonStructure(['user' => ['id', 'name', 'email']])
+            ->assertJsonMissingPath('token')
             ->assertJsonPath('user.email', $usuario->email);
     }
 

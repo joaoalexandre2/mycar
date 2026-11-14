@@ -124,7 +124,7 @@ class PerfisContaTest extends TestCase
             ->assertJsonPath('user.oficina', null);
 
         // O login emite um token novo; é com ele que o /me responde.
-        $this->getJson('/api/me', ['Authorization' => 'Bearer ' . $login->json('token')])
+        $this->getJson('/api/me', ['Authorization' => 'Bearer ' . $this->tokenDaSessao($login)])
             ->assertJsonPath('perfil', 'frota');
     }
 
