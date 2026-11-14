@@ -15,5 +15,6 @@ return [
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
     'max_age' => 0,
-    'supports_credentials' => false,
+    // O navegador envia o cookie da sessão: só origens listadas em allowed_origins recebem.
+    'supports_credentials' => true,
 ];

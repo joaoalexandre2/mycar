@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conta;
 use App\Models\ContaSocial;
 use App\Models\User;
+use App\Support\SessaoCookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -83,10 +84,12 @@ class SocialAuthController extends Controller
             return response()->json(['message' => 'Código inválido ou expirado. Entre novamente.'], 422);
         }
 
+        $token = $user->abrirSessao($request->userAgent());
+
         return response()->json([
             'user' => $user->dadosPublicos(),
-            'token' => $user->abrirSessao($request->userAgent()),
-        ]);
+            'token' => $token,
+        ])->withCookie(SessaoCookie::criar($token));
     }
 
     private function configurado(string $provedor): bool

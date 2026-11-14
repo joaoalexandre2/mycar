@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Acesso;
 use App\Models\TokenAcesso;
+use App\Support\SessaoCookie;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,8 @@ class AuthenticateToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
+        // Navegador: o token vem do cookie HttpOnly. Outros clientes: cabeçalho Bearer.
+        $token = $request->bearerToken() ?? $request->cookie(SessaoCookie::NOME);
 
         if (!$token) {
             return response()->json([

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\SessaoCookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -39,7 +40,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user->dadosPublicos(),
             'token' => $token,
-        ]);
+        ])->withCookie(SessaoCookie::criar($token));
     }
 
     /**
@@ -54,7 +55,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logout realizado com sucesso.',
-        ]);
+        ])->withCookie(SessaoCookie::esquecer());
     }
 
     /**
