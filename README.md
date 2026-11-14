@@ -2,9 +2,9 @@
 
 # 🚗 MyCar API
 
-### API REST para oficinas, cuidados com o carro e frotas
+### API REST para gestão de frotas, com oficinas e cuidados com o carro
 
-Um único backend Laravel que atende três produtos, cada um com seu perfil, seus dados e suas telas.
+Um único backend Laravel que atende quatro perfis, cada um com seus dados e suas telas. O foco principal é a **MyCar Frota**.
 
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
@@ -21,11 +21,30 @@ Um único backend Laravel que atende três produtos, cada um com seu perfil, seu
 
 Cada conta escolhe um perfil no cadastro (`POST /api/register` com `perfil`). Os dados de um perfil não se misturam com os de outro.
 
-| Perfil | Produto | Para quem é |
-|---|---|---|
-| `oficina` | **MyCar Oficina** | Oficinas: clientes, veículos, ordens de serviço, manutenções e peças |
-| `pessoa` | **MyCar Cuidados com seu carro** | Dono de carro: valor, IPVA, licenciamento, seguro, abastecimento, documentos e fotos |
-| `frota` | **MyCar Frota** | Empresas com veículos: agenda de reservas, motoristas, centros de custo, checklist e importação de planilha |
+### 🚚 MyCar Frota (`frota`)
+
+Produto principal. Para empresas com veículos, do controle de reservas à prestação de contas:
+
+- **Agenda de reservas:** quem usa cada veículo, quando e para quê, com aviso de conflito de horário.
+- **Saída e chegada:** registro do uso com km e foto do hodômetro, checklist de saída e de devolução.
+- **Motoristas:** cadastro com CNH e validade, centro de custo padrão e convite para acessar o sistema.
+- **Centros de custo:** cada uso sai em um centro, com histórico das trocas e motivo obrigatório.
+- **Pessoas e grupos:** papéis de administrador, gestor e motorista, e grupos que liberam menus e permissões extras.
+- **Importação de planilha:** histórico de viagens em CSV, conferido antes de gravar.
+- **Ocorrências, multas, financeiro e relatórios:** acompanhamento do que acontece com cada veículo.
+- **Trilha de mudanças:** correções e acessos ficam registrados com quem fez e o motivo.
+
+### 🛠️ MyCar Oficina (`oficina`)
+
+Oficinas: clientes, veículos, ordens de serviço, manutenções e peças.
+
+### 🚗 MyCar Cuidados com seu carro (`pessoa`)
+
+Dono de carro: valor, IPVA, licenciamento, seguro, abastecimento, documentos e fotos.
+
+### ✨ MyCar Estética Automotiva (`estetica`)
+
+Estética automotiva: pátio em etapas, serviços e pacotes, histórico por placa e financeiro.
 
 Uma mesma conta pode ter mais de um MyCar (por exemplo, oficina e frota). O MyCar principal fica nas colunas do usuário; os extras ficam na tabela `acessos`.
 
