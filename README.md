@@ -157,6 +157,18 @@ Os testes são de feature, rodam contra o banco de testes e cobrem os três perf
 
 - Swagger (OpenAPI): `/api/docs` em um ambiente rodando.
 
+## 🖼️ Telas
+
+Prints de uma conta de demonstração, com dados de exemplo.
+
+| Início (frota) | Veículos da frota |
+|---|---|
+| ![Início](docs/screenshots/inicio.jpg) | ![Veículos da frota](docs/screenshots/veiculos.jpg) |
+| **Agenda de veículos** | **Motoristas e centros de custo** |
+| ![Agenda](docs/screenshots/agenda.jpg) | ![Motoristas e centros](docs/screenshots/motoristas.jpg) |
+| **Painel da frota** | **Login** |
+| ![Painel da frota](docs/screenshots/painel.jpg) | ![Login](docs/screenshots/login.png) |
+
 ## 🔗 Frontend
 
 O front-end React está em [joaoalexandre2/mycar_frontend](https://github.com/joaoalexandre2/mycar_frontend). Ele tem as telas dos três perfis e lê o perfil em `/api/me` ao abrir.
