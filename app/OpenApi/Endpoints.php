@@ -12,7 +12,7 @@ class Endpoints
 {
     #[OA\Post(
         path: '/login',
-        summary: 'Login (retorna token Bearer)',
+        summary: 'Login (grava a sessão no cookie mycar_sessao, HttpOnly)',
         tags: ['Autenticação'],
         requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(mediaType: 'application/json', schema: new OA\Schema(required: ['email', 'password'], properties: [
             new OA\Property(property: 'email', type: 'string', format: 'email'),
@@ -53,7 +53,7 @@ class Endpoints
 
     #[OA\Post(
         path: '/auth/social/trocar',
-        summary: 'Troca o código de uso único por token',
+        summary: 'Troca o código de uso único pela sessão (cookie mycar_sessao, HttpOnly)',
         tags: ['Autenticação'],
         requestBody: new OA\RequestBody(required: true, content: new OA\MediaType(mediaType: 'application/json', schema: new OA\Schema(required: ['codigo'], properties: [
             new OA\Property(property: 'codigo', type: 'string'),

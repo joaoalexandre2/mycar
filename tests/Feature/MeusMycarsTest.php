@@ -193,7 +193,7 @@ class MeusMycarsTest extends TestCase
             ->assertStatus(200)
             ->assertJsonPath('user.perfil', 'oficina');
 
-        $this->getJson('/api/clientes', ['Authorization' => 'Bearer ' . $r->json('token')])->assertStatus(200);
+        $this->getJson('/api/clientes', ['Authorization' => 'Bearer ' . $this->tokenDaSessao($r)])->assertStatus(200);
     }
 
     public function test_nao_abre_o_mycar_de_outra_pessoa(): void

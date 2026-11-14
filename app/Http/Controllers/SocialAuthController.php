@@ -86,9 +86,9 @@ class SocialAuthController extends Controller
 
         $token = $user->abrirSessao($request->userAgent());
 
+        // O token vai só no cookie HttpOnly: não aparece no corpo da resposta.
         return response()->json([
             'user' => $user->dadosPublicos(),
-            'token' => $token,
         ])->withCookie(SessaoCookie::criar($token));
     }
 

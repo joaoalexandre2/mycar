@@ -36,7 +36,8 @@ class SessaoEmCookieTest extends TestCase
         $this->assertNotNull($cookie, 'o login precisa devolver o cookie da sessão');
         $this->assertTrue($cookie->isHttpOnly(), 'o cookie não pode ser lido pelo JavaScript');
         $this->assertSame('lax', strtolower((string) $cookie->getSameSite()));
-        $this->assertSame($resposta->json('token'), $cookie->getValue());
+        // O token não vai no corpo: o JavaScript não tem como lê-lo.
+        $this->assertArrayNotHasKey('token', $resposta->json());
     }
 
     public function test_o_cookie_autentica_as_chamadas_seguintes(): void
@@ -48,7 +49,7 @@ class SessaoEmCookieTest extends TestCase
             'password' => 'senha-correta',
         ]);
 
-        $this->withCredentials()->withUnencryptedCookie(SessaoCookie::NOME, $login->json('token'))
+        $this->withCredentials()->withUnencryptedCookie(SessaoCookie::NOME, $this->tokenDaSessao($login))
             ->getJson('/api/me')
             ->assertOk()
             ->assertJsonPath('email', $usuario->email);
@@ -68,7 +69,7 @@ class SessaoEmCookieTest extends TestCase
             'password' => 'senha-correta',
         ]);
 
-        $this->withHeader('Authorization', 'Bearer ' . $login->json('token'))
+        $this->withHeader('Authorization', 'Bearer ' . $this->tokenDaSessao($login))
             ->getJson('/api/me')
             ->assertOk();
     }
@@ -81,7 +82,7 @@ class SessaoEmCookieTest extends TestCase
             'email' => $usuario->email,
             'password' => 'senha-correta',
         ]);
-        $token = $login->json('token');
+        $token = $this->tokenDaSessao($login);
 
         $this->withCredentials()->withUnencryptedCookie(SessaoCookie::NOME, $token)
             ->postJson('/api/logout')

@@ -50,7 +50,8 @@ class SocialAuthTest extends TestCase
 
         $this->postJson('/api/auth/social/trocar', ['codigo' => $query['codigo']])
             ->assertOk()
-            ->assertJsonStructure(['token', 'user' => ['id', 'email']]);
+            ->assertJsonStructure(['user' => ['id', 'email']])
+            ->assertJsonMissingPath('token');
 
         // Código de uso único.
         $this->postJson('/api/auth/social/trocar', ['codigo' => $query['codigo']])->assertStatus(422);
