@@ -31,6 +31,7 @@ use App\Http\Controllers\FotoVeiculoContaController;
 use App\Http\Controllers\GrupoUsuarioController;
 use App\Http\Controllers\HistoricoEsteticaController;
 use App\Http\Controllers\ImagemModeloController;
+use App\Http\Controllers\LeituraHodometroController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\MeusMycarsController;
 use App\Http\Controllers\ModeloGrupoController;
@@ -267,6 +268,8 @@ Route::middleware('auth.token')->group(function () {
         Route::post('/usos/{id}/saida', [UsoVeiculoController::class, 'saida'])->middleware('throttle:60,1');
         Route::post('/usos/{id}/chegada', [UsoVeiculoController::class, 'chegada'])->middleware('throttle:60,1');
         Route::post('/usos/{id}/foto/{momento}', [UsoVeiculoController::class, 'foto'])->middleware('throttle:60,1');
+        // Leitura do km na foto com IA: só sugere o número, quem registra confirma.
+        Route::post('/hodometro/leitura', [LeituraHodometroController::class, 'ler'])->middleware('throttle:20,1');
     });
 
     // Pessoas da frota e seus papéis: só o administrador

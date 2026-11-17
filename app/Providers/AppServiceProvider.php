@@ -7,6 +7,8 @@ use App\Repositories\Interfaces\OrdemServicoRepositoryInterface;
 use App\Repositories\ManutencaoRepository;
 use App\Repositories\OrdemServicoRepository;
 use App\Services\Catalogo\CatalogoTecnicoService;
+use App\Services\Hodometro\ClaudeLeitorDeHodometro;
+use App\Services\Hodometro\LeitorDeHodometro;
 use App\Services\Precos\FontePrecos;
 use App\Services\Precos\MercadoLivreFonte;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             FontePrecos::class,
             MercadoLivreFonte::class
+        );
+
+        // Leitura do km na foto do hodômetro (os testes trocam por uma versão falsa).
+        $this->app->bind(
+            LeitorDeHodometro::class,
+            ClaudeLeitorDeHodometro::class
         );
 
         $this->app->bind(

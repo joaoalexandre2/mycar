@@ -61,6 +61,12 @@ return [
         'redirect' => env('APP_URL') . '/api/auth/facebook/callback',
     ],
 
+    // Leitura do km na foto do hodômetro (Claude). Sem chave, a tela pede o km digitado.
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'modelo_hodometro' => env('ANTHROPIC_MODELO_HODOMETRO', 'claude-opus-5-5'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
