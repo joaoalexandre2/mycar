@@ -10,6 +10,7 @@ use App\Services\ImagensModelos;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -194,13 +195,56 @@ class VeiculoConta extends Model
      */
     public function kmAtual(): ?int
     {
-        $maior = max(
-            (int) $this->abastecimentos()->max('km'),
-            (int) $this->servicos()->max('km'),
-            (int) $this->km_atual,
-        );
+        return $this->kmConhecida()['km'] ?? null;
+    }
 
-        return $maior > 0 ? $maior : null;
+    /**
+     * A km conhecida do veículo (a mesma de kmAtual(), que os avisos por km usam)
+     * e de onde ela veio: o hodômetro do veículo (km_atual, que só os usos da
+     * frota e a correção do gestor atualizam), o abastecimento ou o serviço de
+     * maior km. É a única fonte de verdade para a tela mostrar "km atual": o
+     * km_atual cru pode estar vazio enquanto abastecimentos e serviços já
+     * registram km, e aí o cartão diria "informar" e o aviso "já passou".
+     *
+     * Abastecimentos e serviços vêm pelas relações, filtradas por PertenceAConta.
+     *
+     * @return array{km: int, origem: 'hodometro'|'abastecimento'|'servico', em: string|null}|null
+     */
+    public function kmConhecida(): ?array
+    {
+        $abastecimento = $this->abastecimentos()->where('km', '>', 0)
+            ->orderByDesc('km')->orderByDesc('data')->first(['km', 'data']);
+        $servico = $this->servicos()->where('km', '>', 0)
+            ->orderByDesc('km')->orderByDesc('realizado_em')->first(['km', 'realizado_em']);
+
+        $candidatos = [
+            ['km' => (int) $this->km_atual, 'origem' => 'hodometro', 'em' => $this->km_atualizado_em],
+            ['km' => (int) $abastecimento?->km, 'origem' => 'abastecimento', 'em' => $abastecimento?->data],
+            ['km' => (int) $servico?->km, 'origem' => 'servico', 'em' => $servico?->realizado_em],
+        ];
+
+        // Empate: vale a ordem acima (o hodômetro primeiro).
+        $maior = null;
+
+        foreach ($candidatos as $candidato) {
+            if ($candidato['km'] > 0 && ($maior === null || $candidato['km'] > $maior['km'])) {
+                $maior = $candidato;
+            }
+        }
+
+        if ($maior === null) {
+            return null;
+        }
+
+        $maior['em'] = $maior['em'] ? Carbon::parse($maior['em'])->toDateString() : null;
+
+        return $maior;
+    }
+
+    /** Serializa kmConhecida(); só vai na resposta quando o controller pede (append). */
+    public function getKmConhecidaAttribute(): ?array
+    {
+        return $this->kmConhecida();
     }
 
     /**
