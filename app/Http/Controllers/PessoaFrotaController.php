@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConvitePessoaEmail;
 use App\Models\AcessoFrotaEvento;
 use App\Models\GrupoUsuario;
 use App\Models\User;
@@ -9,6 +10,7 @@ use App\Support\PermissoesFrota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -61,7 +63,19 @@ class PessoaFrotaController extends Controller
 
         // Quem convida informou o e-mail; o link de senha só chega a quem o recebe.
         $usuario->forceFill(['email_verified_at' => now()])->save();
-        Password::sendResetLink(['email' => $usuario->email]);
+
+        // Mesmo token e intervalo do "esqueci minha senha" (o Password::sendResetLink de antes também
+        // não reenviava dentro do intervalo), mas com texto de convite: quem recebe nunca pediu nada.
+        $tokens = Password::broker()->getRepository();
+        if (!$tokens->recentlyCreatedToken($usuario)) {
+            Mail::to($usuario->email)->send(new ConvitePessoaEmail(
+                $usuario,
+                $usuario->urlParaDefinirSenha($tokens->create($usuario), convite: true),
+                $request->user()->name,
+                $dados['papel'],
+                User::minutosParaExpirarLinkDeSenha(),
+            ));
+        }
 
         AcessoFrotaEvento::registrar($request->user()->id, 'pessoa', $usuario->id, 'convidou', [
             'nome' => $usuario->name,

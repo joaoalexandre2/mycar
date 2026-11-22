@@ -298,12 +298,23 @@ class User extends Authenticatable
         Mail::to($this->email)->send(new RedefinirSenhaEmail($this, $this->urlParaDefinirSenha($token)));
     }
 
-    /** Tela do frontend onde a pessoa escolhe a senha (redefinição ou primeiro acesso por convite). */
-    public function urlParaDefinirSenha(string $token): string
+    /**
+     * Tela do frontend onde a pessoa escolhe a senha (redefinição ou primeiro acesso por convite).
+     * Nos convites vai o marcador `convite=1`, para a tela falar em criar a senha em vez de
+     * redefinir; o link do "esqueci minha senha" continua sem ele.
+     */
+    public function urlParaDefinirSenha(string $token, bool $convite = false): string
     {
         $frontend = rtrim(config('app.frontend_url'), '/');
+        $url = "$frontend/redefinir-senha?token=$token&email=" . urlencode($this->email);
 
-        return "$frontend/redefinir-senha?token=$token&email=" . urlencode($this->email);
+        return $convite ? "$url&convite=1" : $url;
+    }
+
+    /** Validade, em minutos, do link de definir senha (o mesmo prazo do "esqueci minha senha"). */
+    public static function minutosParaExpirarLinkDeSenha(): int
+    {
+        return (int) config('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60);
     }
 
     /**

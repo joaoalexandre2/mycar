@@ -99,9 +99,9 @@ class MotoristaController extends Controller
 
         Mail::to($usuario->email)->send(new ConviteMotoristaEmail(
             $usuario,
-            $usuario->urlParaDefinirSenha($tokens->create($usuario)),
+            $usuario->urlParaDefinirSenha($tokens->create($usuario), convite: true),
             $request->user()->name,
-            (int) config('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60),
+            User::minutosParaExpirarLinkDeSenha(),
         ));
 
         return response()->json([
