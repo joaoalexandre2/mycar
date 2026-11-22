@@ -320,7 +320,7 @@ class UsoVeiculoController extends Controller
             }
 
             // Pedido repetido (clique duplo, rede instável): devolve o resultado já gravado.
-            if ($uso->status === 'em_uso' && $uso->saida_por_user_id === $request->user()->id && $uso->km_saida === $dados['km_saida']) {
+            if ($uso->status === 'em_uso' && $this->ehPedidoRepetido($uso->saida_por_user_id, $uso->km_saida, $request, $dados['km_saida'])) {
                 return response()->json($this->formatar($uso->load(self::RELACOES)));
             }
 
@@ -409,8 +409,11 @@ class UsoVeiculoController extends Controller
                 return $this->naoEncontrado();
             }
 
-            if ($uso->status === 'concluido' && $uso->chegada_por_user_id === $request->user()->id && $uso->km_chegada === $dados['km_chegada']) {
-                return response()->json($this->formatar($uso->load(self::RELACOES)));
+            // Pedido repetido: devolve o já gravado e o alerta recalculado (só leitura; o aviso às reservas não é registrado de novo).
+            if ($uso->status === 'concluido' && $this->ehPedidoRepetido($uso->chegada_por_user_id, $uso->km_chegada, $request, $dados['km_chegada'])) {
+                return response()->json($this->formatar($uso->load(self::RELACOES)) + [
+                    'alerta_conflito' => $this->alertaDeConflito($uso, $this->reservasAtingidasPelaDevolucao($uso)),
+                ]);
             }
 
             if ($uso->status !== 'em_uso') {
@@ -454,15 +457,33 @@ class UsoVeiculoController extends Controller
             }
 
             return response()->json($this->formatar($uso->fresh(self::RELACOES)) + [
-                'alerta_conflito' => $afetados->map(fn (UsoVeiculo $a) => [
-                    'uso_id' => $a->id,
-                    'motivo' => $this->motivoDoConflito($uso, $a),
-                    'inicio_previsto' => FusoDaFrota::saida($a->inicio_previsto),
-                    'motorista' => $a->motorista?->nome,
-                    'veiculo' => $a->veiculo?->placa,
-                ])->values(),
+                'alerta_conflito' => $this->alertaDeConflito($uso, $afetados),
             ]);
         });
+    }
+
+    /**
+     * O mesmo usuário já gravou este km (clique duplo, "Tentar de novo" depois de erro de rede).
+     * Compara como inteiro: com foto o pedido vem em multipart e o km chega como texto ("45200").
+     */
+    private function ehPedidoRepetido($gravadoPor, $kmGravado, Request $request, $kmPedido): bool
+    {
+        return $gravadoPor !== null
+            && $kmGravado !== null
+            && (int) $gravadoPor === (int) $request->user()->id
+            && (int) $kmGravado === (int) $kmPedido;
+    }
+
+    /** Reservas atingidas pela devolução, no formato da resposta da chegada. */
+    private function alertaDeConflito(UsoVeiculo $uso, $afetados)
+    {
+        return $afetados->map(fn (UsoVeiculo $a) => [
+            'uso_id' => $a->id,
+            'motivo' => $this->motivoDoConflito($uso, $a),
+            'inicio_previsto' => FusoDaFrota::saida($a->inicio_previsto),
+            'motorista' => $a->motorista?->nome,
+            'veiculo' => $a->veiculo?->placa,
+        ])->values();
     }
 
     /** Envia ou troca a foto do hodômetro de um momento que já foi registrado (a anterior é mantida). */
