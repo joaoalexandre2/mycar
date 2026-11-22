@@ -6,6 +6,7 @@ use App\Models\Concerns\PertenceAConta;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\Rule;
 
 /**
  * Motorista da frota. Pode ser só um cadastro (user_id vazio) ou alguém com
@@ -21,6 +22,8 @@ class Motorista extends Model
 
     public const ACESSO_ATIVO = 'ativo';
 
+    public const MENSAGENS_DE_CADASTRO = ['nome.unique' => 'Já existe um motorista com este nome.'];
+
     protected $table = 'motoristas';
 
     protected $fillable = ['nome', 'telefone', 'cnh_numero', 'cnh_validade', 'ativo', 'centro_custo_id'];
@@ -28,6 +31,29 @@ class Motorista extends Model
     protected function casts(): array
     {
         return ['cnh_validade' => 'date:Y-m-d', 'ativo' => 'boolean'];
+    }
+
+    /**
+     * Regras do cadastro de motorista: as mesmas em Cadastros > Motoristas e ao
+     * criar o cadastro a partir de uma pessoa da frota. Tudo preso à conta atual.
+     *
+     * @return array<string, mixed>
+     */
+    public static function regrasDeCadastro(?int $ignorarId = null): array
+    {
+        return [
+            'nome' => [
+                'required',
+                'string',
+                'max:120',
+                Rule::unique('motoristas', 'nome')->where('conta_id', app('conta.atual'))->ignore($ignorarId),
+            ],
+            'telefone' => ['nullable', 'string', 'max:30'],
+            'cnh_numero' => ['nullable', 'string', 'max:20'],
+            'cnh_validade' => ['nullable', 'date'],
+            'ativo' => ['sometimes', 'boolean'],
+            'centro_custo_id' => ['nullable', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
+        ];
     }
 
     public function usuario(): BelongsTo
