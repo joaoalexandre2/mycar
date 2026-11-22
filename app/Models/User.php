@@ -295,10 +295,15 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token): void
     {
-        $frontend = rtrim(config('app.frontend_url'), '/');
-        $url = "$frontend/redefinir-senha?token=$token&email=" . urlencode($this->email);
+        Mail::to($this->email)->send(new RedefinirSenhaEmail($this, $this->urlParaDefinirSenha($token)));
+    }
 
-        Mail::to($this->email)->send(new RedefinirSenhaEmail($this, $url));
+    /** Tela do frontend onde a pessoa escolhe a senha (redefinição ou primeiro acesso por convite). */
+    public function urlParaDefinirSenha(string $token): string
+    {
+        $frontend = rtrim(config('app.frontend_url'), '/');
+
+        return "$frontend/redefinir-senha?token=$token&email=" . urlencode($this->email);
     }
 
     /**
