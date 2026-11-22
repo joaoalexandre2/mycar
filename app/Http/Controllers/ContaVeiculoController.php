@@ -19,12 +19,18 @@ use Illuminate\Validation\Rule;
  */
 class ContaVeiculoController extends Controller
 {
+    /**
+     * Km conhecida (VeiculoConta::kmConhecida), a mesma que os avisos por km
+     * usam. Campo aditivo: km_atual continua indo como sempre foi.
+     */
+    private const KM_CONHECIDA = 'km_conhecida';
+
     public function index(Request $request)
     {
         $query = $this->aplicarBusca(VeiculoConta::query(), $request->query('busca'));
 
         if ($request->boolean('all')) {
-            return response()->json($query->orderBy('marca')->orderBy('modelo')->get());
+            return response()->json($query->orderBy('marca')->orderBy('modelo')->get()->append(self::KM_CONHECIDA));
         }
 
         $porPaginaSolicitada = (int) $request->query('per_page', 15);
@@ -32,7 +38,7 @@ class ContaVeiculoController extends Controller
         $paginador = $query->orderBy('marca')->orderBy('modelo')->paginate($porPagina);
 
         return response()->json([
-            'data' => $paginador->items(),
+            'data' => $paginador->getCollection()->append(self::KM_CONHECIDA)->all(),
             'meta' => [
                 'current_page' => $paginador->currentPage(),
                 'last_page' => $paginador->lastPage(),
@@ -60,7 +66,7 @@ class ContaVeiculoController extends Controller
 
         $this->preencherValorFipe($veiculo, $fipe);
 
-        return response()->json($veiculo->fresh(), 201);
+        return response()->json($veiculo->fresh()->append(self::KM_CONHECIDA), 201);
     }
 
     public function show($id)
@@ -71,7 +77,7 @@ class ContaVeiculoController extends Controller
             return $this->naoEncontrado();
         }
 
-        return response()->json($veiculo);
+        return response()->json($veiculo->append(self::KM_CONHECIDA));
     }
 
     public function update(Request $request, $id, FipeService $fipe)
@@ -90,7 +96,7 @@ class ContaVeiculoController extends Controller
             $this->preencherValorFipe($veiculo, $fipe);
         }
 
-        return response()->json($veiculo->fresh());
+        return response()->json($veiculo->fresh()->append(self::KM_CONHECIDA));
     }
 
     public function destroy($id)
@@ -122,7 +128,7 @@ class ContaVeiculoController extends Controller
             return response()->json(['message' => 'Não foi possível consultar a tabela FIPE no momento.'], 502);
         }
 
-        return response()->json($veiculo->fresh());
+        return response()->json($veiculo->fresh()->append(self::KM_CONHECIDA));
     }
 
     /**
