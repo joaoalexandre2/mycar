@@ -97,6 +97,8 @@ class MotoristaAcessoTest extends TestCase
         Mail::assertQueued(ConviteMotoristaEmail::class, function (ConviteMotoristaEmail $mail) use (&$token) {
             parse_str((string) parse_url($mail->urlDefinirSenha, PHP_URL_QUERY), $query);
             $token = $query['token'] ?? null;
+            // Marcador para a tela falar em criar a senha, não em redefinir.
+            $this->assertSame('1', $query['convite'] ?? null);
 
             return $query['email'] === 'maria@exemplo.com';
         });
@@ -119,6 +121,7 @@ class MotoristaAcessoTest extends TestCase
         Mail::assertQueued(RedefinirSenhaEmail::class, function (RedefinirSenhaEmail $mail) {
             $html = $mail->render();
             $this->assertStringContainsString('Recebemos um pedido para redefinir a senha', $html);
+            $this->assertStringNotContainsString('convite=1', $mail->urlRedefinir);
 
             return true;
         });
