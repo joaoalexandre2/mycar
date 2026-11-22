@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 /** Motoristas da frota. Isolados pela conta, via PertenceAConta. */
 class MotoristaController extends Controller
@@ -133,21 +132,7 @@ class MotoristaController extends Controller
     /** @return array<string, mixed> */
     private function validar(Request $request, ?int $ignorarId = null): array
     {
-        return $request->validate([
-            'nome' => [
-                'required',
-                'string',
-                'max:120',
-                Rule::unique('motoristas', 'nome')->where('conta_id', app('conta.atual'))->ignore($ignorarId),
-            ],
-            'telefone' => ['nullable', 'string', 'max:30'],
-            'cnh_numero' => ['nullable', 'string', 'max:20'],
-            'cnh_validade' => ['nullable', 'date'],
-            'ativo' => ['sometimes', 'boolean'],
-            'centro_custo_id' => ['nullable', 'integer', Rule::exists('centros_custo', 'id')->where('conta_id', app('conta.atual'))->where('ativo', true)],
-        ], [
-            'nome.unique' => 'Já existe um motorista com este nome.',
-        ]);
+        return $request->validate(Motorista::regrasDeCadastro($ignorarId), Motorista::MENSAGENS_DE_CADASTRO);
     }
 
     private function naoEncontrado()
