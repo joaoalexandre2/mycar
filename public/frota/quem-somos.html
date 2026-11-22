@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quem somos | MyCar</title>
+    <meta name="description" content="Conheça o MyCar: um sistema para cuidar de carros particulares, oficinas e frotas em um só lugar.">
+    <link rel="canonical" href="https://frota.mycar.joaokirst.com.br/quem-somos.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MyCar">
+    <meta property="og:title" content="Quem somos | MyCar">
+    <meta property="og:description" content="Um sistema para cuidar de carros particulares, oficinas e frotas em um só lugar.">
+    <meta property="og:url" content="https://frota.mycar.joaokirst.com.br/quem-somos.html">
+    <meta property="og:locale" content="pt_BR">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand: #2563eb;
+            --brand-hover: #1d4ed8;
+            --brand-soft: #e8effd;
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --radius-card: 16px;
+            --radius-btn: 10px;
+            --shadow: 0 4px 8px rgba(31, 41, 55, 0.12);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --brand-soft: #1e2d4f;
+                --bg: #111418;
+                --surface: #1a1d23;
+                --text: #f3f4f6;
+                --muted: #9ca3af;
+                --line: #2f3440;
+                --shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --brand-soft: #1e2d4f;
+            --bg: #111418;
+            --surface: #1a1d23;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --line: #2f3440;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Figtree, system-ui, -apple-system, "Segoe UI", sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { color: inherit; }
+        svg { display: block; max-width: 100%; }
+        :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+        .wrap {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -0.015em; }
+        h1 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 800; }
+        h2 { font-size: clamp(1.8rem, 4.4vw, 3rem); font-weight: 800; }
+        h3 { font-size: 1.15rem; font-weight: 700; }
+        p { margin: 0; }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--brand);
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 24px;
+            border-radius: var(--radius-btn);
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .btn-primary { background: var(--brand); color: #fff; }
+        .btn-primary:hover { background: var(--brand-hover); }
+        .btn-ghost { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+        .btn-ghost:hover { border-color: #fff; }
+
+        /* ---------- Topo ---------- */
+        header.topo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background: color-mix(in srgb, var(--surface) 92%, transparent);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line);
+        }
+        .topo .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            text-decoration: none;
+        }
+        .marca-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--brand);
+            display: grid;
+            place-items: center;
+            color: #fff;
+        }
+        nav.menu { display: flex; align-items: center; gap: 22px; }
+        nav.menu a {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        nav.menu a:hover { color: var(--text); }
+        nav.menu a.atual { color: var(--brand); }
+        nav.menu .btn { color: #fff; padding: 0 16px; min-height: 38px; font-size: 0.92rem; }
+
+        /* ---------- Hero com parallax ---------- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: linear-gradient(160deg, #2563eb 0%, #1d4ed8 55%, #1e40af 100%);
+            color: #fff;
+            padding: 120px 0 140px;
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 100%, 0 88%);
+        }
+        .camada {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform;
+        }
+        .hero-texto {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 820px;
+        }
+        .hero-texto p {
+            margin: 22px auto 30px;
+            font-size: 1.15rem;
+            max-width: 620px;
+            opacity: 0.92;
+        }
+        .hero-texto .btn-primary { background: #fff; color: var(--brand); }
+        .hero-texto .btn-primary:hover { background: #eef3ff; }
+        .acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+        /* Camadas da cena do hero */
+        .camada-nuvem-1 { top: 12%; left: 6%; width: 180px; opacity: 0.25; }
+        .camada-nuvem-2 { top: 22%; right: 8%; width: 240px; opacity: 0.2; }
+        .camada-roda { bottom: 18%; left: -60px; width: 260px; opacity: 0.18; }
+        .camada-engrenagem { top: 18%; right: 14%; width: 120px; opacity: 0.22; }
+        .camada-pista { bottom: 0; left: 0; right: 0; width: 100%; opacity: 0.9; }
+
+        /* ---------- Seções ---------- */
+        section { padding: 88px 0; }
+        .bloco {
+            display: grid;
+            gap: 36px;
+            align-items: center;
+        }
+        .bloco-texto p {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 1.08rem;
+        }
+        .bloco-texto .destaque-titulo {
+            color: var(--brand);
+        }
+        .ilustracao {
+            position: relative;
+            min-height: 280px;
+            border-radius: 24px;
+            background: var(--brand-soft);
+            overflow: hidden;
+        }
+        .ilustracao .camada { position: absolute; }
+
+        .fundo-escuro {
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        /* ---------- Perfis ---------- */
+        .grid-perfis {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+        }
+        .perfil {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-card);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+        .perfil .icone {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--brand-soft);
+            color: var(--brand);
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+        }
+        .perfil p { margin-top: 10px; color: var(--muted); }
+
+        /* ---------- Valores ---------- */
+        .valores {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 1fr;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .valores li {
+            display: grid;
+            grid-template-columns: 52px 1fr;
+            gap: 16px;
+            align-items: start;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-card);
+            padding: 22px;
+        }
+        .valor-num {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: var(--brand);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+        .valores p { margin-top: 6px; color: var(--muted); }
+
+        /* ---------- CTA ---------- */
+        .cta {
+            position: relative;
+            overflow: hidden;
+            background: var(--brand);
+            color: #fff;
+            border-radius: 28px;
+            padding: 56px 28px;
+            text-align: center;
+        }
+        .cta h2 { color: #fff; }
+        .cta p { margin: 14px auto 28px; max-width: 580px; opacity: 0.92; }
+        .cta .btn-primary { background: #fff; color: var(--brand); }
+        .cta .btn-primary:hover { background: #eef3ff; }
+        .cta .camada { position: absolute; }
+
+        /* ---------- Rodapé ---------- */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 32px 0 40px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        footer .wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+        }
+        footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
+        footer a { text-decoration: none; }
+        footer a:hover { color: var(--text); }
+
+        /* ---------- Telas maiores ---------- */
+        @media (min-width: 640px) {
+            .grid-perfis { grid-template-columns: repeat(3, 1fr); }
+            .valores { grid-template-columns: repeat(2, 1fr); }
+            .cta { padding: 72px 48px; }
+        }
+
+        @media (min-width: 960px) {
+            section { padding: 112px 0; }
+            .bloco { grid-template-columns: 1fr 1fr; }
+            .bloco.inverso .bloco-texto { order: 2; }
+            .valores { grid-template-columns: repeat(4, 1fr); }
+            .ilustracao { min-height: 380px; }
+        }
+
+        @media (max-width: 760px) {
+            .topo .wrap { height: auto; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; row-gap: 8px; }
+            nav.menu {
+                width: 100%;
+                gap: 18px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: none;
+            }
+            nav.menu a { white-space: nowrap; font-size: 0.9rem; }
+            nav.menu .btn { position: sticky; right: 0; flex-shrink: 0; }
+            .hero { padding: 110px 0 130px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .camada { transform: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="topo">
+    <div class="wrap">
+        <a href="index.html" class="marca" aria-label="MyCar, voltar ao início">
+            <span class="marca-icone" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 17h14M6 17V11l2-5h8l2 5v6"/>
+                    <circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/>
+                </svg>
+            </span>
+            <span>MyCar</span>
+        </a>
+        <nav class="menu" aria-label="Principal">
+            <a class="link-menu atual" href="quem-somos.html" aria-current="page">Quem somos</a>
+            <a class="link-menu" href="index.html#recursos">Frota</a>
+            <a class="link-menu" href="index.html#perguntas">Perguntas</a>
+            <a class="btn btn-primary" href="https://mycar.joaokirst.com.br/login">Entrar</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+    <!-- HERO com camadas de parallax -->
+    <section class="hero" id="topo" style="padding-bottom: 150px;">
+        <svg class="camada camada-nuvem-1" data-velocidade="0.15" viewBox="0 0 200 90" aria-hidden="true">
+            <path d="M30 80h130a30 30 0 0 0 0-60 40 40 0 0 0-76-6A32 32 0 0 0 30 80z" fill="#fff"/>
+        </svg>
+        <svg class="camada camada-nuvem-2" data-velocidade="0.3" viewBox="0 0 200 90" aria-hidden="true">
+            <path d="M30 80h130a30 30 0 0 0 0-60 40 40 0 0 0-76-6A32 32 0 0 0 30 80z" fill="#fff"/>
+        </svg>
+        <svg class="camada camada-engrenagem" data-velocidade="-0.2" viewBox="0 0 100 100" aria-hidden="true">
+            <g fill="none" stroke="#fff" stroke-width="10">
+                <circle cx="50" cy="50" r="22"/>
+                <path d="M50 4v14M50 82v14M4 50h14M82 50h14M16 16l10 10M74 74l10 10M84 16L74 26M26 74L16 84"/>
+            </g>
+        </svg>
+        <svg class="camada camada-roda" data-velocidade="0.25" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" stroke-width="16"/>
+            <circle cx="100" cy="100" r="30" fill="#fff"/>
+            <g stroke="#fff" stroke-width="10"><path d="M100 30v40M100 130v40M30 100h40M130 100h40"/></g>
+        </svg>
+
+        <div class="wrap hero-texto">
+            <span class="eyebrow" style="color: #dbe7ff;">Quem somos</span>
+            <h1>Cuidamos de cada carro como se fosse o nosso</h1>
+            <p>
+                O MyCar reúne em um só lugar o que cada veículo precisa: valores, vencimentos, manutenção e o dia a dia de quem usa o carro.
+            </p>
+            <div class="acoes">
+                <a class="btn btn-primary" href="https://mycar.joaokirst.com.br/registrar">Criar conta</a>
+                <a class="btn btn-ghost" href="#historia">Conhecer a história</a>
+            </div>
+        </div>
+
+        <svg class="camada camada-pista" data-velocidade="0.1" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 80 Q360 40 720 80 T1440 80 V120 H0z" fill="#1e3a8a" opacity="0.5"/>
+            <path d="M0 100 Q360 70 720 100 T1440 100 V120 H0z" fill="#1e3a8a"/>
+        </svg>
+    </section>
+
+    <!-- HISTÓRIA -->
+    <section id="historia">
+        <div class="wrap bloco">
+            <div class="bloco-texto">
+                <span class="eyebrow">Por que existimos</span>
+                <h2>Carro é <span class="destaque-titulo">rotina</span>, não só um bem.</h2>
+                <p>
+                    Todo mundo que tem um carro, pessoal ou da empresa, passa pelas mesmas dúvidas: quando vence o IPVA,
+                    quanto o carro custou para rodar no mês, quem estava com ele no dia em que bateu o km.
+                    Quase sempre a resposta está espalhada em planilha, mensagem e papel.
+                </p>
+                <p style="margin-top: 14px;">
+                    O MyCar junta essas respostas. Você cadastra o veículo uma vez e acompanha o resto no mesmo lugar.
+                </p>
+            </div>
+            <div class="ilustracao" data-parallax-area>
+                <svg class="camada" data-velocidade="0.35" style="top: 12%; left: 10%; width: 46%;" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle cx="50" cy="50" r="45" fill="#2563eb" opacity="0.18"/>
+                </svg>
+                <svg class="camada" data-velocidade="-0.25" style="top: 38%; right: 8%; width: 34%;" viewBox="0 0 100 100" aria-hidden="true">
+                    <rect x="10" y="10" width="80" height="80" rx="20" fill="#2563eb" opacity="0.28"/>
+                </svg>
+                <svg class="camada" data-velocidade="0.45" style="bottom: 8%; left: 14%; width: 74%;" viewBox="0 0 600 300" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="golf-corpo" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#ffffff"/>
+                            <stop offset="0.45" stop-color="#f4f6f9"/>
+                            <stop offset="0.8" stop-color="#d7dde6"/>
+                            <stop offset="1" stop-color="#aab4c3"/>
+                        </linearGradient>
+                        <linearGradient id="golf-vidro" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#3b4658"/>
+                            <stop offset="0.6" stop-color="#1c2433"/>
+                            <stop offset="1" stop-color="#0b1020"/>
+                        </linearGradient>
+                        <radialGradient id="golf-aro" cx="0.4" cy="0.35" r="0.75">
+                            <stop offset="0" stop-color="#4b5563"/>
+                            <stop offset="1" stop-color="#111827"/>
+                        </radialGradient>
+                        <linearGradient id="golf-farol" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#334155"/>
+                            <stop offset="1" stop-color="#0f172a"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Sombra no chão -->
+                    <ellipse cx="300" cy="252" rx="268" ry="9" fill="#0f172a" opacity="0.28"/>
+
+                    <!-- Passa-rodas (atrás das rodas) -->
+                    <circle cx="138" cy="222" r="47" fill="#0b1120"/>
+                    <circle cx="460" cy="222" r="47" fill="#0b1120"/>
+
+                    <!-- Carroceria: perfil do Golf Mk7 com curvas suaves -->
+                    <path d="M42 236 C40 214 42 192 52 176 C62 160 84 155 112 151 C154 146 200 143 230 138 C268 114 300 92 336 85 C390 79 440 80 470 88 C502 100 522 124 538 150 C550 168 556 188 558 210 L560 232 C560 242 554 246 544 246 L160 246 C110 246 66 244 48 241 C43 240 42 238 42 236 Z" fill="url(#golf-corpo)"/>
+
+                    <!-- Sombra da parte de baixo e da cava da porta -->
+                    <path d="M44 232 C120 240 300 240 556 232 L556 246 L160 246 C110 246 66 244 48 241 Z" fill="#64748b" opacity="0.22"/>
+                    <path d="M44 214 C120 210 260 204 560 220" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.55"/>
+                    <path d="M52 194 C160 186 300 180 556 198" stroke="#cbd5e1" stroke-width="1.5" fill="none" opacity="0.8"/>
+                    <path d="M120 182 C190 176 260 170 330 166" stroke="#ffffff" stroke-width="5" fill="none" opacity="0.35" stroke-linecap="round"/>
+
+                    <!-- Vidros: para-brisa, janelas laterais e vidro traseiro -->
+                    <path d="M236 150 C262 120 296 98 334 91 C384 86 432 88 466 96 C492 106 512 126 528 150 Z" fill="url(#golf-vidro)"/>
+                    <path d="M252 146 C272 124 300 106 330 98 L340 98 C306 110 280 128 262 146 Z" fill="#ffffff" opacity="0.14"/>
+                    <path d="M344 90 C390 85 436 86 462 94" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.35"/>
+
+                    <!-- Montantes: B e C em preto, como no Golf -->
+                    <path d="M370 90 L380 90 L382 150 L372 150 Z" fill="#111827"/>
+                    <path d="M462 96 C484 106 500 124 514 150 L500 150 C488 128 476 110 458 98 Z" fill="#111827"/>
+
+                    <!-- Retrovisor -->
+                    <path d="M222 152 C222 140 230 134 240 136 C246 137 248 144 246 152 Z" fill="#f4f6f9" stroke="#94a3b8" stroke-width="1"/>
+
+                    <!-- Maçanetas e vincos das portas -->
+                    <path d="M372 152 V236 M466 152 V236" stroke="#64748b" stroke-width="2" opacity="0.55" fill="none"/>
+                    <rect x="290" y="178" width="16" height="3.5" rx="1.75" fill="#64748b"/>
+                    <rect x="412" y="178" width="16" height="3.5" rx="1.75" fill="#64748b"/>
+
+                    <!-- Faixas laterais pretas na soleira, com recortes -->
+                    <path d="M206 232 L528 222 L530 232 L208 242 Z" fill="#0b0b0f"/>
+                    <path d="M420 230 L474 226 L470 236 L416 240 Z" fill="#0b0b0f" opacity="0.9"/>
+                    <path d="M340 228 L372 226 L368 234 L336 236 Z" fill="#0b0b0f" opacity="0.9"/>
+
+                    <!-- Farol com faixa de LED (DRL) -->
+                    <path d="M54 186 C78 168 128 160 178 158 L184 172 C150 176 110 182 56 198 Z" fill="url(#golf-farol)"/>
+                    <path d="M62 186 C92 176 132 170 176 166" stroke="#f8fafc" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M170 170 L184 172" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+
+                    <!-- Para-choque dianteiro: entrada de ar e farol de neblina -->
+                    <path d="M44 214 C80 212 120 216 152 224" stroke="#94a3b8" stroke-width="1.5" fill="none" opacity="0.6"/>
+                    <path d="M52 206 H112 Q118 206 118 212 V224 Q118 230 112 230 H52 Q46 230 46 224 V212 Q46 206 52 206 Z" fill="#0f172a"/>
+                    <path d="M58 208 H106" stroke="#334155" stroke-width="2"/>
+                    <rect x="62" y="232" width="34" height="8" rx="3" fill="#1e293b"/>
+
+                    <!-- Lanterna traseira em faixa -->
+                    <path d="M518 168 C534 170 546 176 552 186 L556 214 L540 212 C534 196 528 184 516 178 Z" fill="#dc2626"/>
+                    <path d="M522 180 C534 184 540 194 544 206" stroke="#fecaca" stroke-width="2" fill="none" opacity="0.8"/>
+
+                    <!-- Rodas: pneu, aro preto de cinco raios, pinça vermelha e cubo -->
+                    <g>
+                        <circle cx="138" cy="222" r="38" fill="#0b0f17"/>
+                        <circle cx="138" cy="222" r="30" fill="url(#golf-aro)"/>
+                        <path d="M150 204 A20 20 0 0 1 164 226" stroke="#dc2626" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <path d="M138 214 L138 197 M145.6 219.5 L161.8 214.3 M142.7 228.5 L152.7 242.2 M133.3 228.5 L123.3 242.2 M130.4 219.5 L114.2 214.3" stroke="#9ca3af" stroke-width="7" stroke-linecap="round"/>
+                        <circle cx="138" cy="222" r="9" fill="#d1d5db"/>
+                        <circle cx="138" cy="222" r="3.5" fill="#6b7280"/>
+                    </g>
+                    <g>
+                        <circle cx="460" cy="222" r="38" fill="#0b0f17"/>
+                        <circle cx="460" cy="222" r="30" fill="url(#golf-aro)"/>
+                        <path d="M472 204 A20 20 0 0 1 486 226" stroke="#dc2626" stroke-width="7" fill="none" stroke-linecap="round"/>
+                        <path d="M460 214 L460 197 M467.6 219.5 L483.8 214.3 M464.7 228.5 L474.7 242.2 M455.3 228.5 L445.3 242.2 M452.4 219.5 L436.2 214.3" stroke="#9ca3af" stroke-width="7" stroke-linecap="round"/>
+                        <circle cx="460" cy="222" r="9" fill="#d1d5db"/>
+                        <circle cx="460" cy="222" r="3.5" fill="#6b7280"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMO PENSAMOS -->
+    <section class="fundo-escuro">
+        <div class="wrap bloco inverso">
+            <div class="ilustracao" data-parallax-area>
+                <svg class="camada" data-velocidade="-0.3" style="top: 8%; left: 8%; width: 40%;" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#2563eb" stroke-width="12" opacity="0.35"/>
+                </svg>
+                <svg class="camada" data-velocidade="0.4" style="top: 30%; right: 10%; width: 44%;" viewBox="0 0 120 120" aria-hidden="true">
+                    <g fill="none" stroke="#2563eb" stroke-width="10" opacity="0.5">
+                        <circle cx="60" cy="60" r="26"/>
+                        <path d="M60 8v18M60 94v18M8 60h18M94 60h18M22 22l12 12M86 86l12 12M98 22L86 34M34 86L22 98"/>
+                    </g>
+                </svg>
+                <svg class="camada" data-velocidade="0.2" style="bottom: 6%; right: 12%; width: 56%;" viewBox="0 0 300 120" aria-hidden="true">
+                    <rect x="10" y="60" width="280" height="10" fill="#1f2937" opacity="0.25"/>
+                    <rect x="10" y="90" width="280" height="10" fill="#1f2937" opacity="0.25"/>
+                    <rect x="30" y="20" width="18" height="100" fill="#2563eb" opacity="0.6"/>
+                    <rect x="90" y="40" width="18" height="80" fill="#2563eb" opacity="0.45"/>
+                    <rect x="150" y="10" width="18" height="110" fill="#2563eb" opacity="0.75"/>
+                    <rect x="210" y="50" width="18" height="70" fill="#2563eb" opacity="0.35"/>
+                </svg>
+            </div>
+            <div class="bloco-texto">
+                <span class="eyebrow">Como pensamos</span>
+                <h2>Fanáticos por <span class="destaque-titulo">organização</span>.</h2>
+                <p>
+                    Gostamos de números que fazem sentido no dia a dia: quanto o carro custou, o que vence nos próximos
+                    60 dias, quem estava com ele e por quê. Quando algo muda, a história fica registrada.
+                </p>
+                <p style="margin-top: 14px;">
+                    Valores de IPVA e licenciamento são estimativas com base na FIPE. Dizemos isso com clareza, para você se planejar sem surpresa.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PERFIS -->
+    <section>
+        <div class="wrap">
+            <div style="max-width: 680px; margin-bottom: 40px;">
+                <span class="eyebrow">Para quem é</span>
+                <h2>Um sistema, três jeitos de usar</h2>
+                <p style="margin-top: 14px; color: var(--muted);">Cada perfil tem as telas e os dados que fazem sentido para ele. Você escolhe ao criar a conta.</p>
+            </div>
+            <div class="grid-perfis">
+                <article class="perfil">
+                    <div class="icone" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 17h14M6 17V11l2-5h8l2 5v6"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg>
+                    </div>
+                    <h3>MyCar Cuidados com seu carro</h3>
+                    <p>Acompanhe o valor, o IPVA, o licenciamento e a revisão do seu carro, sem esquecer nenhuma data.</p>
+                </article>
+                <article class="perfil">
+                    <div class="icone" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg>
+                    </div>
+                    <h3>MyCar Oficina</h3>
+                    <p>Gerencie clientes, ordens de serviço, manutenções e o histórico dos carros que passam pela sua oficina.</p>
+                </article>
+                <article class="perfil">
+                    <div class="icone" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                    </div>
+                    <h3>MyCar Frota</h3>
+                    <p>Controle os veículos da sua empresa em um só lugar: valores, vencimentos, manutenção, reservas e motoristas.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALORES -->
+    <section style="padding-top: 0;">
+        <div class="wrap">
+            <div style="max-width: 680px; margin-bottom: 40px;">
+                <span class="eyebrow">O que nos guia</span>
+                <h2>Três compromissos</h2>
+            </div>
+            <ol class="valores">
+                <li>
+                    <span class="valor-num">1</span>
+                    <div>
+                        <h3>Clareza antes de tudo</h3>
+                        <p>Mostramos de onde vem cada número e o que é estimativa. Nada escondido em letra miúda.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="valor-num">2</span>
+                    <div>
+                        <h3>Seus dados são seus</h3>
+                        <p>Cada conta vê só os próprios veículos, pessoas e histórico. Não misturamos informações entre clientes.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="valor-num">3</span>
+                    <div>
+                        <h3>Registro de tudo que muda</h3>
+                        <p>Correções, trocas de centro de custo e alterações de acesso ficam guardadas com quem fez e o motivo.</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- CTA com parallax -->
+    <section style="padding-top: 0;">
+        <div class="wrap">
+            <div class="cta" data-parallax-area>
+                <svg class="camada" data-velocidade="0.2" style="top: -20px; left: -40px; width: 180px; opacity: 0.12;" viewBox="0 0 200 200" aria-hidden="true">
+                    <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" stroke-width="16"/>
+                </svg>
+                <svg class="camada" data-velocidade="-0.25" style="bottom: -30px; right: -20px; width: 220px; opacity: 0.12;" viewBox="0 0 200 200" aria-hidden="true">
+                    <circle cx="100" cy="100" r="92" fill="none" stroke="#fff" stroke-width="16"/>
+                    <circle cx="100" cy="100" r="30" fill="#fff"/>
+                </svg>
+                <div style="position: relative;">
+                    <h2>Pronto para colocar tudo no lugar?</h2>
+                    <p>Crie sua conta em poucos minutos e cadastre o primeiro veículo.</p>
+                    <div class="acoes">
+                        <a class="btn btn-primary" href="https://mycar.joaokirst.com.br/registrar">Criar conta</a>
+                        <a class="btn btn-ghost" href="https://mycar.joaokirst.com.br/login">Já tenho conta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="wrap">
+        <span>© <span id="ano"></span> MyCar</span>
+        <nav aria-label="Rodapé">
+            <a href="quem-somos.html">Quem somos</a>
+            <a href="index.html">Frota</a>
+            <a href="index.html#perguntas">Perguntas</a>
+            <a href="https://mycar.joaokirst.com.br/login">Entrar</a>
+        </nav>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('ano').textContent = new Date().getFullYear();
+
+    // Parallax: cada camada com data-velocidade se desloca conforme a rolagem.
+    // Positivo desce mais devagar que a página; negativo sobe. Respeita reduced motion.
+    (function () {
+        var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduzir) return;
+
+        var camadas = Array.prototype.slice.call(document.querySelectorAll('[data-velocidade]'));
+        if (!camadas.length) return;
+
+        var pendente = false;
+
+        function atualizar() {
+            pendente = false;
+            var y = window.scrollY || window.pageYOffset;
+            var altura = window.innerHeight;
+
+            camadas.forEach(function (el) {
+                var velocidade = parseFloat(el.getAttribute('data-velocidade')) || 0;
+                var caixa = el.parentElement.getBoundingClientRect();
+                var topoDoPai = caixa.top + y;
+                // só mexe enquanto o elemento está perto da tela
+                if (topoDoPai > y + altura || topoDoPai + caixa.height < y) return;
+                var deslocamento = (y - topoDoPai) * velocidade;
+                el.style.transform = 'translate3d(0, ' + deslocamento.toFixed(1) + 'px, 0)';
+            });
+        }
+
+        function pedir() {
+            if (!pendente) {
+                pendente = true;
+                window.requestAnimationFrame(atualizar);
+            }
+        }
+
+        window.addEventListener('scroll', pedir, { passive: true });
+        window.addEventListener('resize', pedir);
+        atualizar();
+    })();
+</script>
+</body>
+</html>
