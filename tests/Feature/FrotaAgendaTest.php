@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Mail\ConviteMotoristaEmail;
+use App\Mail\RedefinirSenhaEmail;
 use App\Models\CentroCusto;
 use App\Models\Conta;
 use App\Models\Motorista;
@@ -13,7 +15,7 @@ use App\Models\VeiculoConta;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\Concerns\AutenticaUsuario;
 use Tests\TestCase;
@@ -568,10 +570,13 @@ class FrotaAgendaTest extends TestCase
 
     public function test_convida_o_motorista_e_cria_o_login_com_papel_motorista(): void
     {
-        Notification::fake();
+        Mail::fake();
         $maria = $this->motorista('Maria');
 
         $this->postJson("/api/conta/motoristas/{$maria->id}/acesso", ['email' => 'maria@exemplo.com'], $this->headers)->assertStatus(201);
+        // O convite tem e-mail próprio, não o de "redefinir senha".
+        Mail::assertQueued(ConviteMotoristaEmail::class, fn (ConviteMotoristaEmail $m) => $m->hasTo('maria@exemplo.com'));
+        Mail::assertNotQueued(RedefinirSenhaEmail::class);
 
         $login = User::where('email', 'maria@exemplo.com')->firstOrFail();
         $this->assertSame('motorista', $login->papelNaConta());
