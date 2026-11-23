@@ -1,6 +1,8 @@
 @component('mail::message')
 # {{ $ehFrota ? 'Vencimentos da frota ' . $nomeConta : 'Lembrete para o seu carro' }}
 
+Olá!
+
 @php
     $rotulos = ['ipva' => 'IPVA', 'licenciamento' => 'Licenciamento', 'revisao' => 'Revisão', 'seguro' => 'Fim do seguro'];
 
@@ -37,5 +39,6 @@ Abrir o MyCar
 
 Para deixar de receber estes lembretes, desative em **Configurações > Lembretes**.
 
+Obrigado,<br>
 Equipe MyCar
 @endcomponent

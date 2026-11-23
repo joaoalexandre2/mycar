@@ -1,6 +1,8 @@
 @component('mail::message')
 # Resumo da semana — {{ $nomeOficina }}
 
+Olá!
+
 Veja o que precisa de atenção nos próximos 30 dias e o que já passou do prazo.
 
 @php
@@ -52,5 +54,6 @@ Abrir o MyCar
 
 Para deixar de receber este resumo, desative em **Configurações > Oficina**.
 
+Obrigado,<br>
 Equipe MyCar
 @endcomponent
