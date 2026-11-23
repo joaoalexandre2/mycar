@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConviteMotoristaEmail;
 use App\Mail\ConvitePessoaEmail;
 use App\Models\AcessoFrotaEvento;
 use App\Models\GrupoUsuario;
@@ -91,6 +92,55 @@ class PessoaFrotaController extends Controller
         ]);
 
         return response()->json($this->formatar($usuario, GrupoUsuario::with('membros:users.id')->get()), 201);
+    }
+
+    /**
+     * Reenvia o convite a uma pessoa desta frota que ainda não entrou no sistema: link novo para definir
+     * a senha (o anterior deixa de valer), com o texto de convite do papel dela. Mesmas regras do reenvio
+     * do motorista: 429 dentro do intervalo do broker de senha (1 minuto), 422 para quem já entrou.
+     * Pessoa de outra conta ou fora da frota: 404 (nem se confirma que existe).
+     */
+    public function reenviarConvite(Request $request, $id)
+    {
+        $usuario = User::query()
+            ->where('conta_id', app('conta.atual'))
+            ->where('perfil', 'frota')
+            ->find($id);
+
+        if (!$usuario) {
+            return response()->json(['message' => 'Pessoa não encontrada na frota.'], 404);
+        }
+
+        if ($this->estadoDeAcesso($usuario, $request->user()) === Motorista::ACESSO_ATIVO) {
+            return response()->json(['message' => 'Esta pessoa já entra no sistema. Se esqueceu a senha, ela pode usar "Esqueci minha senha".'], 422);
+        }
+
+        $tokens = Password::broker()->getRepository();
+
+        // Mesmo intervalo do "esqueci minha senha": evita encher a caixa da pessoa com convites repetidos.
+        if ($tokens->recentlyCreatedToken($usuario)) {
+            return response()->json(['message' => 'Acabamos de enviar um convite para esta pessoa. Aguarde um minuto para reenviar.'], 429);
+        }
+
+        $papel = $usuario->papelNaConta();
+        $url = $usuario->urlParaDefinirSenha($tokens->create($usuario), convite: true);
+        $minutos = User::minutosParaExpirarLinkDeSenha();
+
+        // O convite de gestor/administrador explica o papel; quem é motorista recebe o texto de motorista.
+        Mail::to($usuario->email)->send($papel === 'motorista'
+            ? new ConviteMotoristaEmail($usuario, $url, $request->user()->name, $minutos)
+            : new ConvitePessoaEmail($usuario, $url, $request->user()->name, $papel, $minutos));
+
+        AcessoFrotaEvento::registrar($request->user()->id, 'pessoa', $usuario->id, 'reenviou_convite', [
+            'nome' => $usuario->name,
+            'papel' => $papel,
+        ]);
+
+        return response()->json([
+            'message' => "Convite reenviado para {$usuario->email}.",
+            'id' => $usuario->id,
+            'acesso' => Motorista::CONVITE_ENVIADO,
+        ]);
     }
 
     public function papel(Request $request, $id)
@@ -265,6 +315,19 @@ class PessoaFrotaController extends Controller
                 fn (string $m) => $veTodosOsMenus || in_array($m, $menusDosGrupos, true),
             )),
             'motorista' => $motorista ? ['id' => $motorista->id, 'nome' => $motorista->nome] : null,
+            'acesso' => $this->estadoDeAcesso($usuario, request()->user()),
         ];
+    }
+
+    /**
+     * Mesmo critério de Motorista::estadoDeAcesso: "ativo" se a pessoa já entrou (ultimo_acesso_em),
+     * senão "convite_enviado". Quem está fazendo a requisição está logado, então conta como ativo
+     * mesmo que a sessão seja anterior ao registro do último acesso.
+     */
+    private function estadoDeAcesso(User $usuario, ?User $quemPede): string
+    {
+        $jaEntrou = $usuario->ultimo_acesso_em !== null || ($quemPede && $quemPede->id === $usuario->id);
+
+        return $jaEntrou ? Motorista::ACESSO_ATIVO : Motorista::CONVITE_ENVIADO;
     }
 }

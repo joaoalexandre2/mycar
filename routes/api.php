@@ -277,6 +277,8 @@ Route::middleware('auth.token')->group(function () {
         Route::get('/pessoas', [PessoaFrotaController::class, 'index']);
         Route::post('/pessoas', [PessoaFrotaController::class, 'store'])->middleware('throttle:10,1');
         Route::put('/pessoas/{id}/papel', [PessoaFrotaController::class, 'papel']);
+        // Reenvia o convite (link novo para definir a senha) a quem ainda não entrou no sistema
+        Route::post('/pessoas/{id}/convite', [PessoaFrotaController::class, 'reenviarConvite'])->middleware('throttle:20,1');
         // Liga o login (papel motorista) a um cadastro de motorista existente ou cria o cadastro a partir da pessoa
         Route::post('/pessoas/{id}/motorista', [PessoaFrotaController::class, 'ligarMotorista'])->middleware('throttle:20,1');
         // Trilha de quem mudou grupos, membros e papéis
